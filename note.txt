@@ -1,0 +1,11 @@
+idées amélioration, réaliser d'abord celles du poly
+
+    fonction menu, print ce qu'elle trouve dans le dossier levels sous forme de boutons selectionnables avec fleches directionnelles
+    du clavier
+
+    proposer de la musique
+    
+    graphismes avec qt
+
+    menu permettant de design un niveau
+
