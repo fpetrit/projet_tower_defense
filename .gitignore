@@ -3,7 +3,10 @@
 projet
 docs/html
 *.txt
+
 !note.txt
+!game/tourelles.txt
+!game/vilains.txt
 
 # Prerequisites
 *.d
