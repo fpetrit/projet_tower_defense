@@ -1,3 +1,7 @@
+.vscode
+*.pdf
+projet
+docs/html
 *.txt
 !note.txt
 
