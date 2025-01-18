@@ -1,11 +1,19 @@
-idées amélioration, réaliser d'abord celles du poly
+on considère que le fichier d'entrée des informations de la partie
+
+idées amélioration
 
     fonction menu, print ce qu'elle trouve dans le dossier levels sous forme de boutons selectionnables avec fleches directionnelles
     du clavier
 
     proposer de la musique
     
-    graphismes avec qt
+    graphismes avec qt/sdl ?
 
     menu permettant de design un niveau
+
+    pouvoir revendre les tourelles a chaque tour de jeu, la valeur se dépréciant avec l'ancienneté et les dégâts subis
+
+    rajouter un système de résistance (propriété propre a chaque type de vilain et de tourelle) et adapter les formules pour infliger des dégâts
+
+    achats de consommables appliquables sur les tourelles, les vilains (résistance temporaire, régéneration étalée sur plusieurs tours)
 
