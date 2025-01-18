@@ -1,0 +1,46 @@
+/ SYNTAXE DU FICHIER
+/
+/ Les lignes commençant par '/' sont ignorées.
+/
+/ Chaque entrée est un bloc de plusieurs lignes.
+/ Les blocs sont séparés par au moins une ligne vide.
+/ Composition d'un bloc :
+/
+/ <NOM_DE_LA_TOURELLE>
+/ <ABREVIATION>
+/ <PRIX>
+/ <POINTS_DE_VIE>
+/ <TYPE_DEGATS>
+/ <TYPE_DEPLACEMENT>
+/
+/
+/ NOM_DE_LA_TOURELLE : chaîne de caractères unique pouvant contenir des espaces.
+/ Pas de guillemets, apostrophes, caractères pouvant poser problème.
+/
+/ ABREVIATION : un seul caractère unique.
+/ Permet de réprésenter facilement la tourelle surtout en ascii.
+/
+/ PRIX : un int.
+/
+/ POINTS_DE_VIE : un int, points de vie maximum.
+/
+/
+/
+/ Les caractéristiques ci-dessus sont définies pour toutes les tourelles.
+/ Le membre de structure Tourelle.stats permet de personnaliser une tourelle au-delà de son type.
+/ Il doit être interprété qu'avec la connaissance du type de la tourelle.
+/
+/ Un entier positif qui rentre dans un int sera assigné à chaque tourelle du fichier dans leur ordre d'apparition en commençant à 0.
+/ Il sera stocké pour chaque instance de Tourelle dans Tourelle.type.
+/ Il permet de retrouver facilement les caractériques de base, initiales, pour chaque type.
+/ Il sert à personaliser le comportement des fonctions de gestion du tour (principalement : infliger degats, deplacer objet, pourquoi pas les graphismes)
+/ pour chaque type de tourelle. Il est testé dans des switch dans le code.
+
+
+
+TOURELLE DE BASE
+T
+0
+20
+100
+
