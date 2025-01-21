@@ -18,7 +18,7 @@
 //     return (bool) new;
 // }
 
-Etudiant * edtudiant_insert(int type, int ligne, int position, int tour){
+Etudiant * etudiant_insert(int type, int ligne, int position, int tour){
     Etudiant * new = malloc(sizeof(Etudiant));
     if (new){
         new->type = type;
@@ -73,7 +73,7 @@ void game_init(FILE * level){
         fscanf(level, " %d %d %c", &round_no, &line_no, &type);
 
         // to chain Etudiants
-        prev_e = edtudiant_insert(type, line_no, 0, round_no);
+        prev_e = etudiant_insert(type, line_no, 0, round_no);
 
         error = prev_e == NULL;
     }
