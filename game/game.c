@@ -21,7 +21,10 @@
 Etudiant * edtudiant_insert(int type, int ligne, int position, int tour){
     Etudiant * new = malloc(sizeof(Etudiant));
     if (new){
-
+        new->type = type;
+        new->ligne = ligne;
+        new->position = position;
+        new->tour = tour;
     }
 
     // set it as the first node in the linked list
