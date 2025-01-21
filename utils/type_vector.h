@@ -12,11 +12,11 @@ typedef struct {
     type * arr;
 } type_vector;
 
-type_vector * type_vector_construct(void);
+void * type_vector_init(type_vector t);
 
 void type_vector_free(type_vector * t);
 
-void * type_vector_append(type_vector * tv, type t);
+void type_vector_append(type_vector * tv, type t);
 
 type * get_type(int id);
 

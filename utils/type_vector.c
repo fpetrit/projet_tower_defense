@@ -2,18 +2,14 @@
 
 extern type_vector types;
 
-type_vector * type_vector_construct(void){
-    type_vector * n = malloc(sizeof(type_vector));
-    n->count = 0;
-    n->arr = malloc( sizeof(type) * TYPE_VECTOR_INITIAL_LENGTH);
-    n->length = TYPE_VECTOR_INITIAL_LENGTH;
-
-    return n;
+void type_vector_construct(type_vector * t){
+    t->count = 0;
+    t->arr = malloc( sizeof(type) * TYPE_VECTOR_INITIAL_LENGTH);
+    t->length = TYPE_VECTOR_INITIAL_LENGTH;
 }
 
 void type_vector_free(type_vector * t){
     free(t->arr);
-    free(t);
 }
 
 void type_vector_append(type_vector * tv, type t){
