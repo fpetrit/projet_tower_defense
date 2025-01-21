@@ -22,8 +22,11 @@
 /
 / PRIX : un int.
 /
-/ POINTS_DE_VIE : un int, points de vie maximum.
+/ POINTS_DE_VIE : un int, points de vie maximum et présent initialement.
 /
+/ TYPE_DEGATS : entier positif et int, id qui personnalise le comportement de inflict_damage
+/
+/ TYPE_DEPLACEMENT : entier positif et int, id qui personnalise le comportement de move
 /
 /
 / Les caractéristiques ci-dessus sont définies pour toutes les tourelles.
@@ -32,9 +35,12 @@
 /
 / Un entier positif qui rentre dans un int sera assigné à chaque tourelle du fichier dans leur ordre d'apparition en commençant à 0.
 / Il sera stocké pour chaque instance de Tourelle dans Tourelle.type.
-/ Il permet de retrouver facilement les caractériques de base, initiales, pour chaque type.
-/ Il sert à personaliser le comportement des fonctions de gestion du tour (principalement : infliger degats, deplacer objet, pourquoi pas les graphismes)
-/ pour chaque type de tourelle. Il est testé dans des switch dans le code.
+/ Il permet de retrouver facilement les caractériques de base, initiales, pour chaque type, qui sont chargées en mémoire vive au lancemement du programme.
+/ Il sert à personaliser le comportement des fonctions de gestion du tour (principalement : inflict_damage, move, pourquoi pas les graphismes)
+/ pour chaque type de tourelle.
+/ Si le type de dommage ou de déplacement de la tourelle est propre elle-même, il suffit de mettre dans ces champs son id (sa place relative dans le fichier,
+/ partant de 0, unique).
+/
 
 
 
