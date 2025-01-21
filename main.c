@@ -14,6 +14,8 @@
 Jeu game;
 
 
+
+
 // fonction wrapper basée sur une boucle permettant la navigation dans le menu
 // cette fonction évoluera avec la complexité/les graphismes du menu
 // elle est responsable d'ouvir le fichier de partie séléctionné et d'appeler la fonction game_init
