@@ -58,6 +58,8 @@ void game_init(FILE * level){
     char type;
     bool error = false;
 
+    char str[2];
+
     Etudiant * current_last_etudiant_on_line[ROWS];
     memset(current_last_etudiant_on_line, 0, ROWS * sizeof(Etudiant *));
 
@@ -106,6 +108,8 @@ void game_init(FILE * level){
         } else {
             fprintf(stderr, "Error: something went wrong with malloc.");
         }
+
+        fgets(str, 2, level);
     }
 
     // the last etudiant on each line has no previous etudiant on the same line
