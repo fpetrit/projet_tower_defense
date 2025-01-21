@@ -70,6 +70,12 @@ typedef struct etudiant {
 
 
 /**
+ * @brief Dynamically allocates memory for a new Etudiant and set it as the first node of the linked list.
+ */
+Etudiant * edtudiant_insert(int type, int ligne, int position, int tour);
+
+
+/**
  * @brief Dynamically allocates memory for a new Etudiant and links it with the one passed as an argument.
  * 
  * This function only manage the simple linking of the Etudiant node in order of apparition in the file.
@@ -77,9 +83,9 @@ typedef struct etudiant {
  * The initial value of pointsDeVie and prix are determined by the type.
  * 
  * @param e This Etudiant "next" member will points to the new one.
- * @return True if successful, else false.
+ * @return A pointer on the created Etudiant, NULL if the dynamic allocation failed.
  */
-bool etudiant_append(Etudiant * e, int type, int ligne, int position, int tour);
+Etudiant * etudiant_append(Etudiant * e, int type, int ligne, int position, int tour);
 
 
 /** 
@@ -102,6 +108,7 @@ void etudiant_line_append(Etudiant * appended, Etudiant * e);
 void etudiant_delete(Etudiant * e);
 
 
+/// @brief Holds the game main objects (2 linked lists, initial money amount, current round no.).
 typedef struct {
     Tourelle* tourelles;
     Etudiant* etudiants;
@@ -110,8 +117,18 @@ typedef struct {
 } Jeu;
 
 
+typedef struct {
+
+} etudiant_type;
+
+typedef struct {
+
+} tourelle_type;
+
+
 /// @brief Global variable defined in @file ../main.c "main.c" holding the game main objects.
 extern Jeu game;
+
 
 
 /**
@@ -119,7 +136,8 @@ extern Jeu game;
  * 
  * This function is called by @ref menu "menu()" in @file ../main.c "main.c"
  * It reads the file level text file and fills the \ref game "game" external globally defined variable in @file ../main.c "main.c".
+ * It also fills two global variable arrays defined in @file ../main.c "main.c" containing information about each Etudiant/Tourelle type. 
  */
 void game_init(FILE * level);
 
-#endif
+#endif 
