@@ -70,6 +70,6 @@ void menu(){
 int main(void){
 
     menu();
-
+    affiche_vague();
     return 0;
 }

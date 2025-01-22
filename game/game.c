@@ -122,3 +122,62 @@ void game_init(FILE * level){
 
 
 }
+
+
+void affiche_jeu(void){  //ancienne version, fonctionne pas pour l'instant 
+    Tourelle* t=game.tourelles;
+    Etudiant* e=game.etudiants;
+    CLEAR;
+    printf("Tour %d\n",game.tour);
+    for (int i=1;i<=ROWS;i++){
+        for (int j=COLUMNS-1;j<=0;j--){
+            if (t!=NULL && t->ligne==i && t->position==j){
+                if (j==1) printf("%d |  %c ",i,t->type);
+                else printf(" %c ",t->type);
+                t=t->next;
+                continue;
+            }
+            if (e!=NULL && e->ligne==i && e->position==j && e->tour<=game.tour){
+                if (j==1) printf("%d |  %2d%c ",i,e->pointsDeVie,e->type);
+                printf("%2d%c ",e->pointsDeVie,e->type);
+                e=e->next;
+                continue;
+            }
+            if (j==1) printf("%d |  . ",i);
+            else printf("  . ");
+        }
+        printf("\n");
+    }
+}
+
+
+void affiche_vague(void){ //affiche la vague avant le début des tours 
+    CLEAR;
+    Etudiant* e=game.etudiants;
+    Etudiant* f=game.etudiants;
+    for (int i=1;i<=ROWS;i++){
+        int c=1;
+        while (f!=NULL){
+            if (f->ligne==i){
+                if (f->tour==c){
+                    printf("%2d%c ",f->pointsDeVie,f->type);
+                    f=f->next_line;
+                    c++;
+                }
+                else {
+                printf("  . ");
+                c++;
+                }
+            }
+            else {
+                if (f->tour>c){
+                    printf("  . ");
+                    c++;
+                }
+                f=f->next;
+            }
+        }
+        f=e;
+        printf("\n");
+    }
+}
