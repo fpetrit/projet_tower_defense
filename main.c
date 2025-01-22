@@ -10,11 +10,11 @@
 
 #include "preprocessor_macros_constants.h"
 #include "game/game.h"
+#include "utils/entity_type_vector.h"
 
 Jeu game;
-
-
-
+Entity_type_vector tourelle_types;
+Entity_type_vector etudiant_types;
 
 // fonction wrapper basée sur une boucle permettant la navigation dans le menu
 // cette fonction évoluera avec la complexité/les graphismes du menu
@@ -71,5 +71,6 @@ int main(void){
 
     menu();
 
+   
     return 0;
 }
