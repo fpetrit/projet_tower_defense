@@ -181,3 +181,56 @@ void affiche_vague(void){ //affiche la vague avant le début des tours
         printf("\n");
     }
 }
+
+void help(void){
+    printf("LISTE DES COMMANDES POSSIBLES :\n   -StatTour : affiche les stats d'une tour (de gauche à droite et de haut en bas)\n   -StatEtu : idem pour les étudiants\n   -end : termine la partie sur une défaite\n   -PlaceTour : Initie le placement d'une tour\n   -next : passe au tour suivant\n");
+}
+
+
+void interInstru(int* gamestate,char instru[256]){ //pas terminé on ajoutera des instructions possibles au fil du temps 
+    if (!strcmp(instru,"help")){
+        help();
+        printf("Que voulez vous faire ? ");
+        scanf("%s",&instru);
+        interInstru(gamestate,instru);
+    }
+    if (!strcmp(instru,"StatTour")){
+        char c;
+        printf("\nDonnez le type de la tourelle");
+        scanf("%c",&c);
+        //fonction affichage tour j'attends de voir comment tu veux les intégrer au code avant de le faire
+        printf("Que voulez vous faire ? ");
+        scanf("%s",&instru);
+        interInstru(gamestate,instru);
+    }
+    if (!strcmp(instru,"StatEtu")){
+        char c;
+        printf("\nDonnez le type de l'étudiant");
+        scanf("%c",&c);
+        //idem
+        printf("Que voulez vous faire ? ");
+        scanf("%s",&instru);
+        interInstru(gamestate,instru);
+    }
+    if (!strcmp(instru,"end")){
+        gamestate=0;
+    }
+    if (!strcmp(instru,"PlaceTour")){
+        int i,k;
+        char t;
+        printf("Saisir le type de la tourelle : ");
+        scanf("%c",&t);
+        printf("Saisir la ligne de la tourelle : ");
+        scanf("%d",&i);
+        printf("Saisir la colonne de la tourelle : ");
+        scanf("%d",&k);
+        //fonction pour ajouter une tour à la liste
+        printf("Que voulez vous faire ? ");
+        scanf("%s",&instru);
+        interInstru(gamestate,instru);
+    }
+    printf("instruction non reconnue");
+    printf("Que voulez vous faire ? ");
+    scanf("%s",&instru);
+    interInstru(gamestate,instru);
+}
