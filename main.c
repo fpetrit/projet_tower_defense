@@ -10,7 +10,7 @@
 
 #include "preprocessor_macros_constants.h"
 #include "game/game.h"
-#include "utils/entity_type_vector.h"
+#include "game/entity_types/entity_type_vector.h"
 
 Jeu game;
 Entity_type_vector tourelle_types;
@@ -70,7 +70,5 @@ void menu(){
 int main(void){
 
     menu();
-
-   
     return 0;
 }

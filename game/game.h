@@ -19,7 +19,7 @@
  * The linking is done in creation order.
  */
 typedef struct tourelle {
-    int type;
+    char type;
     int prix;
     
     int pointsDeVie;
@@ -54,7 +54,7 @@ void tourelle_delete(Tourelle * t);
  * Another double linking is done by line.
  */
 typedef struct etudiant {
-    int type;
+    char type;
     int pointsDeVie;
     int ligne;
     int position;
@@ -118,5 +118,8 @@ extern Jeu game;
  * It also fills two global variable arrays defined in @file ../main.c "main.c" containing information about each Etudiant/Tourelle type. 
  */
 void game_init(FILE * level);
-
+void affiche_jeu(void);
+void affiche_vague(void);
+void interInstru(int* gamestate,char instru[256]);
+void help(void);
 #endif 
