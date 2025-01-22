@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.embeddedhtml": "html",
+			"*.py": "python",
+			"stdlib.h": "c",
+			"string.h": "c",
+			"stdio.h": "c",
+			"math.h": "c",
+			"preprocessor_macros_constants.h": "c"
+		}
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": []
+	}
+}
