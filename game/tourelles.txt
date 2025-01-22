@@ -1,6 +1,10 @@
 / SYNTAXE DU FICHIER
 /
-/ Les lignes commençant par '/' sont ignorées.
+/ NE PAS ECRIRE DE LIGNE DE PLUS DE <LINE_MAX_CHAR_NO> - 1 caractères.
+/ C'est un #define dans "preprocessor_macros_constants.h"
+/
+/ Les lignes commençant par '/' ainsi que les lignes vides sont ignorées.
+/ Les lignes vides servent néanmoins à délimiter les entrées.
 /
 / Chaque entrée est un bloc de plusieurs lignes.
 / Les blocs sont séparés par au moins une ligne vide.
@@ -40,7 +44,7 @@
 / pour chaque type de tourelle.
 / Si le type de dommage ou de déplacement de la tourelle est propre elle-même, il suffit de mettre dans ces champs son id (sa place relative dans le fichier,
 / partant de 0, unique).
-/
+
 
 
 

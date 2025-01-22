@@ -37,9 +37,9 @@ typedef struct tourelle {
  * 
  * The initial value of pointsDeVie and prix are determined by the type.
  * @param t This Tourelle "next" member will point to the new one.
- * @return True if successful, else false.
+ * @return A pointer to the created Tourelle, NULL if the dynamic allocation failed.
  */
-bool tourelle_append(Tourelle * t, int type, int ligne, int position);
+Tourelle * tourelle_append(Tourelle * t, int type, int ligne, int position);
 
 
 /// Free the Tourelle dynamically allocated memory and manage the linking.
@@ -69,23 +69,11 @@ typedef struct etudiant {
 } Etudiant;
 
 
-/**
- * @brief Dynamically allocates memory for a new Etudiant and set it as the first node of the linked list.
- */
-Etudiant * edtudiant_insert(int type, int ligne, int position, int tour);
+Etudiant * etudiant_create(char abbr, int ligne, int position, int tour);
 
+bool etudiant_insert(char abbr, int ligne, int position, int tour);
 
-/**
- * @brief Dynamically allocates memory for a new Etudiant and links it with the one passed as an argument.
- * 
- * This function only manage the simple linking of the Etudiant node in order of apparition in the file.
- * The double linking by line is done etudiant_line_prepend and etudiant_line_append.
- * The initial value of pointsDeVie and prix are determined by the type.
- * 
- * @param e This Etudiant "next" member will points to the new one.
- * @return A pointer on the created Etudiant, NULL if the dynamic allocation failed.
- */
-Etudiant * etudiant_append(Etudiant * e, int type, int ligne, int position, int tour);
+bool etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour);
 
 
 /** 
@@ -117,18 +105,9 @@ typedef struct {
 } Jeu;
 
 
-typedef struct {
-
-} etudiant_type;
-
-typedef struct {
-
-} tourelle_type;
-
 
 /// @brief Global variable defined in @file ../main.c "main.c" holding the game main objects.
 extern Jeu game;
-
 
 
 /**
