@@ -2,57 +2,108 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "preprocessor_macros_constants.h"
 #include "game.h"
-#include "../preprocessor_macros_constants.h"
+#include "entity_types/entity_types.h"
+#include "entity_types/entity_type_vector.h"
 
-// bool tourelle_append(Tourelle * t, int type, int ligne, int position){
-    
-//     Tourelle * new = malloc(sizeof(Tourelle));
 
-//     if (new){
-//         new->type = type;
-//         new->ligne = ligne;
-//         new->position = position;
-//     }
-
-//     return (bool) new;
-// }
-
-Etudiant * etudiant_insert(int type, int ligne, int position, int tour){
+Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
+    // allocate memory
     Etudiant * new = malloc(sizeof(Etudiant));
+
     if (new){
-        new->type = type;
+
+        // fill non type dependent members
         new->ligne = ligne;
         new->position = position;
         new->tour = tour;
+
+        // fill type dependent members
+        Etudiant_type e_type = ( * entity_type_get_type_by_abbr(ETUDIANT, abbr) ).type.e_type;
+
+        new->type = e_type.id;
+        new->pointsDeVie = e_type.pointsDeVie;
     }
-
-    // set it as the first node in the linked list
-    game.etudiants = new;
-
     return new;
 }
 
 
-// A MODIFIER, VERSION PROVISOIRE, pour tester le chainage
-Etudiant * etudiant_append(Etudiant * e, int type, int ligne, int position, int tour){
-    Etudiant * new = malloc(sizeof(Etudiant));
+bool etudiant_insert(char abbr, int ligne, int position, int tour){
 
-    if (new){
-        new->type = type;
-        new->ligne = ligne;
-        new->position = position;
-        new->tour = tour;
+    Etudiant * new = etudiant_create(abbr, ligne, position, tour);
+
+    if (new && game.etudiants){
+        new->next = game.etudiants;
     }
+
+    if (new)
+        game.etudiants = new;
+
+    return (bool) new;
+}
+
+
+bool etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour){
+    
+    Etudiant * new = etudiant_create(abbr, ligne, position, tour);
+
+    if (new) {
+
+    // may be null
+    new->next = e->next;
 
     e->next = new;
 
-    return new;
+    }
+
+    return (bool) new;
 }
 
 
+static void init_types(void){
 
-void game_init(FILE * level){
+    // a line buffer to read the files
+    char line[LINE_MAX_CHAR_NO];
+
+    bool error = false;
+
+    // indicates if we are
+    bool in_block = false;
+
+    // 1) TOURELLE TYPES
+
+    // this allocates memory and set the count & the size
+    tourelle_type_vector_init(&tourelle_types);
+
+    // a tourelle type buffer
+    Tourelle_type t_type_buffer;
+
+    FILE * tourelles_file = fopen("tourelles.txt", "r");
+
+    while ( ! feof(tourelles_file) ) {
+
+        fgets(line, LINE_MAX_CHAR_NO, tourelles_file);
+
+        // not an empty line & not a comment
+        if (*line && *line != "/") {
+            sscanf(line, "%s")
+        }
+
+    }
+
+    fclose(tourelles_file);
+
+
+    // 2) ETUDIANT TYPES
+
+}
+
+
+static void game_init(FILE * level){
+
+    // init & fill the Entity_type_vector tourelle_types & etudiant_types global variable defined in main.c
+    init_types();
 
     int round_no, line_no;
     char type;
@@ -116,9 +167,4 @@ void game_init(FILE * level){
     for (int i = 0; i < ROWS; i++){
         current_last_etudiant_on_line[i]->prev_line = NULL;
     }
-
-    
-    // todo: filling of the Etudiant & Tourelle types global arrays
-
-
 }
