@@ -8,13 +8,17 @@
 
 
 
-void affiche_jeu(void){  //ancienne version, fonctionne pas pour l'instant 
+void affiche_jeu(void){  //pas encore possible de la tester correctement, il faut attendre d'avoir un sytème de gestion des tours qui fonctionne 
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
+    Etudiant* f=game.etudiants;
     CLEAR;
     printf("Tour %d\n",game.tour);
     for (int i=1;i<=ROWS;i++){
         for (int j=COLUMNS-1;j<=0;j--){
+            while (e!=NULL && e->ligne!=i){
+                e=e->next;
+            }
             if (t!=NULL && t->ligne==i && t->position==j){
                 if (j==1) printf("%d |  %c ",i,t->type);
                 else printf(" %c ",t->type);
@@ -24,13 +28,14 @@ void affiche_jeu(void){  //ancienne version, fonctionne pas pour l'instant
             if (e!=NULL && e->ligne==i && e->position==j && e->tour<=game.tour){
                 if (j==1) printf("%d |  %2d%c ",i,e->pointsDeVie,e->type);
                 printf("%2d%c ",e->pointsDeVie,e->type);
-                e=e->next;
+                e=e->next_line;
                 continue;
             }
             if (j==1) printf("%d |  . ",i);
             else printf("  . ");
         }
         printf("\n");
+        e=f;
     }
 }
 
