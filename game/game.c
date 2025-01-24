@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "preprocessor_macros_constants.h"
+#include "../preprocessor_macros_constants.h"
 #include "game.h"
 #include "entity_types/entity_types.h"
 #include "entity_types/entity_type_vector.h"
@@ -20,7 +20,8 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
         new->tour = tour;
 
         // fill type dependent members
-        Etudiant_type e_type = ( * entity_type_get_type_by_abbr(ETUDIANT, abbr) ).type.e_type;
+        Tagged_entity_type * ttype_res = entity_type_get_type_by_abbr(&etudiant_types, abbr, ETUDIANT);
+        Etudiant_type e_type = ttype_res->type.e_type;
 
         new->type = e_type.id;
         new->pointsDeVie = e_type.pointsDeVie;
@@ -29,7 +30,7 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
 }
 
 
-bool etudiant_insert(char abbr, int ligne, int position, int tour){
+Etudiant * etudiant_insert(char abbr, int ligne, int position, int tour){
 
     Etudiant * new = etudiant_create(abbr, ligne, position, tour);
 
@@ -40,11 +41,11 @@ bool etudiant_insert(char abbr, int ligne, int position, int tour){
     if (new)
         game.etudiants = new;
 
-    return (bool) new;
+    return new;
 }
 
 
-bool etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour){
+Etudiant * etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour){
     
     Etudiant * new = etudiant_create(abbr, ligne, position, tour);
 
@@ -57,50 +58,12 @@ bool etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour)
 
     }
 
-    return (bool) new;
+    return new;
 }
 
 
-static void init_types(void){
 
-    // a line buffer to read the files
-    char line[LINE_MAX_CHAR_NO];
-
-    bool error = false;
-
-    // indicates if we are
-    bool in_block = false;
-
-    // 1) TOURELLE TYPES
-
-    // this allocates memory and set the count & the size
-    tourelle_type_vector_init(&tourelle_types);
-
-    // a tourelle type buffer
-    Tourelle_type t_type_buffer;
-
-    FILE * tourelles_file = fopen("tourelles.txt", "r");
-
-    while ( ! feof(tourelles_file) ) {
-
-        fgets(line, LINE_MAX_CHAR_NO, tourelles_file);
-
-        // not an empty line & not a comment
-        if (*line && *line != "/") {
-            sscanf(line, "%s")
-        }
-
-    }
-
-    fclose(tourelles_file);
-
-
-    // 2) ETUDIANT TYPES
-
-}
-
-
-static void game_init(FILE * level){
+void game_init(FILE * level){
 
     // init & fill the Entity_type_vector tourelle_types & etudiant_types global variable defined in main.c
     init_types();
@@ -167,4 +130,10 @@ static void game_init(FILE * level){
     for (int i = 0; i < ROWS; i++){
         current_last_etudiant_on_line[i]->prev_line = NULL;
     }
+}
+
+
+void game_end(void){
+    entity_type_vector_free(&tourelle_types);
+    entity_type_vector_free(&etudiant_types);
 }

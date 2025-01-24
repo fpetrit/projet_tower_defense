@@ -1,5 +1,5 @@
-#ifndef ENTITY_TYPES
-#define ENTITY_TYPES
+#ifndef ENTITY_TYPES_H
+#define ENTITY_TYPES_H
 
 typedef struct {
     
@@ -38,5 +38,7 @@ typedef struct {
     Entity_type_tag tag;
     union Entity_type type;
 } Tagged_entity_type;
+
+void init_types(void);
 
 #endif

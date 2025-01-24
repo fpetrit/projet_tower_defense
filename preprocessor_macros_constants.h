@@ -5,6 +5,8 @@
 #define LINE_MAX_CHAR_NO 300
 #define ROWS 7
 #define COLUMNS 15
+#define TOURELLE_TYPE_MEMBERS_NO 7
+#define ETUDIANT_TYPE_MEMBERS_NO 6
 
 
 #endif

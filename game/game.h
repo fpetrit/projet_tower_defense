@@ -71,9 +71,9 @@ typedef struct etudiant {
 
 Etudiant * etudiant_create(char abbr, int ligne, int position, int tour);
 
-bool etudiant_insert(char abbr, int ligne, int position, int tour);
+Etudiant * etudiant_insert(char abbr, int ligne, int position, int tour);
 
-bool etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour);
+Etudiant * etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour);
 
 
 /** 
@@ -118,5 +118,7 @@ extern Jeu game;
  * It also fills two global variable arrays defined in @file ../main.c "main.c" containing information about each Etudiant/Tourelle type. 
  */
 void game_init(FILE * level);
+
+void game_end(void);
 
 #endif 

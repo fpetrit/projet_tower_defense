@@ -70,5 +70,11 @@ void menu(){
 int main(void){
 
     menu();
+
+    for (int i = 0; i < tourelle_types.count; i++ ){
+        printf("%s\n", tourelle_types.arr[i].type.t_type.name);
+    }
+
+    game_end();
     return 0;
 }
