@@ -18,6 +18,7 @@ static inline void fill_etudiant_block(FILE * file, Etudiant_type * e_type){
     char str[LINE_MAX_CHAR_NO];
 
     memset(e_type, 0, sizeof(Etudiant_type));
+    e_type->id = -1;
 
     do {
         fgets(str, LINE_MAX_CHAR_NO, file);
@@ -57,6 +58,7 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
     char str[LINE_MAX_CHAR_NO];
 
     memset(t_type, 0, sizeof(Tourelle_type));
+    t_type->id = -1;
 
     do {
         fgets(str, LINE_MAX_CHAR_NO, file);
@@ -109,16 +111,25 @@ void init_types(void){
     FILE * tourelles_file = fopen("game/tourelles.txt", "r");
     FILE * etudiants_file = fopen("game/vilains.txt", "r");
 
+
+    /**
+     * La structure de ce code peut être améliorée si on a un grand nombre d'entités.
+     * Une boucle basée sur le nombre de fichier "type d'entité" à aller scanner.
+     * 
+     */
+
     tagged_type.tag = ETUDIANT;
     while ( ! feof(etudiants_file) ) {
         fill_etudiant_block(etudiants_file, &type->e_type);
-        entity_type_vector_append(&etudiant_types, tagged_type);
+        if (type->e_type.id != -1)
+            entity_type_vector_append(&etudiant_types, tagged_type);
     }
 
     tagged_type.tag = TOURELLE;
     while ( ! feof(tourelles_file) ) {
         fill_tourelle_block(tourelles_file, &type->t_type);
-        entity_type_vector_append(&tourelle_types, tagged_type);
+        if (type->e_type.id != -1)
+            entity_type_vector_append(&tourelle_types, tagged_type);
     }
 
     fclose(tourelles_file);
