@@ -19,26 +19,35 @@ static inline void fill_etudiant_block(FILE * file, Etudiant_type * e_type){
 
     memset(e_type, 0, sizeof(Etudiant_type));
 
-    e_type->id = e_id;
-    e_id++;
-
-    while ( !feof(file) && ( *str == '\n' || *str == '/') ) {
+    do {
         fgets(str, LINE_MAX_CHAR_NO, file);
-    }
+    } while ( !feof(file) && ( *str == '\n' || *str == '/') ) ;
     
     length = strlen(str);
-    if ( str[length - 1] == '\n' )
-        str[length - 1] = '\0';
+    if ( length > 0) {
+        
+        if (str[length - 1] == '\n'){
+            str[length - 1] = '\0';
+            length--;
+        }
 
-    strcpy(e_type->name, str);
+        if (length > 0) {
 
-    fscanf(file, "%c", &e_type->abbr);
+            e_type->id = e_id;
+            e_id++;
+        
+            strcpy(e_type->name, str);
 
-    fscanf(file, " %d", &e_type->pointsDeVie);
+            fscanf(file, "%c", &e_type->abbr);
 
-    fscanf(file, " %d", &e_type->damage_type);
- 
-    fscanf(file, " %d", &e_type->move_type);
+            fscanf(file, " %d", &e_type->pointsDeVie);
+
+            fscanf(file, " %d", &e_type->damage_type);
+    
+            fscanf(file, " %d", &e_type->move_type);
+        }
+
+    }
 }
 
 
@@ -47,30 +56,39 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
     int length = 0;
     char str[LINE_MAX_CHAR_NO];
 
-    memset(t_type, 0, sizeof(Etudiant_type));
+    memset(t_type, 0, sizeof(Tourelle_type));
 
-    t_type->id = e_id;
-    t_id++;
-
-    while ( !feof(file) && ( *str == '\n' || *str == '/') ) {
+    do {
         fgets(str, LINE_MAX_CHAR_NO, file);
-    }
+    } while ( !feof(file) && ( *str == '\n' || *str == '/') ) ;
     
     length = strlen(str);
-    if ( str[length - 1] == '\n' )
-        str[length - 1] = '\0';
+    if ( length > 0) {
+        
+        if (str[length - 1] == '\n'){
+            str[length - 1] = '\0';
+            length--;
+        }
 
-    strcpy(t_type->name, str);
+        if (length > 0) {
 
-    fscanf(file, "%c", &t_type->abbr);
+            t_type->id = t_id;
+            t_id++;
+        
+            strcpy(t_type->name, str);
 
-    fscanf(file, " %d", &t_type->prix);
+            fscanf(file, "%c", &t_type->abbr);
 
-    fscanf(file, " %d", &t_type->pointsDeVie);
+            fscanf(file, " %d", &t_type->prix);
 
-    fscanf(file, " %d", &t_type->damage_type);
- 
-    fscanf(file, " %d", &t_type->move_type);
+            fscanf(file, " %d", &t_type->pointsDeVie);
+
+            fscanf(file, " %d", &t_type->damage_type);
+    
+            fscanf(file, " %d", &t_type->move_type);
+        }
+
+    }
 
 }
 
@@ -85,22 +103,22 @@ void init_types(void){
 
     // buffer
     Tagged_entity_type tagged_type;
-    union Entity_type type;
-    tagged_type.type = type;
+    union Entity_type * type = &tagged_type.type;
 
-    FILE * tourelles_file = fopen("tourelles.txt", "r");
-    FILE * etudiants_file = fopen("vilains.txt", "r");
+
+    FILE * tourelles_file = fopen("game/tourelles.txt", "r");
+    FILE * etudiants_file = fopen("game/vilains.txt", "r");
 
     tagged_type.tag = ETUDIANT;
     while ( ! feof(etudiants_file) ) {
-        fill_etudiant_block(etudiants_file, &type.e_type);
-        entity_type_vector_append(&tourelle_types, tagged_type);
+        fill_etudiant_block(etudiants_file, &type->e_type);
+        entity_type_vector_append(&etudiant_types, tagged_type);
     }
 
     tagged_type.tag = TOURELLE;
     while ( ! feof(tourelles_file) ) {
-        fill_tourelle_block(tourelles_file, &type.t_type);
-        entity_type_vector_append(&etudiant_types, tagged_type);
+        fill_tourelle_block(tourelles_file, &type->t_type);
+        entity_type_vector_append(&tourelle_types, tagged_type);
     }
 
     fclose(tourelles_file);
