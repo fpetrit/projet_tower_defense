@@ -139,8 +139,4 @@ extern Jeu game;
  * It also fills two global variable arrays defined in @file ../main.c "main.c" containing information about each Etudiant/Tourelle type. 
  */
 void game_init(FILE * level);
-void affiche_jeu(void);
-void affiche_vague(void);
-void interInstru(int* gamestate,char instru[256]);
-void help(void);
 #endif 
