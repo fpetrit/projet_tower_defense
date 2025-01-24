@@ -9,8 +9,17 @@
 
 
 Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
-    // allocate memory
-    Etudiant * new = malloc(sizeof(Etudiant));
+
+    Etudiant * new = NULL;
+
+    Tagged_entity_type * ttype_res = entity_type_get_type_by_abbr(&etudiant_types, abbr, ETUDIANT);
+
+    if (ttype_res)
+        new = malloc(sizeof(Etudiant));
+    else
+        // if null
+        fprintf(stderr, "Error: etudiant_create failed to retrieve the Etudiant type described by '%c'.\n\
+        Maybe the Etudiant type description is missing in vilains.txt.\n", abbr);
 
     if (new){
 
@@ -20,12 +29,12 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
         new->tour = tour;
 
         // fill type dependent members
-        Tagged_entity_type * ttype_res = entity_type_get_type_by_abbr(&etudiant_types, abbr, ETUDIANT);
         Etudiant_type e_type = ttype_res->type.e_type;
 
         new->type = e_type.id;
         new->pointsDeVie = e_type.pointsDeVie;
     }
+
     return new;
 }
 
@@ -55,7 +64,6 @@ Etudiant * etudiant_append(Etudiant * e, char abbr, int ligne, int position, int
     new->next = e->next;
 
     e->next = new;
-
     }
 
     return new;
@@ -82,13 +90,11 @@ void game_init(FILE * level){
     // fill cagnotte
     fscanf(level, "%d", &game.cagnotte);
 
+    // prev_e "initialization"
     if (! feof(level) ){
-
         fscanf(level, " %d %d %c", &round_no, &line_no, &type);
-
         // to chain Etudiants
         prev_e = etudiant_insert(type, line_no, 0, round_no);
-
         error = prev_e == NULL;
     }
 
