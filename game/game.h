@@ -32,6 +32,10 @@ typedef struct tourelle {
 } Tourelle ;
 
 
+Tourelle * tourelle_create(int type, int ligne, int position);
+
+Tourelle * tourelle_insert(int type, int ligne, int position);
+
 /**
  * @brief Dynamically allocates memory for a new Tourelle and links it with the one passed as an argument.
  * 
@@ -80,6 +84,7 @@ Etudiant * etudiant_append(Etudiant * e, char abbr, int ligne, int position, int
  * @brief Prepend an Etudiant to another in the doubly linked list of Etudiant.
  * @param prepended Its next_line member will point to e.
  * @param e Its prev_line pointer will point to prepended.
+ * @warning Does not verify the line_no and position coherence.
  */
 void etudiant_line_prepend(Etudiant * prepended, Etudiant * e);
 
@@ -88,6 +93,7 @@ void etudiant_line_prepend(Etudiant * prepended, Etudiant * e);
  * @brief Append an Etudiant to another in the doubly linked list of Etudiant.
  * @param appended Its prev_line member will point to e.
  * @param e Its next_line pointer will point to appended.
+ * @warning Does not verify the line_no and position coherence.
  */
 void etudiant_line_append(Etudiant * appended, Etudiant * e);
 
