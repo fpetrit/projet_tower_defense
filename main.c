@@ -75,6 +75,6 @@ int main(void){
         printf("%s\n", tourelle_types.arr[i].type.t_type.name);
     }
 
-    game_end();
+    end_game();
     return 0;
 }
