@@ -7,9 +7,20 @@
 #ifndef GAME_H
 #define GAME_H
 
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+
+
+
+typedef enum {
+    EQ_POS = 1 << 0,
+    L_POS =  1 << 1,
+    G_POS =  1 << 2
+} POS_FLAGS;
+
 
 
 /**
@@ -29,25 +40,24 @@ typedef struct tourelle {
 
     /// The linking pointer.
     struct tourelle* next;
+
+    struct tourelle * next_line;
+    struct tourelle * prev_line;
 } Tourelle ;
+
 
 
 Tourelle * tourelle_create(int type, int ligne, int position);
 
-Tourelle * tourelle_insert(int type, int ligne, int position);
+void tourelle_line_prepend(Tourelle * prepended, Tourelle * t);
 
-/**
- * @brief Dynamically allocates memory for a new Tourelle and links it with the one passed as an argument.
- * 
- * The initial value of pointsDeVie and prix are determined by the type.
- * @param t This Tourelle "next" member will point to the new one.
- * @return A pointer to the created Tourelle, NULL if the dynamic allocation failed.
- */
-Tourelle * tourelle_append(Tourelle * t, int type, int ligne, int position);
+void tourelle_line_append(Tourelle * appended, Tourelle * t);
 
+Tourelle * tourelle_add(int type, int ligne, int position, bool * error);
 
 /// Free the Tourelle dynamically allocated memory and manage the linking.
 void tourelle_delete(Tourelle * t);
+
 
 
 /**
@@ -73,12 +83,8 @@ typedef struct etudiant {
 } Etudiant;
 
 
+
 Etudiant * etudiant_create(char abbr, int ligne, int position, int tour);
-
-Etudiant * etudiant_insert(char abbr, int ligne, int position, int tour);
-
-Etudiant * etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour);
-
 
 /** 
  * @brief Prepend an Etudiant to another in the doubly linked list of Etudiant.
@@ -88,7 +94,6 @@ Etudiant * etudiant_append(Etudiant * e, char abbr, int ligne, int position, int
  */
 void etudiant_line_prepend(Etudiant * prepended, Etudiant * e);
 
-
 /** 
  * @brief Append an Etudiant to another in the doubly linked list of Etudiant.
  * @param appended Its prev_line member will point to e.
@@ -96,7 +101,6 @@ void etudiant_line_prepend(Etudiant * prepended, Etudiant * e);
  * @warning Does not verify the line_no and position coherence.
  */
 void etudiant_line_append(Etudiant * appended, Etudiant * e);
-
 
 /// Free the Etudiant dynamically allocated memory and manage the simple linking and double linking by line.
 void etudiant_delete(Etudiant * e);
@@ -112,6 +116,10 @@ typedef struct {
 
 
 
+Tourelle * tourelle_get_nearest_line(int line, int position, POS_FLAGS * flags);
+Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags);
+
+
 /// @brief Global variable defined in @file ../main.c "main.c" holding the game main objects.
 extern Jeu game;
 
@@ -125,6 +133,8 @@ extern Jeu game;
  */
 void game_init(FILE * level);
 
-void game_end(void);
+void start_game();
+
+void end_game(void);
 
 #endif 

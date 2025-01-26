@@ -5,30 +5,22 @@
 #include <stdlib.h>
 
 #include "game.h"
+#include "../entity_types/entity_types.h"
+#include "../entity_types/entity_type_vector.h"
 
-enum damage_type {
-    basic,
-    zone,
-};
+typedef union {
+    Tourelle tourelle;
+    Etudiant etudiant;
+} Entity;
 
-enum movement_type {
-    basic,
-};
+typedef struct {
+    Entity_type_tag tag;
+    Entity entity;
+} Tagged_entity;
+ 
+void inflict_damage(Tagged_entity * entity);
 
-/**
- * @brief Applies the damages that a Tourelle can inflict to Etudiant s during a round.
- * 
- * The behaviour of the function (the zone in which Etudiant s receive damages, how much, etc...)
- * is personalized thanks to the Tourelle.type.
- */
-void inflict_damage(Tourelle * t);
+void move(Tagged_entity * entity);
 
-/**
- * @brief Applies the damages that an Etudiant can inflict to Tourelle s during a round.
- * 
- * The behaviour of the function (the zone in which Tourelle s receive damages, how much, etc...)
- * is personalized thanks to the Etudiant.type.
- */
-void inflict_damage(Etudiant * e);
 
 #endif ROUND_H

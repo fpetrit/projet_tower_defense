@@ -8,6 +8,7 @@
 #include "entity_types/entity_type_vector.h"
 
 
+
 Tourelle * tourelle_create(int type, int ligne, int position){
     Tourelle * new = NULL;
 
@@ -29,6 +30,8 @@ Tourelle * tourelle_create(int type, int ligne, int position){
         new->position = position;
 
         new->next = NULL;
+        new->next_line = NULL;
+        new->prev_line = NULL;
 
         // fill type dependent members
         Tourelle_type t_type = ttype_res->type.t_type;
@@ -42,31 +45,124 @@ Tourelle * tourelle_create(int type, int ligne, int position){
 
 
 
-Tourelle * tourelle_insert(int type, int ligne, int position){
-    Tourelle * new = tourelle_create(type, ligne, position);
-
-    if (new){
-        // may be NULL;
-        new->next = game.tourelles;
-        game.etudiants = new;
-    }
-
-    return new;
+inline void tourelle_insert(Tourelle * t){
+    t->next = game.tourelles;
+    game.etudiants = t;
 }
 
 
 
-Tourelle * tourelle_append(Tourelle * t, int type, int ligne, int position){
-    Tourelle * new = tourelle_create(type, ligne, position);
+inline void tourelle_append(Tourelle * appended, Tourelle * t){
+    appended->next = t->next;
+    t->next = appended;
+}
 
-    if (new){
-        // may be NULL
-        new->next = t->next;
-        t->next = new;
+
+
+void tourelle_line_prepend(Tourelle * prepended, Tourelle * t){
+    prepended->prev_line = t->prev_line;
+    prepended->next_line = t;
+
+    if (prepended->prev_line)
+        prepended->prev_line->next_line = prepended;
+    
+    t->prev_line = prepended;
+}
+
+
+
+void tourelle_line_append(Tourelle * appended, Tourelle * t){
+    appended->prev_line = t;
+    appended->next_line = t->next_line;
+
+    if (appended->next_line)
+        appended->next_line->prev_line = appended;
+
+    t->next_line = appended;
+}
+
+
+
+Tourelle * tourelle_get_nearest_line(int line, int position, POS_FLAGS * flags) {
+
+    *flags = 0;
+    
+    Tourelle * node = game.tourelles;
+
+    if (node) {
+
+        // get a tourelle on the same line
+        while (node->ligne != line) { node = node->next; }
+
+        if (node){
+
+            // node is: 
+            // on the right
+            //or or directly to the left
+            // or at the same pos
+            while (node->prev_line && node->position > position) { node = node->prev_line; }
+
+            // node is: directly on the left
+            // or directly on the right
+            // or at the same pos
+            while (node->next_line && node->position < position) { node = node->next_line ; }
+
+            if (node->position == position)  
+                *flags = EQ_POS;
+            else if (node->position < position)
+                *flags = G_POS;
+            else
+                *flags = L_POS;
+        }
     }
 
-    return new;
+    return node;
 }
+
+
+
+Tourelle * tourelle_add(int type, int ligne, int position, bool * error){
+
+    POS_FLAGS flags = 0;
+    *error = false;
+    
+    Tourelle * new = tourelle_create(type, ligne, position);
+    Tourelle * node = game.tourelles;
+
+    if (new){
+        
+        if (node){
+            while (node->next) { node = node->next; }
+            tourelle_append(new, node);
+
+            node = tourelle_get_nearest_line(new->ligne, new->position, &flags);
+
+            if (node){
+                // error if there is a tourelle at the same position
+                *error = flags & EQ_POS;
+
+                if (!*error){
+
+                    if (flags & G_POS)
+                        tourelle_line_append(new, node);
+                    else
+                        tourelle_line_prepend(new, node);
+
+                } else {
+                    free(new);
+                    new = NULL;
+                }
+            }
+        }
+
+        // else do nothing the prev_line & next_line pointers are NULL
+        // there is no tourelle on the same line
+
+    } else {
+        tourelle_insert(new);
+    }
+        return new;
+    }
 
 
 
@@ -89,6 +185,14 @@ void tourelle_delete(Tourelle * t){
     else {
         node->next = t->next;
     }
+
+    // double linking by line
+
+    if (t->prev_line)
+        t->prev_line->next_line = t->next_line;
+
+    if (t->next_line)
+        t->next_line->prev_line = t->prev_line;
 
     free(t);
 }
@@ -130,31 +234,17 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
 }
 
 
-Etudiant * etudiant_insert(char abbr, int ligne, int position, int tour){
 
-    Etudiant * new = etudiant_create(abbr, ligne, position, tour);
-
-    if (new){
-        new->next = game.etudiants;
-        game.etudiants = new;
-    }
-
-    return new;
+inline void etudiant_insert(Etudiant * e){
+    e->next = game.etudiants;
+    game.etudiants = e;
 }
 
 
-Etudiant * etudiant_append(Etudiant * e, char abbr, int ligne, int position, int tour){
-    
-    Etudiant * new = etudiant_create(abbr, ligne, position, tour);
 
-    if (new) {
-
-    // may be null
-    new->next = e->next;
-    e->next = new;
-    }
-
-    return new;
+inline void etudiant_append(Etudiant * appended, Etudiant * e){
+    appended->next = e->next;
+    e->next = appended;
 }
 
 
@@ -169,6 +259,8 @@ void etudiant_line_prepend(Etudiant * prepended, Etudiant * e){
     e->prev_line = prepended;    
 }
 
+
+
 void etudiant_line_append(Etudiant * appended, Etudiant * e){
     appended->prev_line = e;
     appended->next_line = e->next_line;
@@ -177,6 +269,44 @@ void etudiant_line_append(Etudiant * appended, Etudiant * e){
         appended->next_line->prev_line = appended;
 
     e->next_line = appended;
+}
+
+
+
+Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
+
+    *flags = 0;
+    
+    Etudiant * node = game.etudiants;
+
+    if (node) {
+
+        // get a tourelle on the same line
+        while (node->ligne != line) { node = node->next; }
+
+        if (node){
+
+            // node is: 
+            // on the right
+            //or directly to the left
+            // or at the same pos
+            while (node->prev_line && node->position > position) { node = node->prev_line; }
+
+            // node is: directly on the left
+            // or directly on the right
+            // or at the same pos
+            while (node->next_line && node->position < position) { node = node->next_line ; }
+
+            if (node->position == position)  
+                *flags = EQ_POS;
+            else if (node->position < position)
+                *flags = G_POS;
+            else
+                *flags = L_POS;
+        }
+    }
+
+    return node;
 }
 
 
@@ -232,6 +362,7 @@ void game_init(FILE * level){
     memset(current_last_etudiant_on_line, 0, ROWS * sizeof(Etudiant *));
 
     Etudiant * prev_e = NULL;
+    Etudiant * e;
 
     // fill cagnotte
     fscanf(level, "%d", &game.cagnotte);
@@ -240,7 +371,8 @@ void game_init(FILE * level){
     if (! feof(level) ){
         fscanf(level, " %d %d %c", &round_no, &line_no, &type);
         // to chain Etudiants
-        prev_e = etudiant_insert(type, line_no, 0, round_no);
+        prev_e = etudiant_create(type, line_no, 0, round_no);
+        etudiant_insert(prev_e);
         error = prev_e == NULL;
     }
 
@@ -250,7 +382,9 @@ void game_init(FILE * level){
         // first simple chaining
         fscanf(level, " %d %d %c", &round_no, &line_no, &type);
 
-        prev_e = etudiant_append(prev_e, type, line_no, 0, round_no);
+        e = etudiant_create(type, line_no, 0, round_no);
+        etudiant_append(e, prev_e);
+        prev_e = e;
 
         // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
         // nécessaire pour l'algo de chaînage double par ligne
@@ -285,7 +419,7 @@ void game_init(FILE * level){
 }
 
 
-void game_end(void){
+void end_game(void){
     entity_type_vector_free(&tourelle_types);
     entity_type_vector_free(&etudiant_types);
 }
