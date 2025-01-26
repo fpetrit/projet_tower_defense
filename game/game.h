@@ -137,4 +137,9 @@ void start_game();
 
 void end_game(void);
 
+void affiche_jeu(void);
+void affiche_vague(void);
+void interInstru(int* gamestate,char instru[256]);
+void help(void);
+
 #endif 
