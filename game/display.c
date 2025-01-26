@@ -8,7 +8,7 @@
 
 
 
-void affiche_jeu(void){  //pas encore possible de la tester correctement, il faut attendre d'avoir un sytème de gestion des tours qui fonctionne 
+int affiche_jeu(void){  //pas encore possible de la tester correctement, il faut attendre d'avoir un sytème de gestion des tours qui fonctionne 
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
     Etudiant* f=game.etudiants;
@@ -37,6 +37,11 @@ void affiche_jeu(void){  //pas encore possible de la tester correctement, il fau
         printf("\n");
         e=f;
     }
+    char p[256];
+    printf("Entrez P si vous voulez faire pause sinon appuyez sur Entrée : ");
+    scanf("%s",&p);
+    if (p=="") return 1;
+    return 0;
 }
 
 
