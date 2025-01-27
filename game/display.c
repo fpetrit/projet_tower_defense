@@ -92,7 +92,7 @@ void help(void){
 }
 
 
-void interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
+int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
     printf("Que voulez vous faire ? ");
     scanf("%s",&instru);
     if (!strcmp(instru,"help")){
@@ -115,6 +115,7 @@ void interInstru(void){ //pas terminé on ajoutera des instructions possibles au
     }
     if (!strcmp(instru,"end")){
         game.finished=True;
+        return 0;
     }
     if (!strcmp(instru,"PlaceTour")){
         int i,k;
