@@ -35,7 +35,9 @@ int affiche_jeu(void){
         }
     }
     while (e!=NULL){
+        if (e->tour<=game.tour){
         sprintf(L[e->ligne][COLUMNS - e->position]," %2d%c ",e->pointsdeVie,/*type ennemi*/);
+        }
         e=e->next;
     }
     while (t!=NULL){
