@@ -17,7 +17,7 @@ int affiche_jeu(void){
     for (int i=0; i<ROWS;i++){
         for (int j=0; j<COLUMNS;j++){
             if (j==0){
-                L[i][0][0]=i+48;
+                L[i][0][0]=i+49;
                 L[i][0][1]='|';
                 L[i][0][2]=' ';
                 L[i][0][3]=' ';
