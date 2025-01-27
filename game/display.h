@@ -13,4 +13,6 @@ void help(void);
 //interprète les commandes utilisateur
 void interInstru(int* gamestate,char instru[256]);
 
+
+
 #endif
