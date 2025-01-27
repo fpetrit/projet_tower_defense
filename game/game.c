@@ -285,7 +285,7 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
     if (node) {
 
         // get a tourelle on the same line
-        while (node->ligne != line || node->tour > game.tour) { node = node->next; }
+        while (node && (node->ligne != line || node->tour > game.tour ) ) { node = node->next; }
 
         if (node){
 
@@ -597,6 +597,8 @@ void update_round(void){
             game.finished = true;
             game.won = false;
         }
+
+        e = e->next;
     }
 
     // if not already lost & there is no more enemy in the linked list: win 

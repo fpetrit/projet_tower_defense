@@ -138,7 +138,7 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
                             return 1;
                         }
                         else{
-                            printf("Instruction non reconnue");
+                            printf("Instruction non reconnue.\n");
                         }
                     }
                 }
