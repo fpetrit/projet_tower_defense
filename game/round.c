@@ -1,4 +1,7 @@
 #include "round.h"
+#include "../preprocessor_macros_constants.h"
+#include "entity_types/entity_types.h"
+#include "entity_types/entity_type_vector.h"
 
 extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
@@ -103,8 +106,10 @@ void inflict_damage(Tagged_entity * t_e){
     switch (t_e->tag){
 
         case ETUDIANT:
-            d_index = entity_type_get_type_by_id(&tourelle_types, t_e->entity.etudiant.type)->type.e_type.damage_type;
-            etudiant_inflict_damage[d_index](&t_e->entity.etudiant);
+            if (t_e->entity.etudiant.tour <= game.tour) {
+                d_index = entity_type_get_type_by_id(&tourelle_types, t_e->entity.etudiant.type)->type.e_type.damage_type;
+                etudiant_inflict_damage[d_index](&t_e->entity.etudiant);
+            }
         case TOURELLE:
             int d_index = entity_type_get_type_by_id(&etudiant_types, t_e->entity.tourelle.type)->type.t_type.damage_type;
             tourelle_inflict_damage[d_index](&t_e->entity.tourelle);
@@ -121,8 +126,10 @@ void move(Tagged_entity * t_e){
     switch (t_e->tag)
     {
     case ETUDIANT:
-        m_index = entity_type_get_type_by_id(&etudiant_types, t_e->entity.etudiant.type)->type.e_type.move_type;
-        etudiant_move[m_index](&t_e->entity.etudiant);
+        if (t_e->entity.etudiant.tour <= game.tour) {
+            m_index = entity_type_get_type_by_id(&etudiant_types, t_e->entity.etudiant.type)->type.e_type.move_type;
+            etudiant_move[m_index](&t_e->entity.etudiant);
+        }
         break;
     
     case TOURELLE:
@@ -133,4 +140,32 @@ void move(Tagged_entity * t_e){
     default:
         break;
     }
+}
+
+
+
+// void log(LOG_TYPE log_t, Tourelle * t, Etudiant * e){
+
+//     char str[LOG_MAX_CHAR_NO];
+
+//     Tourelle_type * t_type = entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type;
+//     Etudiant_type * e_type = entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type;
+
+//     switch (log_t)
+//     {
+//     case DEAD:
+//         dead = 
+//         sprintf(str, "La ");
+//         break;
+
+//     case DAMAGE_INFLICTED:
+
+//         break;
+    
+//     default:
+//         break;
+//     }
+
+
+
 }
