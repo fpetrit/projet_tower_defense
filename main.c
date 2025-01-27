@@ -11,6 +11,8 @@
 #include "preprocessor_macros_constants.h"
 #include "game/game.h"
 #include "game/entity_types/entity_type_vector.h"
+#include "game/display.h"
+#include "game/round.h"
 
 Jeu game;
 Entity_type_vector tourelle_types;
@@ -68,15 +70,12 @@ void menu(){
 }
 
 int main(void){
-    int p=0;
     menu();
     affiche_vague();
     while(!game.finished){
         update_round();
-        p=affiche_jeu()
-        if (p==1){
-            interInstru();
-        }
+        affiche_jeu();
+        interInstru();
     }
     end_game();
     return 0;

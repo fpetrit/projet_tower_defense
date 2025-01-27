@@ -5,8 +5,9 @@
 
 #include "game.h"
 #include "../preprocessor_macros_constants.h"
-
-
+#include "entity_types/entity_type_vector.h"
+extern Entity_type_vector tourelle_types;
+extern Entity_type_vector etudiant_types;
 
 int affiche_jeu(void){
     char L[ROWS+1][COLUMNS+5][4];
@@ -36,12 +37,12 @@ int affiche_jeu(void){
     }
     while (e!=NULL){
         if (e->tour<=game.tour){
-        sprintf(L[e->ligne][COLUMNS - e->position]," %2d%c ",e->pointsdeVie,/*type ennemi*/);
+        sprintf(L[e->ligne][COLUMNS - e->position]," %2d%c ",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         }
         e=e->next;
     }
     while (t!=NULL){
-        sprintf(L[t->ligne][COLUMNS - t->position],"  %c ",/*type tour*/);
+        sprintf(L[t->ligne][COLUMNS - t->position],"  %c ",entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.abbr);
         t=t->next;
     }
     for (int k=0;k<=ROWS;k++){
@@ -95,6 +96,7 @@ void help(void){
 
 
 int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
+    char instru[256];
     printf("Que voulez vous faire ? ");
     scanf("%s",&instru);
     if (!strcmp(instru,"help")){
@@ -116,7 +118,7 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
             }
             else{
                 if (!strcmp(instru,"end")){
-                    game.finished=True;
+                    game.finished=1;
                     return 0;
                 }
                 else{
@@ -132,7 +134,7 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
                         //fonction pour ajouter une tour à la liste
                     }
                     else{
-                        if (!strcmp(instru,"continue"){
+                        if (!strcmp(instru,"continue")){
                             return 1;
                         }
                         else{

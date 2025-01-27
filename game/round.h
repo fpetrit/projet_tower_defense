@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 #include "game.h"
-#include "../entity_types/entity_types.h"
-#include "../entity_types/entity_type_vector.h"
+#include "entity_types/entity_types.h"
+#include "entity_types/entity_type_vector.h"
 
 typedef union {
     Tourelle tourelle;
