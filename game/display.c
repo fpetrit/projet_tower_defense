@@ -97,40 +97,49 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
     scanf("%s",&instru);
     if (!strcmp(instru,"help")){
         help();
-        interInstru();
     }
-    if (!strcmp(instru,"StatTour")){
-        char c;
-        printf("\nDonnez le type de la tourelle");
-        scanf("%c",&c);
-        //fonction affichage tour j'attends de voir comment tu veux les intégrer au code avant de le faire
-        interInstru();
+    else{
+        if (!strcmp(instru,"StatTour")){
+            char c;
+            printf("\nDonnez le type de la tourelle");
+            scanf("%c",&c);
+            //fonction affichage tour j'attends de voir comment tu veux les intégrer au code avant de le faire
+        }
+        else{
+            if (!strcmp(instru,"StatEtu")){
+                char c;
+                printf("\nDonnez le type de l'étudiant");
+                scanf("%c",&c);
+                //idem
+            }
+            else{
+                if (!strcmp(instru,"end")){
+                    game.finished=True;
+                    return 0;
+                }
+                else{
+                    if (!strcmp(instru,"PlaceTour")){
+                        int i,k;
+                        char t;
+                        printf("Saisir le type de la tourelle : ");
+                        scanf("%c",&t);
+                        printf("Saisir la ligne de la tourelle : ");
+                        scanf("%d",&i);
+                        printf("Saisir la colonne de la tourelle : ");
+                        scanf("%d",&k);
+                        //fonction pour ajouter une tour à la liste
+                    }
+                    else{
+                        if (!strcmp(instru,"continue"){
+                            return 1;
+                        }
+                        else{
+                            printf("Instruction non reconnue");
+                        }
+                    }
+                }
+            }
+        }
     }
-    if (!strcmp(instru,"StatEtu")){
-        char c;
-        printf("\nDonnez le type de l'étudiant");
-        scanf("%c",&c);
-        //idem
-        interInstru();
-    }
-    if (!strcmp(instru,"end")){
-        game.finished=True;
-        return 0;
-    }
-    if (!strcmp(instru,"PlaceTour")){
-        int i,k;
-        char t;
-        printf("Saisir le type de la tourelle : ");
-        scanf("%c",&t);
-        printf("Saisir la ligne de la tourelle : ");
-        scanf("%d",&i);
-        printf("Saisir la colonne de la tourelle : ");
-        scanf("%d",&k);
-        //fonction pour ajouter une tour à la liste
-        interInstru();
-    }
-    if (strcmp(instru,"continue"){
-        printf("instruction non reconnue");
-        interInstru();
-    }
+    interInstru();
 }
