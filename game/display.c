@@ -57,7 +57,7 @@ int affiche_jeu(void){
 
 
 void affiche_vague(void){ //affiche la vague avant le début des tours 
-    CLEAR;
+    CLEAR
     Etudiant* e=game.etudiants;
     Etudiant* f=game.etudiants;
     for (int i=1;i<=ROWS;i++){
