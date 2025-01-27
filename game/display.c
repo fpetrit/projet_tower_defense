@@ -8,39 +8,50 @@
 
 
 
-int affiche_jeu(void){  //pas encore possible de la tester correctement, il faut attendre d'avoir un sytème de gestion des tours qui fonctionne 
+int affiche_jeu(void){
+    char L[LINES+1][COLUMNS+4][4];
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
-    Etudiant* f=game.etudiants;
     CLEAR;
     printf("Tour %d\n",game.tour);
-    for (int i=1;i<=ROWS;i++){
-        for (int j=COLUMNS-1;j<=0;j--){
-            while (e!=NULL && e->ligne!=i){
-                e=e->next;
+    for (int i=0; i<LINES;i++){
+        for (int j=0; j<COLUMNS;j++){
+            if (j==0){
+                L[i][0][0]=i+48;
+                L[i][0][1]='|';
+                L[i][0][2]=' ';
+                L[i][0][3]=' ';
+                L[i][1][0]=' ';
+                L[i][1][1]=' ';
+                L[i][1][2]='.';
+                L[i][1][3]=' ';
             }
-            if (t!=NULL && t->ligne==i && t->position==j){
-                if (j==1) printf("%d |  %c ",i,t->type);
-                else printf(" %c ",t->type);
-                t=t->next;
-                continue;
+            else{
+                L[i][j+1][0]=' ';
+                L[i][j+1][1]=' ';
+                L[i][j+1][2]='.';
+                L[i][j+1][3]=' ';
             }
-            if (e!=NULL && e->ligne==i && e->position==j && e->tour<=game.tour){
-                if (j==1) printf("%d |  %2d%c ",i,e->pointsDeVie,e->type);
-                printf("%2d%c ",e->pointsDeVie,e->type);
-                e=e->next_line;
-                continue;
-            }
-            if (j==1) printf("%d |  . ",i);
-            else printf("  . ");
         }
-        printf("\n");
-        e=f;
+    }
+    while (e!=NULL){
+        sprintf(L[e->ligne][COLUMNS - e->position]," %2d%c ",e->pointsdeVie,/*type ennemi*/);
+        e=e->next;
+    }
+    while (t!=NULL){
+        sprintf(L[t->ligne][COLUMNS - t->position],"  %c ",/*type tour*/);
+        t=t->next;
+    }
+    for (int k=0;k<=LINES;k++){
+        for (int l=0;l<=COLUMNS;l++){
+            printf(L[k][l]);
+        }
+        printf('\n');
     }
     char p[256];
     printf("Entrez P si vous voulez faire pause sinon appuyez sur Entrée : ");
     scanf("%s",&p);
-    if (p=="") return 1;
+    if (p=="P") return 1;
     return 0;
 }
 
