@@ -9,7 +9,7 @@
 
 
 int affiche_jeu(void){
-    char L[ROWS+1][COLUMNS+4][4];
+    char L[ROWS+1][COLUMNS+5][4];
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
     CLEAR
