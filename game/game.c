@@ -4,6 +4,7 @@
 
 #include "../preprocessor_macros_constants.h"
 #include "game.h"
+#include "round.h"
 #include "entity_types/entity_types.h"
 #include "entity_types/entity_type_vector.h"
 
@@ -47,7 +48,7 @@ Tourelle * tourelle_create(int type, int ligne, int position){
 
 inline void tourelle_insert(Tourelle * t){
     t->next = game.tourelles;
-    game.etudiants = t;
+    game.tourelles = t;
 }
 
 
@@ -279,24 +280,39 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
     *flags = 0;
     
     Etudiant * node = game.etudiants;
+    Etudiant * last_correct;
 
     if (node) {
 
         // get a tourelle on the same line
-        while (node->ligne != line) { node = node->next; }
+        while (node->ligne != line || node->tour > game.tour) { node = node->next; }
 
         if (node){
 
             // node is: 
             // on the right
-            //or directly to the left
+            // or directly to the left
             // or at the same pos
-            while (node->prev_line && node->position > position) { node = node->prev_line; }
+            while (node->prev_line && node->position > position) {
+                if (node->tour <= game.tour)
+                    last_correct = node;
+                node = node->prev_line;
+            }
+
+            if (node->tour > game.tour)
+                node = last_correct;
 
             // node is: directly on the left
             // or directly on the right
             // or at the same pos
-            while (node->next_line && node->position < position) { node = node->next_line ; }
+            while (node->next_line && node->position < position) {
+                if (node -> tour <= game.tour )
+                    last_correct = node;
+                node = node->next_line ;
+            }
+
+            if (node->tour > game.tour)
+                node = last_correct;
 
             if (node->position == position)  
                 *flags = EQ_POS;
@@ -349,6 +365,8 @@ void game_init(FILE * level){
 
     game.etudiants = NULL;
     game.tourelles = NULL;
+    game.finished = false;
+    game.won = false;
 
     // init & fill the Entity_type_vector tourelle_types & etudiant_types global variable defined in main.c
     init_types();
@@ -421,6 +439,179 @@ void game_init(FILE * level){
 
 
 void end_game(void){
+
+    // save game if not finished
+
+    // save game stats if finished
+
+
+
+    // free the type vectors memory
     entity_type_vector_free(&tourelle_types);
     entity_type_vector_free(&etudiant_types);
+
+    // free the linked lists nodes memory
+
+    // tourelles
+    Tourelle * t = game.tourelles;
+    Tourelle * prev = game.tourelles;
+    while (t){
+        t = t->next;
+        free(prev);
+        prev = t;
+    }
+
+    // etudiants
+    Etudiant * e = game.etudiants;
+    Etudiant * prev = game.etudiants;
+    while (e){
+        e = e->next;
+        free(e);
+        prev = e;
+    }
+}
+
+
+
+void update_tourelles(void){
+
+    Tagged_entity entity;
+    Tourelle * t = &entity.entity.tourelle;
+    entity.tag = TOURELLE;
+
+    while (t){
+        // tourelles cannot move for now
+        // move(&entity);
+        inflict_damage(&entity);
+        t = t->next;
+    }
+}
+
+
+
+void update_etudiants(void){
+
+    Tagged_entity entity;
+    Etudiant * e = &entity.entity.etudiant;
+    entity.tag = ETUDIANT;
+
+    while (e){
+        move(&entity);
+        inflict_damage(&entity);
+        e = e->next;
+    }
+}
+
+
+
+static inline int count_etudiant(void){
+    int count = 0;
+    Etudiant * e = game.etudiants;
+    while ( e ) { count++; e = e->next; } 
+    return count;
+}
+
+
+
+void update_round(void){
+
+    // increment game.tour
+    game.tour++;
+
+    // the etudiants of the current round no. must appear if their position is free (line i, position 0)
+    // else their round no. is incremented
+
+    POS_FLAGS flags_e = 0;
+    POS_FLAGS flags_t = 0;
+
+    Etudiant * e;
+    Tourelle * t;
+
+    Tourelle_type * ttype;
+    Etudiant_type * etype;
+
+    e = game.etudiants;
+    while (e) {
+
+        if (e->tour == game.tour) {
+            
+            etudiant_get_nearest_line(e->ligne, e->position, flags_e);
+            tourelle_get_nearest_line(e->ligne, e->position, flags_t);
+
+            if ( (flags_e | flags_t) & EQ_POS )
+                e->tour ++;
+            }
+
+            // else, the etudiant will be taken in account by the game since e->tour == game.tour
+        
+        e = e->next;
+    }
+    
+    // tourelles are updated (move & inflict damages)
+    update_tourelles();
+
+    // etudiants are updated (move & inflict damages)
+    update_etudiants();
+
+    // we must collect the dead entities
+    // delete them from the linking
+    // print the events
+
+    // tourelles
+    t = game.tourelles;
+    while (t) {
+
+        ttype = &entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type;
+
+        if (t->pointsDeVie <= 0) {
+            
+            printf("La tourelle '%s', position (%d, %d) a ete detruite !\n",
+            ttype->name, t->ligne, t->position);
+
+            tourelle_delete(t);
+        }
+    }
+
+    // if one etudiant has reached the last position, the game is lost
+    // etudiants
+    e = game.etudiants;
+    while (e) {
+
+        etype = &entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type;
+
+        if (e->pointsDeVie <= 0) {
+            
+            printf("L'étudiant '%s', position (%d, %d) a ete elemine !\n",
+            etype->name, e->ligne, e->position);
+
+            etudiant_delete(e);
+        }
+
+        // not dead and has reached his line last position
+        else if (e->position == ROWS - 1){
+
+            printf("Game over !\n\
+                    l'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
+                    etype->name, e->ligne);
+
+            game.finished = true;
+            game.won = false;
+        }
+    }
+
+    // if not already lost & there is no more enemy in the linked list: win 
+    if ( ! game.finished ) {
+        int etudiant_no = count_etudiants();
+        if (etudiant_no == 0){
+            game.won = true;
+            game.finished = true;
+            printf("Vous avez gagne !\n Tous les ennemis sont morts.\n");
+        }
+    }
+}
+
+
+
+void start_game(){
+
 }
