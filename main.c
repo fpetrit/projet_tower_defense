@@ -68,13 +68,16 @@ void menu(){
 }
 
 int main(void){
-
+    int p=0;
     menu();
-
-    for (int i = 0; i < tourelle_types.count; i++ ){
-        printf("%s\n", tourelle_types.arr[i].type.t_type.name);
+    affiche_vague();
+    while(!game.finished){
+        update_round();
+        p=affiche_jeu()
+        if (p==1){
+            interInstru();
+        }
     }
-
     end_game();
     return 0;
 }
