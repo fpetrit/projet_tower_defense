@@ -12,27 +12,11 @@ extern Entity_type_vector etudiant_types;
 void t_d_0(Tourelle * t){
 
     POS_FLAGS flags = 0;
-    int diff;
     
     // find the nearest etudiant on the same line
     // if there is an etudiant to the left, it will be returned as a priority
     Etudiant * e = etudiant_get_nearest_line(t->ligne, t->position, &flags);
 
-    if (e){
-
-        // if there is a tourelle between the etudiant and the attacking tourelle: cannot inflict damage
-
-        // e is on the right
-        if (! flags & L_POS)
-            e = (t->prev_line && t->prev_line->position > e->position) ? NULL : e;
-        // e is on the left
-        else
-            e = (t->next_line && t->next_line->position < e->position) ? NULL : e; 
-    }
-
-    // else do nothing, no etudiant on the same line
-
-    // do not merge with the above if statement: e is modified in it
     if (e)
         e->pointsDeVie -- ;
 }
@@ -88,7 +72,7 @@ const static void (* tourelle_inflict_damage[]) (Tourelle *) = {
 };
 
 const static void (* tourelle_move[]) (Tourelle *) = {
-    t_m_0,
+    // t_m_0,
 };
 
 const static void (* etudiant_move[]) (Etudiant *) = {
@@ -165,7 +149,4 @@ void move(Tagged_entity * t_e){
 //     default:
 //         break;
 //     }
-
-
-
-}
+// }

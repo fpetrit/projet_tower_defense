@@ -49,12 +49,12 @@ int affiche_jeu(void){
         for (int l=0;l<=COLUMNS;l++){
             printf(L[k][l]);
         }
-        printf('\n');
+        printf("\n");
     }
     char p[256];
     printf("Entrez P si vous voulez faire pause sinon appuyez sur Entrée : ");
-    scanf("%s",&p);
-    if (p=="P") return 1;
+    scanf("%s",p);
+    if ( ! strcmp(p, "P") ) return 1;
     return 0;
 }
 
@@ -98,7 +98,7 @@ void help(void){
 int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
     char instru[256];
     printf("Que voulez vous faire ? ");
-    scanf("%s",&instru);
+    scanf("%s", instru);
     if (!strcmp(instru,"help")){
         help();
     }

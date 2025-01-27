@@ -46,14 +46,14 @@ Tourelle * tourelle_create(int type, int ligne, int position){
 
 
 
-inline void tourelle_insert(Tourelle * t){
+void tourelle_insert(Tourelle * t){
     t->next = game.tourelles;
     game.tourelles = t;
 }
 
 
 
-inline void tourelle_append(Tourelle * appended, Tourelle * t){
+void tourelle_append(Tourelle * appended, Tourelle * t){
     appended->next = t->next;
     t->next = appended;
 }
@@ -237,14 +237,14 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
 
 
 
-inline void etudiant_insert(Etudiant * e){
+void etudiant_insert(Etudiant * e){
     e->next = game.etudiants;
     game.etudiants = e;
 }
 
 
 
-inline void etudiant_append(Etudiant * appended, Etudiant * e){
+void etudiant_append(Etudiant * appended, Etudiant * e){
     appended->next = e->next;
     e->next = appended;
 }
@@ -454,20 +454,20 @@ void end_game(void){
 
     // tourelles
     Tourelle * t = game.tourelles;
-    Tourelle * prev = game.tourelles;
+    Tourelle * prev_t;
     while (t){
+        prev_t = t;
         t = t->next;
-        free(prev);
-        prev = t;
+        free(prev_t);
     }
 
     // etudiants
     Etudiant * e = game.etudiants;
-    Etudiant * prev = game.etudiants;
+    Etudiant * prev_e;
     while (e){
+        prev_e = e;
         e = e->next;
-        free(e);
-        prev = e;
+        free(prev_e);
     }
 }
 
@@ -504,7 +504,7 @@ void update_etudiants(void){
 
 
 
-static inline int count_etudiant(void){
+static inline int count_etudiants(void){
     int count = 0;
     Etudiant * e = game.etudiants;
     while ( e ) { count++; e = e->next; } 
@@ -535,8 +535,8 @@ void update_round(void){
 
         if (e->tour == game.tour) {
             
-            etudiant_get_nearest_line(e->ligne, e->position, flags_e);
-            tourelle_get_nearest_line(e->ligne, e->position, flags_t);
+            etudiant_get_nearest_line(e->ligne, e->position, &flags_e);
+            tourelle_get_nearest_line(e->ligne, e->position, &flags_t);
 
             if ( (flags_e | flags_t) & EQ_POS )
                 e->tour ++;

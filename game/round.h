@@ -27,6 +27,8 @@ void inflict_damage(Tagged_entity * entity);
 
 void move(Tagged_entity * entity);
 
+void update_round(void);
+
 // void log(LOG_TYPE log_t, Entity * a, Entity * b);
 
-#endif ROUND_H
+#endif

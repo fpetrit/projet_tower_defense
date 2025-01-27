@@ -21,9 +21,7 @@ void entity_type_vector_free(Entity_type_vector * t);
 void entity_type_vector_append(Entity_type_vector * tv, Tagged_entity_type t);
 
 
-inline Tagged_entity_type * entity_type_get_type_by_id(Entity_type_vector * vect, int id){
-    return &vect->arr[id];
-}
+Tagged_entity_type * entity_type_get_type_by_id(Entity_type_vector * vect, int id);
 
 Tagged_entity_type * entity_type_get_type_by_abbr(Entity_type_vector * vect, char abbr, Entity_type_tag tag);
 
