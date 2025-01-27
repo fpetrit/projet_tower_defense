@@ -9,12 +9,12 @@
 
 
 int affiche_jeu(void){
-    char L[LINES+1][COLUMNS+4][4];
+    char L[ROWS+1][COLUMNS+4][4];
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
-    CLEAR;
+    CLEAR
     printf("Tour %d\n",game.tour);
-    for (int i=0; i<LINES;i++){
+    for (int i=0; i<ROWS;i++){
         for (int j=0; j<COLUMNS;j++){
             if (j==0){
                 L[i][0][0]=i+48;
@@ -42,7 +42,7 @@ int affiche_jeu(void){
         sprintf(L[t->ligne][COLUMNS - t->position],"  %c ",/*type tour*/);
         t=t->next;
     }
-    for (int k=0;k<=LINES;k++){
+    for (int k=0;k<=ROWS;k++){
         for (int l=0;l<=COLUMNS;l++){
             printf(L[k][l]);
         }
@@ -92,33 +92,29 @@ void help(void){
 }
 
 
-void interInstru(int* gamestate,char instru[256]){ //pas terminé on ajoutera des instructions possibles au fil du temps 
+void interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
+    printf("Que voulez vous faire ? ");
+    scanf("%s",&instru);
     if (!strcmp(instru,"help")){
         help();
-        printf("Que voulez vous faire ? ");
-        scanf("%s",&instru);
-        interInstru(gamestate,instru);
+        interInstru();
     }
     if (!strcmp(instru,"StatTour")){
         char c;
         printf("\nDonnez le type de la tourelle");
         scanf("%c",&c);
         //fonction affichage tour j'attends de voir comment tu veux les intégrer au code avant de le faire
-        printf("Que voulez vous faire ? ");
-        scanf("%s",&instru);
-        interInstru(gamestate,instru);
+        interInstru();
     }
     if (!strcmp(instru,"StatEtu")){
         char c;
         printf("\nDonnez le type de l'étudiant");
         scanf("%c",&c);
         //idem
-        printf("Que voulez vous faire ? ");
-        scanf("%s",&instru);
-        interInstru(gamestate,instru);
+        interInstru();
     }
     if (!strcmp(instru,"end")){
-        gamestate=0;
+        game.finished=True;
     }
     if (!strcmp(instru,"PlaceTour")){
         int i,k;
@@ -130,12 +126,10 @@ void interInstru(int* gamestate,char instru[256]){ //pas terminé on ajoutera de
         printf("Saisir la colonne de la tourelle : ");
         scanf("%d",&k);
         //fonction pour ajouter une tour à la liste
-        printf("Que voulez vous faire ? ");
-        scanf("%s",&instru);
-        interInstru(gamestate,instru);
+        interInstru();
     }
-    printf("instruction non reconnue");
-    printf("Que voulez vous faire ? ");
-    scanf("%s",&instru);
-    interInstru(gamestate,instru);
+    if (strcmp(instru,"continue"){
+        printf("instruction non reconnue");
+        interInstru();
+    }
 }
