@@ -123,46 +123,47 @@ Tourelle * tourelle_get_nearest_line(int line, int position, POS_FLAGS * flags) 
 
 Tourelle * tourelle_add(int type, int ligne, int position, bool * error){
 
-    POS_FLAGS flags = 0;
-    *error = false;
-    
-    Tourelle * new = tourelle_create(type, ligne, position);
+    Tourelle * new;
     Tourelle * node = game.tourelles;
 
+    POS_FLAGS flags_e = 0;
+    POS_FLAGS flags_t = 0;
+    *error = false;
+
+    Tourelle * node_t = tourelle_get_nearest_line(ligne, position, &flags_t);
+    etudiant_get_nearest_line(ligne, position, &flags_e);
+
+    *error = ( (flags_e | flags_t) & EQ_POS );
+    
+    // there is no tourelle/etudiant at this position (true / false)
+    // new <--- tourelle_create
+    // else
+    // new <--- NULL
+    new = ! *error ? tourelle_create(type, ligne, position) : NULL;
+
+    // check at the same time if dynamic allocation failed in tourelle_create
     if (new){
         
         if (node){
+
+            // get the last tourelle in the simple linking and append new to it
             while (node->next) { node = node->next; }
             tourelle_append(new, node);
 
-            node = tourelle_get_nearest_line(new->ligne, new->position, &flags);
-
-            if (node){
-                // error if there is a tourelle at the same position
-                *error = flags & EQ_POS;
-
-                if (!*error){
-
-                    if (flags & G_POS)
-                        tourelle_line_append(new, node);
-                    else
-                        tourelle_line_prepend(new, node);
-
-                } else {
-                    free(new);
-                    new = NULL;
-                }
-            }
+            if (flags_t & G_POS)
+                tourelle_line_append(new, node_t);
+            // else --> L_POS is set
+            else
+                tourelle_line_prepend(new, node_t);
         }
 
-        // else do nothing the prev_line & next_line pointers are NULL
-        // there is no tourelle on the same line
-
-    } else {
-        tourelle_insert(new);
-    }
-        return new;
-    }
+        // this is the first tourelle
+        else
+            tourelle_insert(new);
+    } 
+    
+    return new;
+}
 
 
 
