@@ -118,15 +118,21 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
                 }
                 else{
                     if (!strcmp(instru,"PlaceTour")){
-                        int i,k;
-                        char t;
-                        printf("Saisir le type de la tourelle : ");
-                        scanf("%c",&t);
-                        printf("Saisir la ligne de la tourelle : ");
-                        scanf("%d",&i);
-                        printf("Saisir la colonne de la tourelle : ");
-                        scanf("%d",&k);
-                        //fonction pour ajouter une tour à la liste
+                        int line, position, type;
+                        bool error;
+                        printf("Saisir le type de la tourelle :\n");
+                        scanf("%d",&type);
+                        printf("Saisir la ligne de la tourelle :\n");
+                        scanf("%d",&line);
+                        printf("Saisir la colonne de la tourelle :\n");
+                        scanf("%d",&position);
+
+                        Tourelle * new = tourelle_add(type, line, position, &error);
+
+                        if ( error )
+                            printf("Une entitee occupe deja cette position !\n");
+                        else if (! new)
+                            fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add");
                     }
                     else{
                         if (!strcmp(instru,"continue")){
