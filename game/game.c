@@ -93,7 +93,7 @@ Tourelle * tourelle_get_nearest_line(int line, int position, POS_FLAGS * flags) 
     if (node) {
 
         // get a tourelle on the same line
-        while (node->ligne != line) { node = node->next; }
+        while (node && node->ligne != line) { node = node->next; }
 
         if (node){
 
@@ -285,7 +285,7 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
 
     if (node) {
 
-        // get a tourelle on the same line
+        // get an etudiant on the same line
         while (node && (node->ligne != line || node->tour > game.tour ) ) { node = node->next; }
 
         if (node){
@@ -591,6 +591,8 @@ void update_round(void){
 
             tourelle_delete(t);
         }
+
+        t = t->next;
     }
 
     // if one etudiant has reached the last position, the game is lost
