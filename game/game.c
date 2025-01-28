@@ -476,13 +476,17 @@ void end_game(void){
 void update_tourelles(void){
 
     Tagged_entity entity;
-    Tourelle * t = &entity.entity.tourelle;
     entity.tag = TOURELLE;
 
+    Tourelle * t = game.tourelles;
+    
     while (t){
+        entity.entity.tourelle = t;
+
         // tourelles cannot move for now
         // move(&entity);
         inflict_damage(&entity);
+
         t = t->next;
     }
 }
@@ -492,12 +496,16 @@ void update_tourelles(void){
 void update_etudiants(void){
 
     Tagged_entity entity;
-    Etudiant * e = &entity.entity.etudiant;
     entity.tag = ETUDIANT;
 
+    Etudiant * e = game.etudiants;
+
     while (e){
+        entity.entity.etudiant = e;
+
         move(&entity);
         inflict_damage(&entity);
+
         e = e->next;
     }
 }

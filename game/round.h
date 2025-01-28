@@ -9,8 +9,8 @@
 #include "entity_types/entity_type_vector.h"
 
 typedef union {
-    Tourelle tourelle;
-    Etudiant etudiant;
+    Tourelle * tourelle;
+    Etudiant * etudiant;
 } Entity;
 
 typedef struct {
