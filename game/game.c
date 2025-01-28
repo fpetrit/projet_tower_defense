@@ -543,6 +543,8 @@ void update_round(void){
     Tourelle_type * ttype;
     Etudiant_type * etype;
 
+    bool stop;
+
     e = game.etudiants;
     while (e) {
 
@@ -593,8 +595,9 @@ void update_round(void){
 
     // if one etudiant has reached the last position, the game is lost
     // etudiants
+    stop = false;
     e = game.etudiants;
-    while (e) {
+    while (! stop && e) {
 
         etype = &entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type;
 
@@ -609,8 +612,10 @@ void update_round(void){
         // not dead and has reached his line last position
         else if (e->position == COLUMNS - 1){
 
-            printf("Game over !\n\
-                    l'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
+            stop = true;
+
+            printf("Game over !\n"
+                   "L'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
                     etype->name, e->ligne);
 
             game.finished = true;
