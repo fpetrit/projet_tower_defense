@@ -169,6 +169,8 @@ Tourelle * tourelle_add(int type, int ligne, int position, bool * error){
 
 
 void tourelle_delete(Tourelle * t){
+
+    // THIS FUNCTION ASSUMES THAT game.tourelles != NULL AND t IS IN THE LINKED LIST
     
     // simple linking by creation time
     Tourelle * node = game.tourelles;
@@ -176,15 +178,11 @@ void tourelle_delete(Tourelle * t){
     // we compare the pointers rather than the struct values for each field
     // two different Etudiants may have the same struct members values
 
-    if ( node != t){
-        while ( node && node->next != t){
-            node = node->next;
-        }
-    }
+    if ( game.tourelles == t)
+        game.tourelles = t->next;
 
-    if ( ! node )
-        fprintf(stderr, "Error: Etudiant not found in the linked list during deletion.\n");
     else {
+        while ( node->next != t) { node = node->next; }
         node->next = t->next;
     }
 
@@ -331,6 +329,20 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
 
 void etudiant_delete(Etudiant * e){
 
+    // simple linking by creation time
+    Etudiant * node = game.etudiants;
+
+    // we compare the pointers rather than the struct values for each field
+    // two different Etudiants may have the same struct members values
+
+    if (game.etudiants == e)
+        game.etudiants = e->next;
+
+    else {
+        while (node->next != e) { node = node->next; }
+        node->next = e->next;
+    }
+
     // double linking by line
 
     if (e->next_line)
@@ -338,24 +350,6 @@ void etudiant_delete(Etudiant * e){
 
     if (e->prev_line)
         e->prev_line->next_line = e->next_line;
-
-    // simple linking by creation time
-    Etudiant * node = game.etudiants;
-
-    // we compare the pointers rather than the struct values for each field
-    // two different Etudiants may have the same struct members values
-
-    if ( node != e){
-        while ( node && node->next != e){
-            node = node->next;
-        }
-    }
-
-    if ( ! node )
-        fprintf(stderr, "Error: Etudiant not found in the linked list during deletion.\n");
-    else {
-        node->next = e->next;
-    }
 
     free(e);
 }
@@ -540,6 +534,9 @@ void update_round(void){
     Etudiant * e;
     Tourelle * t;
 
+    Etudiant * tmp_e;
+    Tourelle * tmp_t;
+
     Tourelle_type * ttype;
     Etudiant_type * etype;
 
@@ -589,10 +586,14 @@ void update_round(void){
             printf("La tourelle '%s', position (%d, %d) a ete detruite !\n",
             ttype->name, t->ligne, t->position);
 
-            tourelle_delete(t);
-        }
+            tmp_t = t;
+            t = t->next;
 
-        t = t->next;
+            tourelle_delete(tmp_t);
+        }
+        
+        else
+            t = t->next;
     }
 
     // if one etudiant has reached the last position, the game is lost
@@ -608,7 +609,10 @@ void update_round(void){
             printf("L'étudiant '%s', position (%d, %d) a ete elemine !\n",
             etype->name, e->ligne, e->position);
 
-            etudiant_delete(e);
+            tmp_e = e;
+            e = e->next;
+
+            etudiant_delete(tmp_e);
         }
 
         // not dead and has reached his line last position
@@ -624,7 +628,8 @@ void update_round(void){
             game.won = false;
         }
 
-        e = e->next;
+        else
+            e = e->next;
     }
 
     // if not already lost & there is no more enemy in the linked list: win 
