@@ -95,11 +95,11 @@ void inflict_damage(Tagged_entity * t_e){
 
         case ETUDIANT:
             if (t_e->entity.etudiant->tour <= game.tour) {
-                d_index = entity_type_get_type_by_id(&tourelle_types, t_e->entity.etudiant->type)->type.e_type.damage_type;
+                d_index = entity_type_get_type_by_id(&etudiant_types, t_e->entity.etudiant->type)->type.e_type.damage_type;
                 etudiant_inflict_damage[d_index](t_e->entity.etudiant);
             }
         case TOURELLE:
-            int d_index = entity_type_get_type_by_id(&etudiant_types, t_e->entity.tourelle->type)->type.t_type.damage_type;
+            int d_index = entity_type_get_type_by_id(&tourelle_types, t_e->entity.tourelle->type)->type.t_type.damage_type;
             tourelle_inflict_damage[d_index](t_e->entity.tourelle);
 
         default:
