@@ -280,7 +280,7 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
     *flags = 0;
     
     Etudiant * node = game.etudiants;
-    Etudiant * last_correct;
+    Etudiant * last_correct = NULL;
 
     if (node) {
 
@@ -294,20 +294,20 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
             // or directly to the left
             // or at the same pos
             while (node->prev_line && node->position > position) {
-                if (node->tour <= game.tour)
-                    last_correct = node;
+                if (node->tour <= game.tour) last_correct = node;
                 node = node->prev_line;
             }
 
             if (node->tour > game.tour)
                 node = last_correct;
 
+            // else the node is correct
+
             // node is: directly on the left
             // or directly on the right
             // or at the same pos
             while (node->next_line && node->position < position) {
-                if (node -> tour <= game.tour )
-                    last_correct = node;
+                if (node->tour <= game.tour ) last_correct = node;
                 node = node->next_line ;
             }
 
@@ -515,11 +515,8 @@ static inline int count_etudiants(void){
 
 void update_round(void){
 
-    // increment game.tour
-    game.tour++;
-
-    // the etudiants of the current round no. must appear if their position is free (line i, position 0)
-    // else their round no. is incremented
+    // the etudiants of the current round no. ust appear if their position is free (line i, position 0)
+    // else their round no. is incrementedm
 
     POS_FLAGS flags_e = 0;
     POS_FLAGS flags_t = 0;
@@ -533,19 +530,25 @@ void update_round(void){
     e = game.etudiants;
     while (e) {
 
-        if (e->tour == game.tour) {
+        if (e->tour == game.tour + 1) {
             
+            // these funcitons reset flags_e and flags_t, no need to set it to 0 here
+            // only takes in account the visible entities
             etudiant_get_nearest_line(e->ligne, e->position, &flags_e);
             tourelle_get_nearest_line(e->ligne, e->position, &flags_t);
 
-            if ( (flags_e | flags_t) & EQ_POS )
+            if ( (flags_t | flags_e) & EQ_POS )
                 e->tour ++;
-            }
 
-            // else, the etudiant will be taken in account by the game since e->tour == game.tour
+            // else, the etudiant will be taken in account by the game since e->tour == game.tour after incrementing game.tour
+        }
         
         e = e->next;
     }
+
+    // increment game.tour AFTER THE NEAREST ENTITIES SEARCH
+    // to ignore during the search the etudiants that must appear at this current round
+    game.tour++;
     
     // tourelles are updated (move & inflict damages)
     update_tourelles();
@@ -612,8 +615,3 @@ void update_round(void){
     }
 }
 
-
-
-void start_game(){
-
-}
