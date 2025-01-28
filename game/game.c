@@ -607,7 +607,7 @@ void update_round(void){
         }
 
         // not dead and has reached his line last position
-        else if (e->position == ROWS - 1){
+        else if (e->position == COLUMNS - 1){
 
             printf("Game over !\n\
                     l'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
