@@ -16,7 +16,7 @@ int affiche_jeu(void){
     CLEAR
     printf("Tour %d\n",game.tour);
     for (int i=0; i<ROWS;i++){
-        for (int j=0; j<COLUMNS;j++){
+        for (int j=0; j<COLUMNS+1;j++){
             if (j==0){
                 sprintf(L[i][0],"%d|  ",i+1);
                 L[i][1][0]=' ';
@@ -36,16 +36,16 @@ int affiche_jeu(void){
     }
     while (e!=NULL){
         if (e->tour<=game.tour){
-        sprintf(L[e->ligne-1][COLUMNS - e->position]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
+        sprintf(L[e->ligne-1][COLUMNS+1 - e->position]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         }
         e=e->next;
     }
     while (t!=NULL){
-        sprintf(L[t->ligne-1][COLUMNS - t->position],"  %c ",entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.abbr);
+        sprintf(L[t->ligne-1][COLUMNS+1 - t->position],"  %c ",entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.abbr);
         t=t->next;
     }
     for (int k=0;k<=ROWS-1;k++){
-        for (int l=0;l<=COLUMNS-1;l++){
+        for (int l=0;l<=COLUMNS;l++){
             printf(L[k][l]);
         }
         printf("\n");
