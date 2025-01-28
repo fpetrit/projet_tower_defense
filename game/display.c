@@ -36,7 +36,7 @@ int affiche_jeu(void){
     }
     while (e!=NULL){
         if (e->tour<=game.tour){
-        sprintf(L[e->ligne-1][COLUMNS - e->position]," %2d%c ",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
+        sprintf(L[e->ligne-1][COLUMNS - e->position]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         }
         e=e->next;
     }
@@ -51,11 +51,6 @@ int affiche_jeu(void){
         printf("\n");
     }
     printf("\n");
-    char p[256];
-    printf("Entrez P si vous voulez faire pause sinon appuyez sur Entree : ");
-    scanf("%s",p);
-    if ( ! strcmp(p, "P") ) return 1;
-    return 0;
 }
 
 
