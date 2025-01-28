@@ -230,6 +230,7 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
 
         new->type = e_type.id;
         new->pointsDeVie = e_type.pointsDeVie;
+        new->vitesse = e_type.vitesse;
     }
 
     return new;
@@ -372,7 +373,7 @@ void game_init(FILE * level){
     init_types();
 
     int round_no, line_no;
-    char type;
+    char abbr ;
     bool error = false;
 
     char str[2];
@@ -386,39 +387,46 @@ void game_init(FILE * level){
     // fill cagnotte
     fscanf(level, "%d", &game.cagnotte);
 
-    // prev_e "initialization"
+    // create the first etudiant, initialize prev_e
     if (! feof(level) ){
-        fscanf(level, " %d %d %c", &round_no, &line_no, &type);
+        fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
         // to chain Etudiants
-        prev_e = etudiant_create(type, line_no, 0, round_no);
-        etudiant_insert(prev_e);
+        prev_e = etudiant_create(abbr , line_no, 0, round_no);
         error = prev_e == NULL;
+
+        if (!error) {
+            etudiant_insert(prev_e);
+            current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
+            prev_e->next_line = NULL;
+        }
+    
     }
 
     // CHAINING
     while ( ! feof(level) && ! error){
 
         // first simple chaining
-        fscanf(level, " %d %d %c", &round_no, &line_no, &type);
+        fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
 
-        e = etudiant_create(type, line_no, 0, round_no);
-        etudiant_append(e, prev_e);
-        prev_e = e;
-
+        e = etudiant_create(abbr , line_no, 0, round_no);
+        
         // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
         // nécessaire pour l'algo de chaînage double par ligne
         // erreur également si malloc n'a pas fonctionné
-        error = prev_e == NULL || prev_e->tour > round_no;
+        error = e == NULL || prev_e->tour > round_no;
         
         if ( ! error ) {
+
+            etudiant_append(e, prev_e);
+            prev_e = e;
 
             // if it is the first etudiant created for this line, he does not have next etudiant
             if (current_last_etudiant_on_line[prev_e->ligne - 1] == NULL){
                 current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
                 prev_e->next_line = NULL;
             } else {
-                current_last_etudiant_on_line[prev_e->ligne - 1]->next_line = prev_e;
-                prev_e->prev_line = current_last_etudiant_on_line[prev_e->ligne - 1];
+                current_last_etudiant_on_line[prev_e->ligne - 1]->prev_line = prev_e;
+                prev_e->next_line = current_last_etudiant_on_line[prev_e->ligne - 1];
                 current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
             }
 
@@ -535,6 +543,8 @@ void update_round(void){
     Tourelle_type * ttype;
     Etudiant_type * etype;
 
+    bool stop;
+
     e = game.etudiants;
     while (e) {
 
@@ -585,8 +595,9 @@ void update_round(void){
 
     // if one etudiant has reached the last position, the game is lost
     // etudiants
+    stop = false;
     e = game.etudiants;
-    while (e) {
+    while (! stop && e) {
 
         etype = &entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type;
 
@@ -599,10 +610,12 @@ void update_round(void){
         }
 
         // not dead and has reached his line last position
-        else if (e->position == ROWS - 1){
+        else if (e->position == COLUMNS - 1){
 
-            printf("Game over !\n\
-                    l'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
+            stop = true;
+
+            printf("Game over !\n"
+                   "L'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
                     etype->name, e->ligne);
 
             game.finished = true;
