@@ -55,7 +55,7 @@ void e_m_0(Etudiant * e){
         // if this function is called, e->tour <= game.tour hence e->next_line->tour <= game.tour because it has a HIGHER POSITION  than e
           !  (  // NOT
         (  e->next_line && abs(e->next_line->position - e->position) == 1) ||
-        (  t && (flags & G_POS) && abs(t->position - e->position ) == 1 ) 
+        (  t && (flags & L_POS) && abs(t->position - e->position ) == 1 ) 
              )
     ) 
     { e->position ++; }
