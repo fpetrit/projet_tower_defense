@@ -10,7 +10,7 @@ extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
 
 int affiche_jeu(void){
-    char L[ROWS+1][COLUMNS+5][4];
+    char L[ROWS+1][COLUMNS+5][5];
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
     CLEAR
@@ -18,41 +18,41 @@ int affiche_jeu(void){
     for (int i=0; i<ROWS;i++){
         for (int j=0; j<COLUMNS;j++){
             if (j==0){
-                L[i][0][0]=i+49;
-                L[i][0][1]='|';
-                L[i][0][2]=' ';
-                L[i][0][3]=' ';
+                sprintf(L[i][0],"%d|  ",i+1);
                 L[i][1][0]=' ';
                 L[i][1][1]=' ';
                 L[i][1][2]='.';
                 L[i][1][3]=' ';
+                L[i][1][4]='\0';
             }
             else{
                 L[i][j+1][0]=' ';
                 L[i][j+1][1]=' ';
                 L[i][j+1][2]='.';
                 L[i][j+1][3]=' ';
+                L[i][j+1][4]='\0';
             }
         }
     }
     while (e!=NULL){
         if (e->tour<=game.tour){
-        sprintf(L[e->ligne][COLUMNS - e->position]," %2d%c ",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
+        sprintf(L[e->ligne-1][COLUMNS - e->position]," %2d%c ",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         }
         e=e->next;
     }
     while (t!=NULL){
-        sprintf(L[t->ligne][COLUMNS - t->position],"  %c ",entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.abbr);
+        sprintf(L[t->ligne-1][COLUMNS - t->position],"  %c ",entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.abbr);
         t=t->next;
     }
-    for (int k=0;k<=ROWS;k++){
-        for (int l=0;l<=COLUMNS;l++){
+    for (int k=0;k<=ROWS-2;k++){
+        for (int l=0;l<=COLUMNS-1;l++){
             printf(L[k][l]);
         }
         printf("\n");
     }
+    printf("\n");
     char p[256];
-    printf("Entrez P si vous voulez faire pause sinon appuyez sur Entrée : ");
+    printf("Entrez P si vous voulez faire pause sinon appuyez sur Entree : ");
     scanf("%s",p);
     if ( ! strcmp(p, "P") ) return 1;
     return 0;
