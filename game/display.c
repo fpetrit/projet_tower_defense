@@ -10,7 +10,7 @@ extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
 
 int affiche_jeu(void){
-    char L[ROWS+1][COLUMNS+5][5];
+    char L[ROWS][COLUMNS+5][5];
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
     CLEAR
@@ -44,7 +44,7 @@ int affiche_jeu(void){
         sprintf(L[t->ligne-1][COLUMNS - t->position],"  %c ",entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.abbr);
         t=t->next;
     }
-    for (int k=0;k<=ROWS-2;k++){
+    for (int k=0;k<=ROWS-1;k++){
         for (int l=0;l<=COLUMNS-1;l++){
             printf(L[k][l]);
         }
