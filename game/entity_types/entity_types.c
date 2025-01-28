@@ -43,6 +43,8 @@ static inline void fill_etudiant_block(FILE * file, Etudiant_type * e_type){
 
             fscanf(file, " %d", &e_type->pointsDeVie);
 
+            fscanf(file, " %d", &e_type->vitesse);
+
             fscanf(file, " %d", &e_type->damage_type);
     
             fscanf(file, " %d", &e_type->move_type);

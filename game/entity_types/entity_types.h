@@ -19,6 +19,7 @@ typedef struct {
     char name[30];
     char abbr;
     int pointsDeVie;
+    int vitesse;
     int damage_type;
     int move_type;
 
