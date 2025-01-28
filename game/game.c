@@ -153,9 +153,11 @@ Tourelle * tourelle_add(int type, int ligne, int position, bool * error){
 
             if (flags_t & G_POS)
                 tourelle_line_append(new, node_t);
-            // else --> L_POS is set
-            else
+
+            else if ( flags_t & L_POS )
                 tourelle_line_prepend(new, node_t);
+            
+            // else: EQ_POS is not set, hence no tourelle on the same line and node_t is NULL
         }
 
         // this is the first tourelle
