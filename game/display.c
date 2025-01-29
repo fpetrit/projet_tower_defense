@@ -92,7 +92,12 @@ void affiche_vague(void){ //affiche la vague avant le début des tours
 }
 
 void help(void){
-    printf("LISTE DES COMMANDES POSSIBLES :\n   -StatTour : affiche les stats d'une tour (de gauche à droite et de haut en bas)\n   -StatEtu : idem pour les étudiants\n   -end : termine la partie sur une défaite\n   -PlaceTour : Initie le placement d'une tour\n   -next : passe au tour suivant\n");
+    printf("\nCOMMANDES :\n"
+           "\t- StatTour    affiche les stats d'une tour <ligne> <position>\n"
+           "\t- StatEtu     idem pour les étudiants\n"
+           "\t- end         termine la partie sur une defaite\n"
+           "\t- PlaceTour   initie le placement d'une tour\n"
+           "\t- <Entree>    passe au tour suivant\n\n");
 }
 
 
