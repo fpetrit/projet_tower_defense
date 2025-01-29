@@ -1,11 +1,16 @@
+#include <limits.h>
+
 #include "round.h"
 #include "../preprocessor_macros_constants.h"
 #include "entity_types/entity_types.h"
 #include "entity_types/entity_type_vector.h"
 #include "game.h"
 
+#define min(a, b)   ((a <= b) ? a : b)
+
 extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
+
 
 // FUNCTIONS TO INFLICT DAMAGE
 
@@ -47,20 +52,18 @@ void t_m_0(Tourelle * t);
 void e_m_0(Etudiant * e){
 
     POS_FLAGS flags = 0;
-
     Tourelle * t = tourelle_get_nearest_line(e->ligne, e->position, &flags);
 
-    if 
-    ( 
-        // no need to verify e->next_line->tour:
-        // if this function is called, e->tour <= game.tour hence e->next_line->tour <= game.tour because it has a HIGHER POSITION  than e
-          !  (  // NOT
-        (  e->next_line && abs(e->next_line->position - e->position) == 1) ||
-        (  t && (flags & L_POS) && abs(t->position - e->position ) == 1 ) 
-             )
-    ) 
-    { e->position ++; }
+    int d1, d2;
 
+    d1 = (e->next_line) ? abs(e->next_line->position - e->position) : INT_MAX;
+    d2 = (t && (flags & L_POS)) ? abs(t->position - e->position ) : INT_MAX;
+
+    d1 = min(d1, d2);
+
+    e->position += min(d1 - 1, e->vitesse);
+
+    e->position = min(e->position, COLUMNS);
 }
 
 
