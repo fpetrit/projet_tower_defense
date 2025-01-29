@@ -92,8 +92,15 @@ void help(void){
 
 int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
     char instru[256];
-    printf("Que voulez vous faire ? ");
-    scanf("%s", instru);
+    int len;
+    printf("game > ");
+    fgets(instru, 256, stdin);
+    len = strlen(instru);
+
+    if ( len > 1)
+        instru[len - 1] = '\0';
+
+
     if (!strcmp(instru,"help")){
         help();
     }
@@ -135,7 +142,7 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
                             fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add");
                     }
                     else{
-                        if (!strcmp(instru,"continue")){
+                        if (!strcmp(instru,"\n")){
                             return 1;
                         }
                         else{

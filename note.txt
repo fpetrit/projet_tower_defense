@@ -1,6 +1,6 @@
 affiche_vague ne fonctionne plus, le nécessaire est maintenant fait pour qu'elle ai le temps d'être vu
 
-mauvaise commande dans l'affichage de help (next n'est pas reconnu mais continue oui)
+mauvaise commande dans l'affichage de help (next n'est pas reconnu mais <entrée> oui)
 
 StatTour ne fonctionne pas
 
@@ -8,6 +8,10 @@ StatEtu ne fonctionne pas
 
 après la résolution d'un tour, certains messages sont print (ex: telle tour a été détruite) mais non visibles
 car immédiatement replacés par affiche_jeu (résultat du tour qui vient d'être résolu)
+
+
+
+
 
 améliorer le code de interInstru ?
 
