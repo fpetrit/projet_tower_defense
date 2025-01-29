@@ -618,7 +618,7 @@ void update_round(void){
         }
 
         // not dead and has reached his line last position
-        else if (e->position == COLUMNS - 1){
+        else if (e->position == COLUMNS){
 
             stop = true;
 
