@@ -1,6 +1,4 @@
-la vague n'est pas affichée avant le début de la partie
-
-le jeu démarre direct sans laisser le joueur placer des tourelles ou explorer les menus
+affiche_vague ne fonctionne plus, le nécessaire est maintenant fait pour qu'elle ai le temps d'être vu
 
 lorsqu'un étudiant arrive sur sa dernière position, je jeu se termine mais il n'a pas été affiché encore,
 on ne voit pas la dernière case atteinte

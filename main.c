@@ -70,13 +70,29 @@ void menu(){
 }
 
 int main(void){
+
+    // open level file & initialize all the data
     menu();
+
     affiche_vague();
+
+    char str[2];
+    str[0] = '\0';
+
+    printf("\n\nEntree pour commencer à jouer ...");
+    getc(stdin);
+    scanf("%c", str);
+
+    affiche_jeu();
+    interInstru();
+
     while(!game.finished){
         update_round();
         affiche_jeu();
         interInstru();
     }
+
     end_game();
+    
     return 0;
 }
