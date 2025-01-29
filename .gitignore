@@ -4,6 +4,7 @@ projet
 docs/html
 *.txt
 
+!node.txt
 !game/tourelles.txt
 !game/vilains.txt
 

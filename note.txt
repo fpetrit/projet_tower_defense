@@ -1,0 +1,30 @@
+la vague n'est pas affichée avant le début de la partie
+
+le jeu démarre direct sans laisser le joueur placer des tourelles ou explorer les menus
+
+lorsqu'un étudiant arrive sur sa dernière position, je jeu se termine mais il n'a pas été affiché encore,
+on ne voit pas la dernière case atteinte
+
+mauvaise commande dans l'affichage de help (next n'est pas reconnu mais continue oui)
+
+StatTour ne fonctionne pas
+
+StatEtu ne fonctionne pas
+
+après la résolution d'un tour, certains messages sont print (ex: telle tour a été détruite) mais non visibles
+car immédiatement replacés par affiche_jeu (résultat du tour qui vient d'être résolu)
+
+améliorer le code de interInstru ?
+
+les PV des tourelles ne sont pas affichés sur le plateau ascii
+
+dans placetour il faut rajouter les contraintes par rapport a la cagnotte et la faire diminuer en cas d'achat
+
+la cagnotte  n'est pas affichée lors d'un achat
+
+quand on entre dans placeTour on ne sait pas ce qu'on achète il faudrait afficher tous les types de tourelles disponibles
+
+
+
+
+
