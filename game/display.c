@@ -55,34 +55,40 @@ int affiche_jeu(void){
 
 
 void affiche_vague(void){ //affiche la vague avant le début des tours 
-    CLEAR
+    char L[ROWS][COLUMNS+5][5];;
     Etudiant* e=game.etudiants;
-    Etudiant* f=game.etudiants;
-    for (int i=1;i<=ROWS;i++){
-        int c=1;
-        while (f!=NULL){
-            if (f->ligne==i){
-                if (f->tour==c){
-                    printf("%2d%c ",f->pointsDeVie,f->type);
-                    f=f->next_line;
-                    c++;
-                }
-                else {
-                printf("  . ");
-                c++;
-                }
+    CLEAR
+    printf("Vague d'ennemis");
+    for (int i=0; i<ROWS;i++){
+        for (int j=0; j<COLUMNS+1;j++){
+            if (j==0){
+                sprintf(L[i][0],"%d|  ",i+1);
+                L[i][1][0]=' ';
+                L[i][1][1]=' ';
+                L[i][1][2]='.';
+                L[i][1][3]=' ';
+                L[i][1][4]='\0';
             }
-            else {
-                if (f->tour>c){
-                    printf("  . ");
-                    c++;
-                }
-                f=f->next;
+            else{
+                L[i][j+1][0]=' ';
+                L[i][j+1][1]=' ';
+                L[i][j+1][2]='.';
+                L[i][j+1][3]=' ';
+                L[i][j+1][4]='\0';
             }
         }
-        f=e;
+    }
+    while (e!=NULL){
+        sprintf(L[e->ligne-1][COLUMNS+1 - e->tour]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
+        e=e->next;
+    }
+    for (int k=0;k<=ROWS-1;k++){
+        for (int l=0;l<=COLUMNS;l++){
+            printf(L[k][l]);
+        }
         printf("\n");
     }
+    printf("\n");
 }
 
 void help(void){
@@ -104,54 +110,42 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
     if (!strcmp(instru,"help")){
         help();
     }
+    else if (!strcmp(instru,"StatTour")){
+        char c;
+        printf("\nDonnez le type de la tourelle");
+        scanf("%c",&c);
+        //fonction affichage tour j'attends de voir comment tu veux les intégrer au code avant de le faire
+    }
+    else if (!strcmp(instru,"StatEtu")){
+        char c;
+        printf("\nDonnez le type de l'étudiant");
+        scanf("%c",&c);
+        //idem
+    }
+    else if (!strcmp(instru,"end")){
+        game.finished=1;
+        return 0;
+    }
+    else if (!strcmp(instru,"PlaceTour")){
+        int line, position, type;
+        bool error;
+        printf("Saisir le type de la tourelle :\n");
+        scanf("%d",&type);
+        printf("Saisir la ligne de la tourelle :\n");
+        scanf("%d",&line);
+        printf("Saisir la colonne de la tourelle :\n");
+        scanf("%d",&position);
+        Tourelle * new = tourelle_add(type, line, position, &error);
+        if ( error )
+            printf("Une entitee occupe deja cette position !\n");
+        else if (! new)
+            fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add");
+        }
+    else if (!strcmp(instru,"\n")){
+        return 1;
+    }
     else{
-        if (!strcmp(instru,"StatTour")){
-            char c;
-            printf("\nDonnez le type de la tourelle");
-            scanf("%c",&c);
-            //fonction affichage tour j'attends de voir comment tu veux les intégrer au code avant de le faire
-        }
-        else{
-            if (!strcmp(instru,"StatEtu")){
-                char c;
-                printf("\nDonnez le type de l'étudiant");
-                scanf("%c",&c);
-                //idem
-            }
-            else{
-                if (!strcmp(instru,"end")){
-                    game.finished=1;
-                    return 0;
-                }
-                else{
-                    if (!strcmp(instru,"PlaceTour")){
-                        int line, position, type;
-                        bool error;
-                        printf("Saisir le type de la tourelle :\n");
-                        scanf("%d",&type);
-                        printf("Saisir la ligne de la tourelle :\n");
-                        scanf("%d",&line);
-                        printf("Saisir la colonne de la tourelle :\n");
-                        scanf("%d",&position);
-
-                        Tourelle * new = tourelle_add(type, line, position, &error);
-
-                        if ( error )
-                            printf("Une entitee occupe deja cette position !\n");
-                        else if (! new)
-                            fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add");
-                    }
-                    else{
-                        if (!strcmp(instru,"\n")){
-                            return 1;
-                        }
-                        else{
-                            printf("Instruction non reconnue.\n");
-                        }
-                    }
-                }
-            }
-        }
+        printf("Instruction non reconnue.\n");
     }
     interInstru();
 }
