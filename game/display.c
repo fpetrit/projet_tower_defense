@@ -58,7 +58,7 @@ void affiche_vague(void){ //affiche la vague avant le début des tours
     char L[ROWS][COLUMNS+5][5];;
     Etudiant* e=game.etudiants;
     CLEAR
-    printf("Vague d'ennemis");
+    printf("Vague d'ennemis\n");
     for (int i=0; i<ROWS;i++){
         for (int j=0; j<COLUMNS+1;j++){
             if (j==0){
