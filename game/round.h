@@ -7,28 +7,34 @@
 #include "game.h"
 #include "entity_types/entity_types.h"
 #include "entity_types/entity_type_vector.h"
+#include "../preprocessor_macros_constants.h"
+ 
+void inflict_damage(Tagged_entity_p * entity);
 
-typedef union {
-    Tourelle * tourelle;
-    Etudiant * etudiant;
-} Entity;
+void move(Tagged_entity_p * entity);
 
-typedef struct {
-    Entity_type_tag tag;
-    Entity entity;
-} Tagged_entity;
+void next_round(void);
 
 typedef enum {
-    DEAD,
-    DAMAGE_INFLICTED
+    DEAD_TOURELLE,
+    DEAD_ETUDIANT,
+    PLAYER_WIN,
+    ETUDIANT_WIN
 } LOG_TYPE;
- 
-void inflict_damage(Tagged_entity * entity);
 
-void move(Tagged_entity * entity);
+typedef struct {
+    LOG_TYPE type;
+    Tagged_entity t_entity;
+} Log_infos ;
 
-void update_round(void);
+typedef struct {
+    int count;
+    int length;
+    Log_infos arr[LOGS_MAX_NO];
+} Log_storage ;
 
-// void log(LOG_TYPE log_t, Entity * a, Entity * b);
+void save_log(LOG_TYPE log_type, Tagged_entity t_entity, Log_storage * storage);
+void display_logs(Log_storage * storage);
+
 
 #endif

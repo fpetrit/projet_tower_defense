@@ -87,8 +87,7 @@ int main(void){
     interInstru();
 
     while(!game.finished){
-        update_round();
-        affiche_jeu();
+        next_round();
         interInstru();
     }
 

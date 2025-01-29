@@ -1,6 +1,8 @@
 #ifndef ENTITY_TYPES_H
 #define ENTITY_TYPES_H
 
+#include "../game.h"
+
 typedef struct {
     
     int id;
@@ -39,6 +41,26 @@ typedef struct {
     Entity_type_tag tag;
     union Entity_type type;
 } Tagged_entity_type;
+
+typedef union {
+    Tourelle * tourelle;
+    Etudiant * etudiant;
+} Entity_p;
+
+typedef union {
+    Tourelle tourelle;
+    Etudiant etudiant;
+} Entity;
+
+typedef struct {
+    Entity_type_tag tag;
+    Entity_p entity;
+} Tagged_entity_p;
+
+typedef struct {
+    Entity_type_tag tag;
+    Entity entity;
+} Tagged_entity;
 
 void init_types(void);
 

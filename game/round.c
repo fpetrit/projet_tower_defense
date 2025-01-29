@@ -2,6 +2,7 @@
 #include "../preprocessor_macros_constants.h"
 #include "entity_types/entity_types.h"
 #include "entity_types/entity_type_vector.h"
+#include "game.h"
 
 extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
@@ -87,7 +88,7 @@ const static void (* etudiant_move[]) (Etudiant *) = {
 
 // WRAPPER FUNCTIONS: AN ENTITY CAN MOVE AND INFLICT DAMAGES
 
-void inflict_damage(Tagged_entity * t_e){
+void inflict_damage(Tagged_entity_p * t_e){
 
     int d_index;
 
@@ -110,7 +111,7 @@ void inflict_damage(Tagged_entity * t_e){
     }
 }
 
-void move(Tagged_entity * t_e){
+void move(Tagged_entity_p * t_e){
 
     int m_index;
 
@@ -135,25 +136,72 @@ void move(Tagged_entity * t_e){
 
 
 
-// void log(LOG_TYPE log_t, Tourelle * t, Etudiant * e){
+void save_log(LOG_TYPE log_type, Tagged_entity t_entity, Log_storage * storage){
 
-//     char str[LOG_MAX_CHAR_NO];
+    Log_infos infos;
+    infos.t_entity = t_entity;
+    infos.type = log_type;
 
-//     Tourelle_type * t_type = entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type;
-//     Etudiant_type * e_type = entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type;
+    if (storage->count < storage->length) {
+        storage->arr[storage->count] = infos;
+        storage->count++; 
+    }
+    else
+        fprintf(stderr, "Error: too many game logs in the Log_storage struct");
+}
 
-//     switch (log_t)
-//     {
-//     case DEAD:
-//         dead = 
-//         sprintf(str, "La ");
-//         break;
 
-//     case DAMAGE_INFLICTED:
 
-//         break;
-    
-//     default:
-//         break;
-//     }
-// }
+static const char * log_format_strings[] = {
+    "La tourelle '%s', ligne %d position %d, a ete detruite !\n\n",
+    "L'etudiant '%s',  ligne %d position %d, a ete elemine !\n\n",
+    "Tous les etudiants ont ete elemines ! Vous avez gagne !\n\n",
+    "L'etudiant '%s', a atteint sa derniere position sur la ligne %d !\nVous avez perdu !\n",
+};
+
+
+
+void display_logs(Log_storage * storage){
+
+    int i = 0;
+    Tagged_entity t_entity;
+    union Entity_type entity_type;
+
+
+    while (i < storage->count){
+
+        const char * format_string = log_format_strings[storage->arr[i].type];
+
+        t_entity = storage->arr[i].t_entity;
+
+        if ( t_entity.tag == ETUDIANT )
+            entity_type = entity_type_get_type_by_id(&etudiant_types, t_entity.entity.etudiant.type)->type;
+        else if ( t_entity.tag == TOURELLE)
+            entity_type = entity_type_get_type_by_id(&tourelle_types, t_entity.entity.tourelle.type)->type;
+
+        switch (storage->arr[i].type)
+        {
+        case DEAD_TOURELLE:
+            printf(format_string, entity_type.t_type.name, t_entity.entity.tourelle.ligne, t_entity.entity.tourelle.position);
+            break;
+
+        case DEAD_ETUDIANT:
+            printf(format_string, entity_type.e_type.name, t_entity.entity.etudiant.ligne, t_entity.entity.etudiant.position);
+            break;
+
+        case PLAYER_WIN:
+            printf(format_string);
+            break;
+
+        case ETUDIANT_WIN:
+            printf(format_string, entity_type.e_type.name, t_entity.entity.etudiant.ligne);
+            break;
+        
+        default:
+            break;
+        }
+
+        i++;
+
+    }
+}

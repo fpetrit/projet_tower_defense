@@ -7,6 +7,7 @@
 #include "round.h"
 #include "entity_types/entity_types.h"
 #include "entity_types/entity_type_vector.h"
+#include "display.h"
 
 
 
@@ -479,7 +480,7 @@ void end_game(void){
 
 void update_tourelles(void){
 
-    Tagged_entity entity;
+    Tagged_entity_p entity;
     entity.tag = TOURELLE;
 
     Tourelle * t = game.tourelles;
@@ -499,7 +500,7 @@ void update_tourelles(void){
 
 void update_etudiants(void){
 
-    Tagged_entity entity;
+    Tagged_entity_p entity;
     entity.tag = ETUDIANT;
 
     Etudiant * e = game.etudiants;
@@ -525,7 +526,7 @@ static inline int count_etudiants(void){
 
 
 
-void update_round(void){
+void next_round(void){
 
     // the etudiants of the current round no. ust appear if their position is free (line i, position 0)
     // else their round no. is incrementedm
@@ -536,11 +537,13 @@ void update_round(void){
     Etudiant * e;
     Tourelle * t;
 
+    Tagged_entity tmp_t_entity;
     Etudiant * tmp_e;
     Tourelle * tmp_t;
 
-    Tourelle_type * ttype;
-    Etudiant_type * etype;
+    Log_storage logs;
+    logs.count = 0;
+    logs.length = LOGS_MAX_NO;
 
     bool stop;
 
@@ -578,15 +581,16 @@ void update_round(void){
     // print the events
 
     // tourelles
+    tmp_t_entity.tag = TOURELLE;
     t = game.tourelles;
     while (t) {
 
-        ttype = &entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type;
-
         if (t->pointsDeVie <= 0) {
             
-            printf("La tourelle '%s', position (%d, %d) a ete detruite !\n",
-            ttype->name, t->ligne, t->position);
+            // tmp_t_entity has type Tagged_entity (NOT Tagged_entity_p) that store the entity data itself and not pointers to it
+            // because the tourelle memory is not longer available
+            tmp_t_entity.entity.tourelle = *t;
+            save_log(DEAD_TOURELLE, tmp_t_entity, &logs);
 
             tmp_t = t;
             t = t->next;
@@ -600,16 +604,15 @@ void update_round(void){
 
     // if one etudiant has reached the last position, the game is lost
     // etudiants
+    tmp_t_entity.tag = ETUDIANT;
     stop = false;
     e = game.etudiants;
     while (! stop && e) {
 
-        etype = &entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type;
-
         if (e->pointsDeVie <= 0) {
             
-            printf("L'étudiant '%s', position (%d, %d) a ete elemine !\n",
-            etype->name, e->ligne, e->position);
+            tmp_t_entity.entity.etudiant = *e;
+            save_log(DEAD_ETUDIANT, tmp_t_entity, &logs);
 
             tmp_e = e;
             e = e->next;
@@ -622,9 +625,8 @@ void update_round(void){
 
             stop = true;
 
-            printf("Game over !\n"
-                   "L'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
-                    etype->name, e->ligne);
+            tmp_t_entity.entity.etudiant = *e;
+            save_log(ETUDIANT_WIN, tmp_t_entity, &logs);
 
             game.finished = true;
             game.won = false;
@@ -634,14 +636,24 @@ void update_round(void){
             e = e->next;
     }
 
+    memset(&tmp_t_entity, 0, sizeof(Tagged_entity));
     // if not already lost & there is no more enemy in the linked list: win 
     if ( ! game.finished ) {
         int etudiant_no = count_etudiants();
         if (etudiant_no == 0){
             game.won = true;
             game.finished = true;
-            printf("Vous avez gagne !\n Tous les ennemis sont morts.\n");
+            save_log(PLAYER_WIN, tmp_t_entity, &logs);
         }
     }
+
+
+    // print the game then the messages
+
+    affiche_jeu();
+
+    display_logs(&logs);
+
+
 }
 
