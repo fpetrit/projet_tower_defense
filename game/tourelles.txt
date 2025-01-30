@@ -12,6 +12,7 @@
 /
 / <NOM_DE_LA_TOURELLE>
 / <ABREVIATION>
+/ <DESCRIPTION>
 / <PRIX>
 / <POINTS_DE_VIE>
 / <TYPE_DEGATS>
@@ -23,6 +24,8 @@
 /
 / ABREVIATION : un seul caractère unique.
 / Permet de réprésenter facilement la tourelle surtout en ascii.
+/
+/ DESCRIPTION : Un texte entre crochets (délimiteurs).
 /
 / PRIX : un int.
 /
@@ -50,6 +53,8 @@
 
 TOURELLE DE BASE
 T
+[La première tourelle du jeu !
+Il est possible de sauter des lignes.]
 25
 3
 0

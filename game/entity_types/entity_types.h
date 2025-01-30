@@ -2,12 +2,14 @@
 #define ENTITY_TYPES_H
 
 #include "../game.h"
+#include "../../preprocessor_macros_constants.h"
 
 typedef struct {
     
     int id;
     char name[30];
     char abbr;
+    char description[TYPE_DESCRIPTONS_MAX_CHAR_NO + 1];
     int prix;
     int pointsDeVie;
     int damage_type;

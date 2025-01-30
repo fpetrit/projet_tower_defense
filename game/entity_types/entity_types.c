@@ -76,19 +76,36 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
 
         if (length > 0) {
 
+            // unique type id to refer the type
             t_type->id = t_id;
             t_id++;
         
+            // name
             strcpy(t_type->name, str);
 
+            // abbreviation
             fscanf(file, "%c", &t_type->abbr);
 
+            getc(file);
+
+            // a description
+            if (getc(file) == '[') {
+                scanf(" %[^]]", t_type->description);
+            };
+
+            getc(file);
+
+            // price
             fscanf(file, " %d", &t_type->prix);
 
+
+            // HPs
             fscanf(file, " %d", &t_type->pointsDeVie);
 
+            // an integer damage type 
             fscanf(file, " %d", &t_type->damage_type);
     
+            // an integer move type
             fscanf(file, " %d", &t_type->move_type);
         }
 
