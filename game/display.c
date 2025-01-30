@@ -100,6 +100,22 @@ void help(void){
            "\t- <Entree>    passe au tour suivant\n\n");
 }
 
+void creer_save(char nom[64]){
+    FILE* f=fopen(nom,"w");
+    fprintf(f,"%d\n%d\n%d\n",game.cagnotte,game.score,game.tour); // game.score à ajouter
+    Tourelle* t=game.tourelles;
+    Etudiant* e=game.etudiants;
+    while (t!=NULL){
+        fprintf(f,"%d %d %d %d\n",t->type,t->ligne,t->position,t->pointsDeVie);
+        t=t->next;
+    }
+    fprintf(f,"\n"); //2e saut de ligne pour différencier tourelles et ennemis
+    while (e!=NULL){
+        fprintf(f,"%d %d %d %d\n",e->type,e->ligne,e->position,e->tour,e->pointsDeVie);
+        e=e->next;
+    }
+    fclose(f);
+}
 
 int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
     printf("Cagnotte : %d\n",game.cagnotte);

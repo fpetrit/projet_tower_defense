@@ -3,7 +3,7 @@ on ne peut donc rentrer qu'une seule commande par tour ?
 
 le prompt s'affiche après avoir perdu la partie -> bug si l'on rentre des trucs surement
 
-
+ajouter game.score 
 
 
 
