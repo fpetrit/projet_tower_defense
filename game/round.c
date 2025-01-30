@@ -159,7 +159,7 @@ static const char * log_format_strings[] = {
     "La tourelle '%s', ligne %d position %d, a ete detruite !\n\n",
     "L'etudiant '%s',  ligne %d position %d, a ete elemine !\n\n",
     "Tous les etudiants ont ete elemines ! Vous avez gagne !\n\n",
-    "L'etudiant '%s', a atteint sa derniere position sur la ligne %d !\nVous avez perdu !\n",
+    "L'etudiant '%s', a atteint sa derniere position sur la ligne %d !\n\nVous avez perdu !\n\n",
 };
 
 
