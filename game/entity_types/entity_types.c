@@ -86,7 +86,7 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
             // abbreviation
             fscanf(file, "%c", &t_type->abbr);
 
-            // 'n'
+            // '\n'
             fgetc(file);
 
             // a description
@@ -94,8 +94,11 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
                 fscanf(file, " %[^]]", t_type->description);
 
                 // ']'
-                getc(file);
-            };
+                fgetc(file);
+            }
+
+            else
+                *t_type->description = '\0';
 
             
 

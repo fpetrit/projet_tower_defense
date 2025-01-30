@@ -105,7 +105,7 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
     printf("Cagnotte : %d\n",game.cagnotte);
     char instru[256];
     int len;
-    printf("game > ");
+    printf("\ngame > ");
     fgets(instru, 256, stdin);
     len = strlen(instru);
 
@@ -148,12 +148,12 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
         int line, position, type;
         bool error;
         int i=0;
-        printf("Tourelles disponibles :\n");
+        printf("\nTourelles disponibles :\n");
         while (i<tourelle_types.count){
-            printf("Type : %d : %s : Degats : %d, PV : %d, prix : %d\n",tourelle_types.arr[i].type.t_type.id, tourelle_types.arr[i].type.t_type.name, tourelle_types.arr[i].type.t_type.damage_type, tourelle_types.arr[i].type.t_type.pointsDeVie, tourelle_types.arr[i].type.t_type.prix);
+            printf("\nType %d --- %s :\n%s\nDegats : %d, PV : %d, prix : %d\n",tourelle_types.arr[i].type.t_type.id, tourelle_types.arr[i].type.t_type.name, tourelle_types.arr[i].type.t_type.description, tourelle_types.arr[i].type.t_type.damage_type, tourelle_types.arr[i].type.t_type.pointsDeVie, tourelle_types.arr[i].type.t_type.prix);
             i++;
         }
-        printf("Saisir le type de la tourelle :\n");
+        printf("\nSaisir le type de la tourelle :\n");
         scanf("%d",&type);
         if (game.cagnotte<entity_type_get_type_by_id(&tourelle_types, type)->type.t_type.prix){
             printf("Pas assez d'argent");
