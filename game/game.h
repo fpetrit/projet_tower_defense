@@ -111,6 +111,7 @@ typedef struct {
     Tourelle* tourelles;
     Etudiant* etudiants;
     int etudiant_last_tour;
+    int score;
     int cagnotte;
     int tour;
     bool finished;

@@ -366,6 +366,7 @@ void game_init(FILE * level){
     game.finished = false;
     game.won = false;
     game.etudiant_last_tour = 0;
+    game.score = 0;
 
     // init & fill the Entity_type_vector tourelle_types & etudiant_types global variable defined in main.c
     init_types();

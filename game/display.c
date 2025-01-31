@@ -111,7 +111,7 @@ void creer_save(char nom[64]){
     }
     fprintf(f,"\n"); //2e saut de ligne pour différencier tourelles et ennemis
     while (e!=NULL){
-        fprintf(f,"%d %d %d %d\n",e->type,e->ligne,e->position,e->tour,e->pointsDeVie);
+        fprintf(f,"%d %d %d %d %d\n",e->type,e->ligne,e->position,e->tour,e->pointsDeVie);
         e=e->next;
     }
     fclose(f);
