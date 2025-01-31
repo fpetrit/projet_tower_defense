@@ -224,13 +224,13 @@ int etudiant_get_score(Etudiant_type e_type, int round_no){
     // moyenne pondérée 0.6 points de vie et 0.4 rapidité d'execution
     // tous les trois tours après l'apparition de l'ennemi, le bonus de rapidité d'exécution est divisé par 2
     // normalisation des ordres de grandeurs des pv
-    double res = e_type.pointsDeVie * 0.6 * 100 + (1 / pow(2, (game.tour - round_no) / 3  )) * 0.4 * 100 ;
+    double res = e_type.pointsDeVie * 0.6 * 100 + (1 / pow(2, (game.tour - round_no) / 3.0  )) * 0.4 * 100 ;
 
     // resultat arrondi à l'entier inférieur
     return round(res);
 }
 
 int tourelle_get_score(Tourelle_type t_type, int round_no){
-    double res = -0.5 * ( t_type.pointsDeVie * 25 + (1 / pow(2, (game.tour - round_no) / 3  )) * 25 ) ;
+    double res = -0.5 * ( t_type.pointsDeVie * 25 + (1 / pow(2, (game.tour - round_no) / 3.0  )) * 25 ) ;
     return round(res);
 }
