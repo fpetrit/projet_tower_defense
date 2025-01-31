@@ -55,12 +55,12 @@ int affiche_jeu(void){
 
 
 void affiche_vague(void){ //affiche la vague avant le début des tours 
-    char L[ROWS][COLUMNS+5][5];;
+    char L[ROWS][game.etudiant_last_tour+5][5];;
     Etudiant* e=game.etudiants;
     CLEAR
     printf("Vague d'ennemis\n");
     for (int i=0; i<ROWS;i++){
-        for (int j=0; j<COLUMNS+1;j++){
+        for (int j=0; j<game.etudiant_last_tour+1;j++){
             if (j==0){
                 sprintf(L[i][0],"%d|  ",i+1);
                 L[i][1][0]=' ';
@@ -79,11 +79,11 @@ void affiche_vague(void){ //affiche la vague avant le début des tours
         }
     }
     while (e!=NULL){
-        sprintf(L[e->ligne-1][COLUMNS+1 - e->tour]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
+        sprintf(L[e->ligne-1][game.etudiant_last_tour+1 - e->tour]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         e=e->next;
     }
     for (int k=0;k<=ROWS-1;k++){
-        for (int l=0;l<=COLUMNS;l++){
+        for (int l=0;l<=game.etudiant_last_tour;l++){
             printf(L[k][l]);
         }
         printf("\n");
@@ -115,6 +115,98 @@ void creer_save(char nom[64]){
         e=e->next;
     }
     fclose(f);
+}
+
+
+int charge_save(char nom[64]){
+    game.etudiants = NULL;
+    game.tourelles = NULL;
+    game.finished = false;
+    game.etudiant_last_tour = 0;
+    game.won = false;
+    FILE* f=fopen(nom,"r");
+    char t;
+    int l,p,pv;
+    Tourelle* T=NULL;
+    bool error=false;
+    init_types();
+    char str[2];
+    int round_no, line_no;
+    char abbr ;
+    if (!f){
+        printf("La sauvegarde %s n'existe pas",nom);
+        return 0;
+    }
+    fscanf(f,"%d\n%d\n%d\n",&game.cagnotte,&game.score,&game.tour);
+    fscanf(f,"%c",&t);
+    while(t!='\n'){
+        fscanf(f," %d %d %d\n",&l,&p,&pv);
+        T=tourelle_add(t-48,l,p,0);
+        T->pointsDeVie=pv;
+        fscanf(f,"%c",&t);
+    }
+    Etudiant * current_last_etudiant_on_line[ROWS];
+    memset(current_last_etudiant_on_line, 0, ROWS * sizeof(Etudiant *));
+
+    Etudiant * prev_e = NULL;
+    Etudiant * e;
+    if (! feof(f) ){
+        fscanf(f, "%c %d %d %d %d",&abbr, &line_no, &p, &round_no, &pv );
+        // to chain Etudiants
+        if(round_no>game.etudiant_last_tour) game.etudiant_last_tour=round_no;
+        prev_e = etudiant_create(abbr , line_no, p, round_no);
+        error = prev_e == NULL;
+
+        if (!error) {
+            etudiant_insert(prev_e);
+            current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
+            prev_e->next_line = NULL;
+            prev_e->pointsDeVie=pv;
+        }
+    
+    }
+
+    // CHAINING
+    while ( ! feof(f) && ! error){
+
+        // first simple chaining
+        fscanf(f, "%c %d %d %d %d",&abbr, &line_no, &p, &round_no, &pv );
+        if(round_no>game.etudiant_last_tour) game.etudiant_last_tour=round_no;
+        e = etudiant_create(abbr , line_no, p, round_no);
+        
+        // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
+        // nécessaire pour l'algo de chaînage double par ligne
+        // erreur également si malloc n'a pas fonctionné
+        error = e == NULL || prev_e->tour > round_no;
+        
+        if ( ! error ) {
+
+            etudiant_append(e, prev_e);
+            prev_e = e;
+            e->pointsDeVie=pv;
+            // if it is the first etudiant created for this line, he does not have next etudiant
+            if (current_last_etudiant_on_line[prev_e->ligne - 1] == NULL){
+                current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
+                prev_e->next_line = NULL;
+            } else {
+                current_last_etudiant_on_line[prev_e->ligne - 1]->prev_line = prev_e;
+                prev_e->next_line = current_last_etudiant_on_line[prev_e->ligne - 1];
+                current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
+            }
+
+        } else if (prev_e != NULL) {
+            fprintf(stderr, "Error: incorrect level text file format.\nFirst fields of each row must be ordered in ascending order.");
+        } else {
+            fprintf(stderr, "Error: something went wrong with malloc.");
+        }
+
+        fgets(str, 2, f);
+    }
+
+    // the last etudiant on each line has no previous etudiant on the same line
+    for (int i = 0; i < ROWS; i++){
+        current_last_etudiant_on_line[i]->prev_line = NULL;
+    }
 }
 
 int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
