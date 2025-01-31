@@ -73,9 +73,8 @@ int main(void){
 
     // open level file & initialize all the data
     menu();
-
+    
     affiche_vague();
-
     char str[2];
     str[0] = '\0';
 
