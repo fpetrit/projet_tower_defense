@@ -1,4 +1,5 @@
 #include <limits.h>
+#include <math.h>
 
 #include "round.h"
 #include "../preprocessor_macros_constants.h"
@@ -139,11 +140,12 @@ void move(Tagged_entity_p * t_e){
 
 
 
-void save_log(LOG_TYPE log_type, Tagged_entity t_entity, Log_storage * storage){
+void save_log(LOG_TYPE log_type, Tagged_entity t_entity, int data, Log_storage * storage){
 
     Log_infos infos;
     infos.t_entity = t_entity;
     infos.type = log_type;
+    infos.data = data;
 
     if (storage->count < storage->length) {
         storage->arr[storage->count] = infos;
@@ -155,9 +157,9 @@ void save_log(LOG_TYPE log_type, Tagged_entity t_entity, Log_storage * storage){
 
 
 
-static const char * log_format_strings[] = {
-    "La tourelle '%s', ligne %d position %d, a ete detruite !\n\n",
-    "L'etudiant '%s',  ligne %d position %d, a ete elemine !\n\n",
+static char * log_format_strings[] = {
+    "La tourelle '%s', ligne %d position %d, a ete detruite !\t%+d points !\n\n",
+    "L'etudiant '%s',  ligne %d position %d, a ete elemine !\t%+d points !\n\n",
     "Tous les etudiants ont ete elemines ! Vous avez gagne !\n\n",
     "L'etudiant '%s', a atteint sa derniere position sur la ligne %d !\n\nVous avez perdu !\n\n",
 };
@@ -167,15 +169,22 @@ static const char * log_format_strings[] = {
 void display_logs(Log_storage * storage){
 
     int i = 0;
+
     Tagged_entity t_entity;
     union Entity_type entity_type;
+
+    int data;
+    char * format_string;
 
 
     while (i < storage->count){
 
-        const char * format_string = log_format_strings[storage->arr[i].type];
+        format_string = log_format_strings[storage->arr[i].type];
 
         t_entity = storage->arr[i].t_entity;
+
+        data = storage->arr[i].data;
+
 
         if ( t_entity.tag == ETUDIANT )
             entity_type = entity_type_get_type_by_id(&etudiant_types, t_entity.entity.etudiant.type)->type;
@@ -185,11 +194,11 @@ void display_logs(Log_storage * storage){
         switch (storage->arr[i].type)
         {
         case DEAD_TOURELLE:
-            printf(format_string, entity_type.t_type.name, t_entity.entity.tourelle.ligne, t_entity.entity.tourelle.position);
+            printf(format_string, entity_type.t_type.name, t_entity.entity.tourelle.ligne, t_entity.entity.tourelle.position, data);
             break;
 
         case DEAD_ETUDIANT:
-            printf(format_string, entity_type.e_type.name, t_entity.entity.etudiant.ligne, t_entity.entity.etudiant.position);
+            printf(format_string, entity_type.e_type.name, t_entity.entity.etudiant.ligne, t_entity.entity.etudiant.position, data);
             break;
 
         case PLAYER_WIN:
@@ -205,6 +214,23 @@ void display_logs(Log_storage * storage){
         }
 
         i++;
-
     }
+}
+
+
+
+int etudiant_get_score(Etudiant_type e_type, int round_no){
+
+    // moyenne pondérée 0.6 points de vie et 0.4 rapidité d'execution
+    // tous les trois tours après l'apparition de l'ennemi, le bonus de rapidité d'exécution est divisé par 2
+    // normalisation des ordres de grandeurs des pv
+    double res = e_type.pointsDeVie * 0.6 * 100 + (1 / pow(2, (game.tour - round_no) / 3  )) * 0.4 * 100 ;
+
+    // resultat arrondi à l'entier inférieur
+    return round(res);
+}
+
+int tourelle_get_score(Tourelle_type t_type, int round_no){
+    double res = -0.5 * ( t_type.pointsDeVie * 25 + (1 / pow(2, (game.tour - round_no) / 3  )) * 25 ) ;
+    return round(res);
 }

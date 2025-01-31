@@ -15,6 +15,9 @@ void move(Tagged_entity_p * entity);
 
 void next_round(void);
 
+int etudiant_get_score(Etudiant_type e_type, int round_no);
+int tourelle_get_score(Tourelle_type t_type, int round_no);
+
 typedef enum {
     DEAD_TOURELLE,
     DEAD_ETUDIANT,
@@ -25,6 +28,7 @@ typedef enum {
 typedef struct {
     LOG_TYPE type;
     Tagged_entity t_entity;
+    int data;
 } Log_infos ;
 
 typedef struct {
@@ -33,8 +37,9 @@ typedef struct {
     Log_infos arr[LOGS_MAX_NO];
 } Log_storage ;
 
-void save_log(LOG_TYPE log_type, Tagged_entity t_entity, Log_storage * storage);
+void save_log(LOG_TYPE log_type, Tagged_entity t_entity, int data, Log_storage * storage);
 void display_logs(Log_storage * storage);
+
 
 
 #endif

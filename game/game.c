@@ -30,6 +30,7 @@ Tourelle * tourelle_create(int type, int ligne, int position){
         new->type = type;
         new->ligne = ligne;
         new->position = position;
+        new->round_no = game.tour;
 
         new->next = NULL;
         new->next_line = NULL;
@@ -545,11 +546,14 @@ void next_round(void){
     Tagged_entity tmp_t_entity;
     Etudiant * tmp_e;
     Tourelle * tmp_t;
+    Etudiant_type e_type;
+    Tourelle_type t_type;
 
     Log_storage logs;
     logs.count = 0;
     logs.length = LOGS_MAX_NO;
 
+    int score;
     bool stop;
 
     e = game.etudiants;
@@ -595,12 +599,18 @@ void next_round(void){
             // tmp_t_entity has type Tagged_entity (NOT Tagged_entity_p) that store the entity data itself and not pointers to it
             // because the tourelle memory is not longer available
             tmp_t_entity.entity.tourelle = *t;
-            save_log(DEAD_TOURELLE, tmp_t_entity, &logs);
 
             tmp_t = t;
             t = t->next;
 
+            t_type = entity_type_get_type_by_id(&tourelle_types, tmp_t->type)->type.t_type;
+            score = tourelle_get_score(t_type, game.tour);
+
             tourelle_delete(tmp_t);
+            game.score += score;
+
+            save_log(DEAD_TOURELLE, tmp_t_entity, score, &logs);
+
         }
         
         else
@@ -608,6 +618,7 @@ void next_round(void){
     }
 
     // if one etudiant has reached the last position, the game is lost
+    // if one etudiant is dead we compute the score increment
     // etudiants
     tmp_t_entity.tag = ETUDIANT;
     stop = false;
@@ -617,12 +628,17 @@ void next_round(void){
         if (e->pointsDeVie <= 0) {
             
             tmp_t_entity.entity.etudiant = *e;
-            save_log(DEAD_ETUDIANT, tmp_t_entity, &logs);
 
             tmp_e = e;
             e = e->next;
 
+            e_type = entity_type_get_type_by_id(&etudiant_types, tmp_e->type)->type.e_type;
+            score = etudiant_get_score(e_type, game.tour);
+
+            game.score += score;
             etudiant_delete(tmp_e);
+
+            save_log(DEAD_ETUDIANT, tmp_t_entity, score, &logs);
         }
 
         // not dead and has reached his line last position
@@ -631,7 +647,7 @@ void next_round(void){
             stop = true;
 
             tmp_t_entity.entity.etudiant = *e;
-            save_log(ETUDIANT_WIN, tmp_t_entity, &logs);
+            save_log(ETUDIANT_WIN, tmp_t_entity, 0, &logs);
 
             game.finished = true;
             game.won = false;
@@ -648,7 +664,7 @@ void next_round(void){
         if (etudiant_no == 0){
             game.won = true;
             game.finished = true;
-            save_log(PLAYER_WIN, tmp_t_entity, &logs);
+            save_log(PLAYER_WIN, tmp_t_entity, 0, &logs);
         }
     }
 
@@ -658,6 +674,8 @@ void next_round(void){
     affiche_jeu();
 
     display_logs(&logs);
+
+    printf("Score : %d\n\n", game.score);
 
 
 }

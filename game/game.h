@@ -36,6 +36,8 @@ typedef struct tourelle {
     int pointsDeVie;
     int ligne;
     int position;
+
+    int round_no;
     
 
     /// The linking pointer.
