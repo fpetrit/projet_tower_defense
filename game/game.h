@@ -105,6 +105,9 @@ void etudiant_line_append(Etudiant * appended, Etudiant * e);
 /// Free the Etudiant dynamically allocated memory and manage the simple linking and double linking by line.
 void etudiant_delete(Etudiant * e);
 
+void etudiant_insert(Etudiant * e);
+
+void etudiant_append(Etudiant * appended, Etudiant * e);
 
 /// @brief Holds the game main objects (2 linked lists, initial money amount, current round no.).
 typedef struct {

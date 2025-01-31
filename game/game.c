@@ -432,6 +432,9 @@ void game_init(FILE * level){
                 current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
             }
 
+            if (prev_e->tour > game.etudiant_last_tour)
+                game.etudiant_last_tour = prev_e->tour;
+
         } else if (prev_e != NULL) {
             fprintf(stderr, "Error: incorrect level text file format.\nFirst fields of each row must be ordered in ascending order.");
         } else {

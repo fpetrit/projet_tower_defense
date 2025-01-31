@@ -100,7 +100,7 @@ void help(void){
            "\t- <Entree>    passe au tour suivant\n\n");
 }
 
-void creer_save(char nom[64]){
+void creer_save(char nom[28]){
     FILE* f=fopen(nom,"w");
     fprintf(f,"%d\n%d\n%d\n",game.cagnotte,game.score,game.tour); // game.score à ajouter
     Tourelle* t=game.tourelles;
@@ -278,6 +278,14 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
             else if (! new)
                 fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add");
         }
+    }
+    else if (!strcmp(instru,"save")){
+        char filename[28];
+        strcpy(filename, "saves/");
+        char save_name[21];
+        printf("nom de fichier de sauvegarde : ");
+        scanf("%s",save_name); 
+        creer_save(strcat(filename,save_name));
     }
     else if (!strcmp(instru,"\n")){
         return 1;
