@@ -110,6 +110,7 @@ void etudiant_delete(Etudiant * e);
 typedef struct {
     Tourelle* tourelles;
     Etudiant* etudiants;
+    int etudiant_last_tour;
     int cagnotte;
     int tour;
     bool finished;

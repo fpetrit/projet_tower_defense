@@ -365,6 +365,7 @@ void game_init(FILE * level){
     game.tourelles = NULL;
     game.finished = false;
     game.won = false;
+    game.etudiant_last_tour = 0;
 
     // init & fill the Entity_type_vector tourelle_types & etudiant_types global variable defined in main.c
     init_types();
@@ -395,6 +396,9 @@ void game_init(FILE * level){
             etudiant_insert(prev_e);
             current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
             prev_e->next_line = NULL;
+
+            if (prev_e->tour > game.etudiant_last_tour)
+                game.etudiant_last_tour = prev_e->tour;
         }
     
     }
