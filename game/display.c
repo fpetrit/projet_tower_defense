@@ -9,7 +9,7 @@
 extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
 
-int affiche_jeu(void){
+void affiche_jeu(void){
     char L[ROWS][COLUMNS+5][5];
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
@@ -207,17 +207,18 @@ int charge_save(char nom[64]){
     for (int i = 0; i < ROWS; i++){
         current_last_etudiant_on_line[i]->prev_line = NULL;
     }
+    return 1;
 }
 
-int save_s(char nom){
+int save_s(char *nom){
     FILE *f=fopen("scores.txt","r");
     int i,p=-1;
     char lines[10][64];
     int s[10];
-    fscanf("%d\n",&i);
+    fscanf(f,"%d\n",&i);
     for (int j=0;j<10;j++){
-        if (f!=EOF){
-            fscanf("%d %s",&s[j],&lines[j]);
+        if (!feof(f)){
+            fscanf(f,"%d %s\n",&s[j],lines[j]);
         }
     }
     fclose(f);
@@ -256,6 +257,19 @@ int save_s(char nom){
     }
     fclose(f);
     return 1;
+}
+
+void affiche_s(void){
+    FILE* f=fopen("scores.txt","r");
+    int i,j;
+    char s[28];
+    fscanf(f,"%d\n",&i);
+    if (i==0) printf("Pas de scores sauvegardes");
+    else{
+        printf("Meilleurs scores :\n");
+        fscanf(f,"%d %s\n",&j,s);
+        printf("Joueur : %s     Score : %d\n",s,j);
+    }
 }
 
 int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
