@@ -272,67 +272,6 @@ void affiche_s(void){
     }
 }
 
-int save_s(char *nom){
-    FILE *f=fopen("scores.txt","r");
-    int i,p=-1;
-    char lines[10][64];
-    int s[10];
-    fscanf(f,"%d\n",&i);
-    for (int j=0;j<10;j++){
-        if (!feof(f)){
-            fscanf(f,"%d %s\n",&s[j],lines[j]);
-        }
-    }
-    fclose(f);
-    for (int k=0;k<10;k++){
-        if (s[k]<=game.score){
-            p=k;
-            break;
-        }
-    }
-    if (p==-1){
-        return 0;
-    }
-    if (i<10){
-        i++;
-        FILE* f=fopen("scores.txt","w");
-        fprintf(f,"%d\n",i);
-        for (int j=0;j<p;j++){
-            fprintf(f,"%d %s\n",s[j],lines[j]);
-        }
-        fprintf(f,"%d %s\n",game.score,nom);
-        for (int k=p+1;k<i;k++){
-            fprintf(f,"%d %s\n",s[k-1],lines[k-1]);
-        }
-    }
-
-    else{
-        FILE* f=fopen("scores.txt","w");
-        fprintf(f,"%d\n",i);
-        for (int j=0;j<p;j++){
-            fprintf(f,"%d %s\n",s[j],lines[j]);
-        }
-        fprintf(f,"%d %s\n",game.score,nom);
-        for (int k=p+1;k<10;k++){
-            fprintf(f,"%d %s\n",s[k-1],lines[k-1]);
-        }
-    }
-    fclose(f);
-    return 1;
-}
-
-void affiche_s(void){
-    FILE* f=fopen("scores.txt","r");
-    int i,j;
-    char s[28];
-    fscanf(f,"%d\n",&i);
-    if (i==0) printf("Pas de scores sauvegardes");
-    else{
-        printf("Meilleurs scores :\n");
-        fscanf(f,"%d %s\n",&j,s);
-        printf("Joueur : %s     Score : %d\n",s,j);
-    }
-}
 
 int prompt(void){ 
     char instru[256];
