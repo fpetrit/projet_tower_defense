@@ -225,6 +225,10 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
 
     if (new && ttype_res){
 
+        // update game.etudiant_last_tour
+        if (game.etudiant_last_tour < tour)
+            game.etudiant_last_tour = tour;
+
         // fill non type dependent members
         new->ligne = ligne;
         new->position = position;
@@ -410,9 +414,6 @@ void game_init(FILE * level){
             etudiant_insert(prev_e);
             current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
             prev_e->next_line = NULL;
-
-            if (prev_e->tour > game.etudiant_last_tour)
-                game.etudiant_last_tour = prev_e->tour;
         }
     
     }
