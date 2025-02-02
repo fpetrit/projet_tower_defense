@@ -22,7 +22,7 @@ Log_storage logs;
 /**
  * @brief Prompt the user for a level filename, open it and initialize a game with it by calling @ref game_init
  */
-void menu(){
+int menu(){
 
     bool quit = false, save=false;
     char response,response_1=0;
@@ -47,6 +47,7 @@ void menu(){
                 printf("%s\n", filename);
                 if (charge_save(filename)){
                     save = true;
+                    quit=true;
                 }
                 else {
                     perror("Erreur lors du chargement de la sauvegarde");
@@ -60,7 +61,8 @@ void menu(){
             }
             save = response_1 == 'n' || save;
             strcpy(filename, "levels/");
-        } 
+        }
+        return 0;
     }  
     // 8 chararcers ("levels" + null byte), 20 available for level filename
     strcpy(filename, "levels/");
@@ -98,6 +100,7 @@ void menu(){
 
         strcpy(filename, "levels/");
     }
+    return 1;
 }
 
 
@@ -109,16 +112,16 @@ void menu(){
 int main(void){
 
     // open level file & initialize all the data
-    menu();
-    
-    affiche_vague();
-    char str[2];
-    str[0] = '\0';
+    int i=menu();
+    if (i==1){
+        affiche_vague();
+        char str[2];
+        str[0] = '\0';
 
-    printf("\n\nEntree pour commencer a jouer ...");
-    getc(stdin);
-    scanf("%c", str);
-
+        printf("\n\nEntree pour commencer a jouer ...");
+        getc(stdin);
+        scanf("%c", str);
+    }
     affiche_jeu();
     prompt();
 

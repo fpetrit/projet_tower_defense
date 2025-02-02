@@ -132,15 +132,17 @@ Tourelle * tourelle_get_nearest_line(int line, int position, POS_FLAGS * flags) 
 
 
 Tourelle * tourelle_add(int type, int ligne, int position, bool * error){
-
+    
     Tourelle * new;
+    
     Tourelle * node = game.tourelles;
-
+    
     POS_FLAGS flags_e = 0;
     POS_FLAGS flags_t = 0;
     *error = false;
-
+    
     Tourelle * node_t = tourelle_get_nearest_line(ligne, position, &flags_t);
+    
     etudiant_get_nearest_line(ligne, position, &flags_e);
 
     *error = ( (flags_e | flags_t) & EQ_POS );

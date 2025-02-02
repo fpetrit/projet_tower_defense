@@ -79,7 +79,7 @@ void affiche_vague(void){ //affiche la vague avant le début des tours
         }
     }
     while (e!=NULL){
-        sprintf(L[e->ligne-1][game.etudiant_last_tour+1 - e->tour]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
+        sprintf(L[e->ligne-1][e->tour]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         e=e->next;
     }
     for (int k=0;k<=ROWS-1;k++){
@@ -104,7 +104,7 @@ void creer_save(char nom[28]){
     }
     fprintf(f,"\n"); //2e saut de ligne pour différencier tourelles et ennemis
     while (e!=NULL){
-        fprintf(f,"%d %d %d %d %d\n",e->type,e->ligne,e->position,e->tour,e->pointsDeVie);
+        fprintf(f,"%d %d %d %d %c\n",e->ligne,e->position,e->tour,e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         e=e->next;
     }
     fclose(f);
@@ -121,7 +121,7 @@ int charge_save(char nom[28]){
     char t;
     int l,p,pv;
     Tourelle* T=NULL;
-    bool error=false;
+    bool error=false,error_1=false;
     init_types();
     char str[2];
     int round_no, line_no;
@@ -132,18 +132,21 @@ int charge_save(char nom[28]){
     fscanf(f,"%d\n%d\n%d\n",&game.cagnotte,&game.score,&game.tour);
     fscanf(f,"%c",&t);
     while(t!='\n'){
-        fscanf(f," %d %d %d\n",&l,&p,&pv);
-        T=tourelle_add(t-48,l,p,0); 
+        fscanf(f,"%d %d %d",&l,&p,&pv);
+        T=tourelle_add(t-48,l,p,&error_1);
+        printf("%c %d %d %d\n",t,l,p,pv); 
         T->pointsDeVie=pv;
         fscanf(f,"%c",&t);
+        
     }
+    
     Etudiant * current_last_etudiant_on_line[ROWS];
     memset(current_last_etudiant_on_line, 0, ROWS * sizeof(Etudiant *));
-
     Etudiant * prev_e = NULL;
     Etudiant * e;
     if (! feof(f) ){
-        fscanf(f, "%c %d %d %d %d",&abbr, &line_no, &p, &round_no, &pv );
+        fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
+        printf("%d %d %d %d %c\n", line_no, p, round_no, pv,abbr );
         // to chain Etudiants
         if(round_no>game.etudiant_last_tour) game.etudiant_last_tour=round_no;
         prev_e = etudiant_create(abbr , line_no, p, round_no);
@@ -162,10 +165,10 @@ int charge_save(char nom[28]){
     while ( ! feof(f) && ! error){
 
         // first simple chaining
-        fscanf(f, "%c %d %d %d %d",&abbr, &line_no, &p, &round_no, &pv );
+        fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
         if(round_no>game.etudiant_last_tour) game.etudiant_last_tour=round_no;
+        printf("%d %d %d %d %c\n", line_no, p, round_no, pv,abbr );
         e = etudiant_create(abbr , line_no, p, round_no);
-        
         // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
         // nécessaire pour l'algo de chaînage double par ligne
         // erreur également si malloc n'a pas fonctionné
