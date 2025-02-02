@@ -11,7 +11,7 @@ void affiche_vague(void);
 void help(void);
 
 //interprète les commandes utilisateur
-int prompt(void);
+void prompt(void);
 
 void creer_save(char nom[28]);
 

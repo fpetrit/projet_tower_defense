@@ -91,14 +91,7 @@ void affiche_vague(void){ //affiche la vague avant le début des tours
     printf("\n");
 }
 
-void help(void){
-    printf("\nCOMMANDES :\n"
-           "\t- StatTour    affiche les stats d'une tour <ligne> <position>\n"
-           "\t- StatEtu     idem pour les étudiants\n"
-           "\t- end         termine la partie sur une defaite\n"
-           "\t- PlaceTour   initie le placement d'une tour\n"
-           "\t- <Entree>    passe au tour suivant\n\n");
-}
+
 
 void creer_save(char nom[28]){
     FILE* f=fopen(nom,"w");
@@ -273,106 +266,187 @@ void affiche_s(void){
 }
 
 
-int prompt(void){ 
-    char instru[256];
-    int len;
-    printf("\ngame > ");
-    fgets(instru, 256, stdin);
-    len = strlen(instru);
+// PROMPT SYSTEM ////////////////////////////////////////////////////
 
-    if ( len > 1)
-        instru[len - 1] = '\0';
+void help(void){
+    printf("\nCOMMANDES :\n"
+           "\t- st | stats tourelle    affiche les stats d'un type de tourelle\n"
+           "\t- se | stats etudiant    affiche les stats d'un type d'etudiant\n"
+           "\t- p  | place             initie le placement d'une tourelle\n"
+           "\t- end                    termine la partie sur une defaite\n"
+           "\t- <Entree>               passe au tour suivant\n\n");
+}
 
+void tourelle_stats(void){
+    char c;
+    int i=0;
 
-    if (!strcmp(instru,"help")){
-        help();
-    }
-    else if (!strcmp(instru,"StatTour")){
-        char c;
-        int i=0;
-
-        printf("\nAbbreviations existantes :\n");
-        while (i<tourelle_types.count){
-            printf("%c ",tourelle_types.arr[i].type.t_type.abbr);
-            i++;
-        }
-
-        printf("\n\nDonnez l'abbreviation du type de la tourelle : ");
-        scanf("%c",&c);
-
-        // remove the '\n' from the buffer otherwise will not prompt again
-        fgetc(stdin);
-
-        Tourelle_type t_type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE)->type.t_type;
-        printf("\nType : %d --- %s\n%s\nForce : %d\nPV : %d\nPrix : %d\n\n",
-        t_type.id, t_type.name, t_type.description, t_type.strength, t_type.pointsDeVie, t_type.prix);
+    printf("\nAbbreviations existantes :\n");
+    while (i<tourelle_types.count){
+        printf("%c ",tourelle_types.arr[i].type.t_type.abbr);
+        i++;
     }
 
-    else if (!strcmp(instru,"StatEtu")){
-        int i=0;
-        char c;
+    printf("\n\nDonnez l'abbreviation du type de la tourelle : ");
+    scanf("%c",&c);
 
-        printf("\nAbbreviations existantes :\n");
-        while (i<etudiant_types.count){
-            printf("%c ", etudiant_types.arr[i].type.e_type.abbr);
-            i++;
-        }
+    // remove the '\n' from the buffer otherwise will not prompt again
+    fgetc(stdin);
 
-        printf("\n\nDonnez l'abbreviation du type de l'etudiant : ");
-        scanf("%c",&c);
+    Tourelle_type t_type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE)->type.t_type;
+    printf("\nType : %d --- %s\n%s\nForce : %d\nPV : %d\nPrix : %d\n\n",
+    t_type.id, t_type.name, t_type.description, t_type.strength, t_type.pointsDeVie, t_type.prix);
+}
 
-        // remove the '\n' from the buffer otherwise will not prompt again
-        fgetc(stdin);
+void etudiant_stats(void){
+    int i=0;
+    char c;
 
-        Etudiant_type e_type = entity_type_get_type_by_abbr(&etudiant_types, c, ETUDIANT)->type.e_type;
-        printf("\nType : %d --- %s\nForce : %d\nPV : %d\nVitesse : %d\n\n",
-        e_type.id, e_type.name, e_type.strength, e_type.pointsDeVie, e_type.vitesse);
+    printf("\nAbbreviations existantes :\n");
+    while (i<etudiant_types.count){
+        printf("%c ", etudiant_types.arr[i].type.e_type.abbr);
+        i++;
     }
 
-    else if (!strcmp(instru,"end")){
-        game.finished=1;
-        return 0;
+    printf("\n\nDonnez l'abbreviation du type de l'etudiant : ");
+    scanf("%c",&c);
+
+    // remove the '\n' from the buffer otherwise will not prompt again
+    fgetc(stdin);
+
+    Etudiant_type e_type = entity_type_get_type_by_abbr(&etudiant_types, c, ETUDIANT)->type.e_type;
+    printf("\nType : %d --- %s\nForce : %d\nPV : %d\nVitesse : %d\n\n",
+    e_type.id, e_type.name, e_type.strength, e_type.pointsDeVie, e_type.vitesse);
+}
+
+void place_tourelle(void){
+
+    int line, position;
+    char c;
+    bool error;
+    int i = 0;
+    Tourelle_type t_type;
+    
+    printf("\nTourelles disponibles :\n");
+    while (i < tourelle_types.count){
+        
+        t_type = entity_type_get_type_by_id(&tourelle_types, i)->type.t_type;
+
+        printf("\n%c --- %s :\n%s\nDegats : %d\nPV : %d\nPrix : %d\n\n",
+        t_type.abbr, t_type.name, t_type.description, t_type.strength, t_type.pointsDeVie, t_type.prix);
+        
+        i++;
     }
-    else if (!strcmp(instru,"PlaceTour")){
-        int line, position, type;
-        bool error;
-        int i=0;
-        printf("\nTourelles disponibles :\n");
-        while (i<tourelle_types.count){
-            printf("\nType %d --- %s :\n%s\nDegats : %d, PV : %d, prix : %d\n",tourelle_types.arr[i].type.t_type.id, tourelle_types.arr[i].type.t_type.name, tourelle_types.arr[i].type.t_type.description, tourelle_types.arr[i].type.t_type.damage_type, tourelle_types.arr[i].type.t_type.pointsDeVie, tourelle_types.arr[i].type.t_type.prix);
-            i++;
-        }
-        printf("\nSaisir le type de la tourelle : ");
-        scanf("%d",&type);
-        if (game.cagnotte<entity_type_get_type_by_id(&tourelle_types, type)->type.t_type.prix){
-            printf("\nPas assez d'argent.");
-        }
-        else{
-            game.cagnotte-=entity_type_get_type_by_id(&tourelle_types, type)->type.t_type.prix;
-            printf("Saisir la ligne de la tourelle : ");
-            scanf("%d",&line);
-            printf("Saisir la colonne de la tourelle : ");
-            scanf("%d",&position);
-            Tourelle * new = tourelle_add(type, line, position, &error);
-            if ( error )
-                printf("Une entitee occupe deja cette position !\n");
-            else if (! new)
-                fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add");
-        }
+
+    printf("\nSaisissez l'abbreviation de la tourelle : ");
+    scanf("%c",&c);
+
+    // remove the '\n' from the buffer otherwise will not prompt again
+    getc(stdin);
+
+    t_type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE)->type.t_type;
+
+    if (game.cagnotte < t_type.prix){
+        printf("\nPas assez d'argent.\n\n");
     }
-    else if (!strcmp(instru,"save")){
-        char filename[28];
-        strcpy(filename, "saves/");
-        char save_name[21];
-        printf("nom de fichier de sauvegarde : ");
-        scanf("%s",save_name); 
-        creer_save(strcat(filename,save_name));
-    }
-    else if (!strcmp(instru,"\n")){
-        return 1;
-    }
+
     else{
-        printf("Instruction non reconnue.\n");
+
+        game.cagnotte -= t_type.prix;
+
+        printf("Saisir la ligne de la tourelle : ");
+        scanf("%d",&line);
+
+        printf("Saisir la colonne de la tourelle : ");
+        scanf("%d",&position);
+
+        Tourelle * new = tourelle_add(t_type.id, line, position, &error);
+
+        if ( error )
+            printf("Une entitee occupe deja cette position !\n\n");
+        else if (! new)
+            fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add\n\n");
     }
-    prompt();
+}
+
+void end(void){
+    game.finished = true;
+    game.won = false;
+}
+
+void save(void){
+    char filename[28];
+    strcpy(filename, "saves/");
+    char save_name[21];
+    printf("nom de fichier de sauvegarde : ");
+    scanf("%s",save_name); 
+    creer_save(strcat(filename,save_name));
+}
+
+#define COMMANDS_NO 6
+
+static const char * commands[] = {
+    "help",
+    "st",
+    "se",
+    "p",
+    "end",
+    "save",
+};
+
+const static void (* prompt_functions[]) (void) = {
+    help,
+    tourelle_stats,
+    etudiant_stats,
+    place_tourelle,
+    end,
+    save,
+};
+
+void prompt(void){
+
+    char command[50];
+    int len;
+
+    bool quit = false;
+
+    while ( ! quit ){
+
+        printf("game > ");
+
+        // 50 - 1 bytes are read max
+        fgets(command, 50, stdin);
+        len  = strlen(command);
+
+        if (len > 1 && command[len - 1] == '\n'){
+            command[len - 1] = '\0';
+            len --;
+        }
+
+        else if (len == 1 && command[0] == '\n'){
+            quit = true;
+        }
+
+        else {
+            printf("Error in prompt\n");
+            quit = true;
+        }
+
+        if (! quit ){
+
+            int i = 0;
+            while (i < COMMANDS_NO && strcmp(command, commands[i]) ){
+                i++;
+            }
+
+            // i is the index in the commands array if found
+            // else it is equal to COMMANDS_NO
+
+            if (i == COMMANDS_NO)
+                printf("Commande non reconnue.\n\n");
+            
+            else
+                prompt_functions[i]();
+        }
+    }
 }

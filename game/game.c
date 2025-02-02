@@ -470,8 +470,6 @@ void end_game(void){
 
     // save game stats if finished
 
-
-
     // free the type vectors memory
     entity_type_vector_free(&tourelle_types);
     entity_type_vector_free(&etudiant_types);

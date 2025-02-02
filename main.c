@@ -84,8 +84,11 @@ int main(void){
     prompt();
 
     do {
+        
         next_round();
-        prompt();
+        if (! game.finished)
+            prompt();
+
     } while (! game.finished );
     
 
