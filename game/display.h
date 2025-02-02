@@ -11,7 +11,7 @@ void affiche_vague(void);
 void help(void);
 
 //interprète les commandes utilisateur
-int interInstru(void);
+int prompt(void);
 
 
 

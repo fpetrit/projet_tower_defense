@@ -291,5 +291,5 @@ int prompt(void){
     else{
         printf("Instruction non reconnue.\n");
     }
-    interInstru();
+    prompt();
 }
