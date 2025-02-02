@@ -87,7 +87,7 @@ G
 [Elle inflige des degats de base et sa cible est ralentie d'une vitesse d'une case par tour pendant 3 tours.]
 40
 10
-3
+0
 3
 0
 

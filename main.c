@@ -17,6 +17,7 @@
 Jeu game;
 Entity_type_vector tourelle_types;
 Entity_type_vector etudiant_types;
+Log_storage logs;
 
 void menu(){
 

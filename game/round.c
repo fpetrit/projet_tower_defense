@@ -13,6 +13,7 @@
 
 extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
+extern Log_storage logs;
 
 // temporary effects setters & helpers
 
@@ -26,11 +27,18 @@ TEMP_EFFECT get_tmp_effect_type(int index){
 
 void set_speed_effect(Etudiant * e, int value){
 
-    e->effect |= SPEED;
+    Tagged_entity tagged_e;
+    tagged_e.tag = ETUDIANT;
 
+    e->effect |= SPEED;
+    e->effect_values[get_effect_index(SPEED)] = value;
     e->effect_remaining_time[get_effect_index(SPEED)] = 3;
 
     e->vitesse = max(0, e->vitesse + value);
+
+    tagged_e.entity.etudiant = *e;
+
+    save_log(ENTITY_EFFECT_APPLY, tagged_e, SPEED);
 
 }
 
@@ -313,7 +321,7 @@ static Tagged_entity t_entity_p_to_t_entity(Tagged_entity_p t_e_p){
 // decrement the effect remaining time
 // save logs when reseting an effect
 // apply the per round effect actions
-static inline void manage_effects_on_entity(Tagged_entity_p entity, Tagged_entity_type * type, Log_storage * logs){
+static inline void manage_effects_on_entity(Tagged_entity_p entity, Tagged_entity_type * type){
 
     TEMP_EFFECT * effects;
     TEMP_EFFECT effect;
@@ -373,7 +381,7 @@ static inline void manage_effects_on_entity(Tagged_entity_p entity, Tagged_entit
                 break;
             }
             
-            save_log(ENTITY_EFFECT_REMOVE, t_entity_p_to_t_entity(entity), effect, logs);
+            save_log(ENTITY_EFFECT_REMOVE, t_entity_p_to_t_entity(entity), effect);
         }
 
         // decrement the non zero remaining times
@@ -382,7 +390,7 @@ static inline void manage_effects_on_entity(Tagged_entity_p entity, Tagged_entit
     }
 }
 
-void manage_effects(Log_storage * logs){
+void manage_effects(void){
 
     Tagged_entity_p entity;
     Tagged_entity_type type;
@@ -395,7 +403,7 @@ void manage_effects(Log_storage * logs){
     entity.entity.tourelle = game.tourelles;
     while (entity.entity.tourelle){
         *t_type = entity_type_get_type_by_id(&tourelle_types, entity.entity.tourelle->type)->type.t_type;
-        manage_effects_on_entity(entity, &type, logs);
+        manage_effects_on_entity(entity, &type);
         entity.entity.tourelle = entity.entity.tourelle->next;
     }
 
@@ -405,7 +413,7 @@ void manage_effects(Log_storage * logs){
     entity.entity.etudiant = game.etudiants;
     while (entity.entity.etudiant){
         *e_type = entity_type_get_type_by_id(&etudiant_types, entity.entity.etudiant->type)->type.e_type;
-        manage_effects_on_entity(entity, &type, logs);
+        manage_effects_on_entity(entity, &type);
         entity.entity.tourelle = entity.entity.tourelle->next;
     }
 }
@@ -439,16 +447,16 @@ void manage_per_round_effects(void){
 //  LOG SYSTEM FUNCTIONS: to keep track of the messages generated during the round resolution
 //  Because we want to keep data of entities whose memory may be free() 
 
-void save_log(LOG_TYPE log_type, Tagged_entity t_entity, int data, Log_storage * storage){
+void save_log(LOG_TYPE log_type, Tagged_entity t_entity, int data){
 
     Log_infos infos;
     infos.t_entity = t_entity;
     infos.type = log_type;
     infos.data = data;
 
-    if (storage->count < storage->length) {
-        storage->arr[storage->count] = infos;
-        storage->count++; 
+    if (logs.count < logs.length) {
+        logs.arr[logs.count] = infos;
+        logs.count++; 
     }
     else
         fprintf(stderr, "Error: too many game logs in the Log_storage struct");
@@ -470,7 +478,7 @@ static char * log_format_strings[] = {
     "l'effet '%s' s'applique sur %s '%s', ligne %d, position %d (%+d) !\n\n",
 };
 
-void display_logs(Log_storage * storage){
+void display_logs(void){
 
     int i = 0;
 
@@ -485,13 +493,13 @@ void display_logs(Log_storage * storage){
     char * format_string;
 
 
-    while (i < storage->count){
+    while (i < logs.count){
 
-        format_string = log_format_strings[storage->arr[i].type];
+        format_string = log_format_strings[logs.arr[i].type];
 
-        t_entity = storage->arr[i].t_entity;
+        t_entity = logs.arr[i].t_entity;
 
-        data = storage->arr[i].data;
+        data = logs.arr[i].data;
 
 
         if ( t_entity.tag == ETUDIANT ) {
@@ -513,7 +521,7 @@ void display_logs(Log_storage * storage){
 
         }
 
-        switch (storage->arr[i].type)
+        switch (logs.arr[i].type)
         {
         case DEAD_TOURELLE:
             printf(format_string, name, line, position, data);

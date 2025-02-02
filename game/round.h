@@ -40,10 +40,10 @@ typedef struct {
     Log_infos arr[LOGS_MAX_NO];
 } Log_storage ;
 
-void manage_effects(Log_storage * logs);
+void manage_effects(void);
 
-void save_log(LOG_TYPE log_type, Tagged_entity t_entity, int data, Log_storage * storage);
-void display_logs(Log_storage * storage);
+void save_log(LOG_TYPE log_type, Tagged_entity t_entity, int data);
+void display_logs(void);
 
 
 

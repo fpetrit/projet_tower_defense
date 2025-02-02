@@ -11,7 +11,7 @@
 
 #define max(a, b)   (a <= b) b : a
 
-
+extern Log_storage logs;
 
 Tourelle * tourelle_create(int type, int ligne, int position){
     Tourelle * new = NULL;
@@ -561,7 +561,7 @@ void next_round(void){
     Etudiant_type e_type;
     Tourelle_type t_type;
 
-    Log_storage logs;
+    
     logs.count = 0;
     logs.length = LOGS_MAX_NO;
 
@@ -628,7 +628,7 @@ void next_round(void){
             tourelle_delete(tmp_t);
             game.score += score;
 
-            save_log(DEAD_TOURELLE, tmp_t_entity, score, &logs);
+            save_log(DEAD_TOURELLE, tmp_t_entity, score);
 
         }
         
@@ -657,7 +657,7 @@ void next_round(void){
             game.score += score;
             etudiant_delete(tmp_e);
 
-            save_log(DEAD_ETUDIANT, tmp_t_entity, score, &logs);
+            save_log(DEAD_ETUDIANT, tmp_t_entity, score);
         }
 
         // not dead and has reached his line last position
@@ -666,7 +666,7 @@ void next_round(void){
             stop = true;
 
             tmp_t_entity.entity.etudiant = *e;
-            save_log(ETUDIANT_WIN, tmp_t_entity, 0, &logs);
+            save_log(ETUDIANT_WIN, tmp_t_entity, 0);
 
             game.finished = true;
             game.won = false;
@@ -683,20 +683,20 @@ void next_round(void){
         if (etudiant_no == 0){
             game.won = true;
             game.finished = true;
-            save_log(PLAYER_WIN, tmp_t_entity, 0, &logs);
+            save_log(PLAYER_WIN, tmp_t_entity, 0);
         }
     }
 
 
     // update the temporary effects (decrement remaining times and reset characteristics)
-    manage_effects(&logs);
+    manage_effects();
 
 
     // print the game then the messages
 
     affiche_jeu();
 
-    display_logs(&logs);
+    display_logs();
 
     printf("Score : %d\n\n", game.score);
 
