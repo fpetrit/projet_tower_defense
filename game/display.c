@@ -210,7 +210,7 @@ int charge_save(char nom[64]){
 }
 
 int save_s(char nom){
-    FILE f=fopen("scores.txt","r");
+    FILE *f=fopen("scores.txt","r");
     int i,p=-1;
     char lines[10][64];
     int s[10];
