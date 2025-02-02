@@ -15,7 +15,7 @@ void prompt(void);
 
 void creer_save(char nom[28]);
 
-int charge_save(char nom[64]);
+int charge_save(char nom[28]);
 
 int save_s(char *nom);
 

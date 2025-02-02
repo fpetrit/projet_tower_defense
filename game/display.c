@@ -111,7 +111,7 @@ void creer_save(char nom[28]){
 }
 
 
-int charge_save(char nom[64]){
+int charge_save(char nom[28]){
     game.etudiants = NULL;
     game.tourelles = NULL;
     game.finished = false;
@@ -127,14 +127,13 @@ int charge_save(char nom[64]){
     int round_no, line_no;
     char abbr ;
     if (!f){
-        printf("La sauvegarde %s n'existe pas",nom);
         return 0;
     }
     fscanf(f,"%d\n%d\n%d\n",&game.cagnotte,&game.score,&game.tour);
     fscanf(f,"%c",&t);
     while(t!='\n'){
         fscanf(f," %d %d %d\n",&l,&p,&pv);
-        T=tourelle_add(t-48,l,p,0);
+        T=tourelle_add(t-48,l,p,0); 
         T->pointsDeVie=pv;
         fscanf(f,"%c",&t);
     }
@@ -200,6 +199,7 @@ int charge_save(char nom[64]){
     for (int i = 0; i < ROWS; i++){
         current_last_etudiant_on_line[i]->prev_line = NULL;
     }
+    fclose(f);
     return 1;
 }
 

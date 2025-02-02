@@ -24,15 +24,47 @@ Log_storage logs;
  */
 void menu(){
 
-    bool quit = false;
-    char response;
+    bool quit = false, save=false;
+    char response,response_1=0;
     FILE * level;
-
-    // 8 chararcers ("levels" + null byte), 20 available for level filename
+    char save_name[21];
     char filename[28];
+    //cas save : 
+    while (response != 'o' && response != 'n'){
+        CLEAR
+        printf("charger une sauvegarde ? [o/n]\n");
+        scanf("%c", &response);
+    }
+    if (response=='o'){
+        strcpy(filename, "saves/");
+        
+        while (!save){
+        save=false;
+        response_1=0;   
+            printf("Quelle sauvegarde souhaitez vous charger ?\nNom du niveau : ");
+            scanf("%s", save_name);
+            if ( strcat(filename, save_name) ){
+                printf("%s\n", filename);
+                if (charge_save(filename)){
+                    save = true;
+                }
+                else {
+                    perror("Erreur lors du chargement de la sauvegarde");
+                    sleep(2);
+                }
+            }
+            while ( ! save && response_1 != 'o' && response_1 != 'n'){
+                CLEAR
+                printf("Continuer ? [o/n]\n");
+                scanf("%c", &response_1);
+            }
+            save = response_1 == 'n' || save;
+            strcpy(filename, "levels/");
+        } 
+    }  
+    // 8 chararcers ("levels" + null byte), 20 available for level filename
     strcpy(filename, "levels/");
     char level_name[21];
-
     while ( ! quit ){
 
         CLEAR
@@ -66,8 +98,8 @@ void menu(){
 
         strcpy(filename, "levels/");
     }
-
 }
+
 
 
 
@@ -83,7 +115,7 @@ int main(void){
     char str[2];
     str[0] = '\0';
 
-    printf("\n\nEntree pour commencer à jouer ...");
+    printf("\n\nEntree pour commencer a jouer ...");
     getc(stdin);
     scanf("%c", str);
 
