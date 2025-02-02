@@ -696,8 +696,7 @@ void next_round(void){
 
     affiche_jeu();
 
-    display_logs();
-
+    printf("Cagnotte : %d\n",game.cagnotte);
     printf("Score : %d\n\n", game.score);
 
 

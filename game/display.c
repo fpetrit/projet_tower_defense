@@ -209,8 +209,7 @@ int charge_save(char nom[64]){
     }
 }
 
-int interInstru(void){ //pas terminé on ajoutera des instructions possibles au fil du temps 
-    printf("Cagnotte : %d\n",game.cagnotte);
+int prompt(void){ 
     char instru[256];
     int len;
     printf("\ngame > ");

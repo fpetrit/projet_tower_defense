@@ -81,11 +81,11 @@ int main(void){
     scanf("%c", str);
 
     affiche_jeu();
-    interInstru();
+    prompt();
 
     do {
         next_round();
-        interInstru();
+        prompt();
     } while (! game.finished );
     
 
