@@ -7,8 +7,11 @@
 #include "round.h"
 #include "entity_types/entity_types.h"
 #include "entity_types/entity_type_vector.h"
+#include "display.h"
 
+#define max(a, b)   (a <= b) b : a
 
+extern Log_storage logs;
 
 Tourelle * tourelle_create(int type, int ligne, int position){
     Tourelle * new = NULL;
@@ -29,6 +32,11 @@ Tourelle * tourelle_create(int type, int ligne, int position){
         new->type = type;
         new->ligne = ligne;
         new->position = position;
+        new->round_no = game.tour;
+
+        new->effect = 0;
+        memset(&new->effect_remaining_time, 0, EFFECT_NO);
+        memset(&new->effect_values, 0, EFFECT_NO);
 
         new->next = NULL;
         new->next_line = NULL;
@@ -39,6 +47,7 @@ Tourelle * tourelle_create(int type, int ligne, int position){
 
         new->pointsDeVie = t_type.pointsDeVie;
         new->prix = t_type.prix;
+        new->strength = t_type.strength;
     }
 
     return new;
@@ -93,7 +102,7 @@ Tourelle * tourelle_get_nearest_line(int line, int position, POS_FLAGS * flags) 
     if (node) {
 
         // get a tourelle on the same line
-        while (node->ligne != line) { node = node->next; }
+        while (node && node->ligne != line) { node = node->next; }
 
         if (node){
 
@@ -153,9 +162,11 @@ Tourelle * tourelle_add(int type, int ligne, int position, bool * error){
 
             if (flags_t & G_POS)
                 tourelle_line_append(new, node_t);
-            // else --> L_POS is set
-            else
+
+            else if ( flags_t & L_POS )
                 tourelle_line_prepend(new, node_t);
+            
+            // else: EQ_POS is not set, hence no tourelle on the same line and node_t is NULL
         }
 
         // this is the first tourelle
@@ -169,6 +180,8 @@ Tourelle * tourelle_add(int type, int ligne, int position, bool * error){
 
 
 void tourelle_delete(Tourelle * t){
+
+    // THIS FUNCTION ASSUMES THAT game.tourelles != NULL AND t IS IN THE LINKED LIST
     
     // simple linking by creation time
     Tourelle * node = game.tourelles;
@@ -176,15 +189,11 @@ void tourelle_delete(Tourelle * t){
     // we compare the pointers rather than the struct values for each field
     // two different Etudiants may have the same struct members values
 
-    if ( node != t){
-        while ( node && node->next != t){
-            node = node->next;
-        }
-    }
+    if ( game.tourelles == t)
+        game.tourelles = t->next;
 
-    if ( ! node )
-        fprintf(stderr, "Error: Etudiant not found in the linked list during deletion.\n");
     else {
+        while ( node->next != t) { node = node->next; }
         node->next = t->next;
     }
 
@@ -214,12 +223,16 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
         fprintf(stderr, "Error: etudiant_create failed to retrieve the Etudiant type described by '%c'.\n\
         Maybe the Etudiant type description is missing in vilains.txt.\n", abbr);
 
-    if (new){
+    if (new && ttype_res){
 
         // fill non type dependent members
         new->ligne = ligne;
         new->position = position;
         new->tour = tour;
+
+        new->effect = 0;
+        memset(&new->effect_remaining_time, 0, EFFECT_NO);
+        memset(&new->effect_values, 0, EFFECT_NO);
 
         new->prev_line = NULL;
         new->next_line = NULL;
@@ -230,6 +243,8 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
 
         new->type = e_type.id;
         new->pointsDeVie = e_type.pointsDeVie;
+        new->vitesse = e_type.vitesse;
+        new->strength = e_type.strength;
     }
 
     return new;
@@ -284,7 +299,7 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
 
     if (node) {
 
-        // get a tourelle on the same line
+        // get an etudiant on the same line
         while (node && (node->ligne != line || node->tour > game.tour ) ) { node = node->next; }
 
         if (node){
@@ -330,6 +345,20 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
 
 void etudiant_delete(Etudiant * e){
 
+    // simple linking by creation time
+    Etudiant * node = game.etudiants;
+
+    // we compare the pointers rather than the struct values for each field
+    // two different Etudiants may have the same struct members values
+
+    if (game.etudiants == e)
+        game.etudiants = e->next;
+
+    else {
+        while (node->next != e) { node = node->next; }
+        node->next = e->next;
+    }
+
     // double linking by line
 
     if (e->next_line)
@@ -337,24 +366,6 @@ void etudiant_delete(Etudiant * e){
 
     if (e->prev_line)
         e->prev_line->next_line = e->next_line;
-
-    // simple linking by creation time
-    Etudiant * node = game.etudiants;
-
-    // we compare the pointers rather than the struct values for each field
-    // two different Etudiants may have the same struct members values
-
-    if ( node != e){
-        while ( node && node->next != e){
-            node = node->next;
-        }
-    }
-
-    if ( ! node )
-        fprintf(stderr, "Error: Etudiant not found in the linked list during deletion.\n");
-    else {
-        node->next = e->next;
-    }
 
     free(e);
 }
@@ -367,12 +378,14 @@ void game_init(FILE * level){
     game.tourelles = NULL;
     game.finished = false;
     game.won = false;
+    game.etudiant_last_tour = 0;
+    game.score = 0;
 
     // init & fill the Entity_type_vector tourelle_types & etudiant_types global variable defined in main.c
     init_types();
 
     int round_no, line_no;
-    char type;
+    char abbr ;
     bool error = false;
 
     char str[2];
@@ -386,41 +399,54 @@ void game_init(FILE * level){
     // fill cagnotte
     fscanf(level, "%d", &game.cagnotte);
 
-    // prev_e "initialization"
+    // create the first etudiant, initialize prev_e
     if (! feof(level) ){
-        fscanf(level, " %d %d %c", &round_no, &line_no, &type);
+        fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
         // to chain Etudiants
-        prev_e = etudiant_create(type, line_no, 0, round_no);
-        etudiant_insert(prev_e);
+        prev_e = etudiant_create(abbr , line_no, 0, round_no);
         error = prev_e == NULL;
+
+        if (!error) {
+            etudiant_insert(prev_e);
+            current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
+            prev_e->next_line = NULL;
+
+            if (prev_e->tour > game.etudiant_last_tour)
+                game.etudiant_last_tour = prev_e->tour;
+        }
+    
     }
 
     // CHAINING
     while ( ! feof(level) && ! error){
 
         // first simple chaining
-        fscanf(level, " %d %d %c", &round_no, &line_no, &type);
+        fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
 
-        e = etudiant_create(type, line_no, 0, round_no);
-        etudiant_append(e, prev_e);
-        prev_e = e;
-
+        e = etudiant_create(abbr , line_no, 0, round_no);
+        
         // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
         // nécessaire pour l'algo de chaînage double par ligne
         // erreur également si malloc n'a pas fonctionné
-        error = prev_e == NULL || prev_e->tour > round_no;
+        error = e == NULL || prev_e->tour > round_no;
         
         if ( ! error ) {
+
+            etudiant_append(e, prev_e);
+            prev_e = e;
 
             // if it is the first etudiant created for this line, he does not have next etudiant
             if (current_last_etudiant_on_line[prev_e->ligne - 1] == NULL){
                 current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
                 prev_e->next_line = NULL;
             } else {
-                current_last_etudiant_on_line[prev_e->ligne - 1]->next_line = prev_e;
-                prev_e->prev_line = current_last_etudiant_on_line[prev_e->ligne - 1];
+                current_last_etudiant_on_line[prev_e->ligne - 1]->prev_line = prev_e;
+                prev_e->next_line = current_last_etudiant_on_line[prev_e->ligne - 1];
                 current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
             }
+
+            if (prev_e->tour > game.etudiant_last_tour)
+                game.etudiant_last_tour = prev_e->tour;
 
         } else if (prev_e != NULL) {
             fprintf(stderr, "Error: incorrect level text file format.\nFirst fields of each row must be ordered in ascending order.");
@@ -475,7 +501,7 @@ void end_game(void){
 
 void update_tourelles(void){
 
-    Tagged_entity entity;
+    Tagged_entity_p entity;
     entity.tag = TOURELLE;
 
     Tourelle * t = game.tourelles;
@@ -495,7 +521,7 @@ void update_tourelles(void){
 
 void update_etudiants(void){
 
-    Tagged_entity entity;
+    Tagged_entity_p entity;
     entity.tag = ETUDIANT;
 
     Etudiant * e = game.etudiants;
@@ -521,10 +547,7 @@ static inline int count_etudiants(void){
 
 
 
-void update_round(void){
-
-    // the etudiants of the current round no. ust appear if their position is free (line i, position 0)
-    // else their round no. is incrementedm
+void next_round(void){
 
     POS_FLAGS flags_e = 0;
     POS_FLAGS flags_t = 0;
@@ -532,8 +555,23 @@ void update_round(void){
     Etudiant * e;
     Tourelle * t;
 
-    Tourelle_type * ttype;
-    Etudiant_type * etype;
+    Tagged_entity tmp_t_entity;
+    Etudiant * tmp_e;
+    Tourelle * tmp_t;
+    Etudiant_type e_type;
+    Tourelle_type t_type;
+
+    
+    logs.count = 0;
+    logs.length = LOGS_MAX_NO;
+
+    int score;
+    bool stop;
+
+    // the etudiants of the current round no. ust appear if their position is free (line i, position 0)
+    // else their round no. is incremented
+
+    // take the opportunity to apply per round effect
 
     e = game.etudiants;
     while (e) {
@@ -557,6 +595,8 @@ void update_round(void){
     // increment game.tour AFTER THE NEAREST ENTITIES SEARCH
     // to ignore during the search the etudiants that must appear at this current round
     game.tour++;
+
+    manage_per_round_effects();
     
     // tourelles are updated (move & inflict damages)
     update_tourelles();
@@ -569,57 +609,96 @@ void update_round(void){
     // print the events
 
     // tourelles
+    tmp_t_entity.tag = TOURELLE;
     t = game.tourelles;
     while (t) {
 
-        ttype = &entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type;
-
         if (t->pointsDeVie <= 0) {
             
-            printf("La tourelle '%s', position (%d, %d) a ete detruite !\n",
-            ttype->name, t->ligne, t->position);
+            // tmp_t_entity has type Tagged_entity (NOT Tagged_entity_p) that store the entity data itself and not pointers to it
+            // because the tourelle memory is not longer available
+            tmp_t_entity.entity.tourelle = *t;
 
-            tourelle_delete(t);
+            tmp_t = t;
+            t = t->next;
+
+            t_type = entity_type_get_type_by_id(&tourelle_types, tmp_t->type)->type.t_type;
+            score = tourelle_get_score(t_type, game.tour);
+
+            tourelle_delete(tmp_t);
+            game.score += score;
+
+            save_log(DEAD_TOURELLE, tmp_t_entity, score);
+
         }
+        
+        else
+            t = t->next;
     }
 
     // if one etudiant has reached the last position, the game is lost
+    // if one etudiant is dead we compute the score increment
     // etudiants
+    tmp_t_entity.tag = ETUDIANT;
+    stop = false;
     e = game.etudiants;
-    while (e) {
-
-        etype = &entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type;
+    while (! stop && e) {
 
         if (e->pointsDeVie <= 0) {
             
-            printf("L'étudiant '%s', position (%d, %d) a ete elemine !\n",
-            etype->name, e->ligne, e->position);
+            tmp_t_entity.entity.etudiant = *e;
 
-            etudiant_delete(e);
+            tmp_e = e;
+            e = e->next;
+
+            e_type = entity_type_get_type_by_id(&etudiant_types, tmp_e->type)->type.e_type;
+            score = etudiant_get_score(e_type, game.tour);
+
+            game.score += score;
+            etudiant_delete(tmp_e);
+
+            save_log(DEAD_ETUDIANT, tmp_t_entity, score);
         }
 
         // not dead and has reached his line last position
-        else if (e->position == ROWS - 1){
+        else if (e->position == COLUMNS){
 
-            printf("Game over !\n\
-                    l'etudiant '%s' a atteint la dernière position sur la ligne %d.\n",
-                    etype->name, e->ligne);
+            stop = true;
+
+            tmp_t_entity.entity.etudiant = *e;
+            save_log(ETUDIANT_WIN, tmp_t_entity, 0);
 
             game.finished = true;
             game.won = false;
         }
 
-        e = e->next;
+        else
+            e = e->next;
     }
 
+    memset(&tmp_t_entity, 0, sizeof(Tagged_entity));
     // if not already lost & there is no more enemy in the linked list: win 
     if ( ! game.finished ) {
         int etudiant_no = count_etudiants();
         if (etudiant_no == 0){
             game.won = true;
             game.finished = true;
-            printf("Vous avez gagne !\n Tous les ennemis sont morts.\n");
+            save_log(PLAYER_WIN, tmp_t_entity, 0);
         }
     }
+
+
+    // update the temporary effects (decrement remaining times and reset characteristics)
+    manage_effects();
+
+
+    // print the game then the messages
+
+    affiche_jeu();
+
+    printf("Cagnotte : %d\n",game.cagnotte);
+    printf("Score : %d\n\n", game.score);
+
+    display_logs();
 }
 

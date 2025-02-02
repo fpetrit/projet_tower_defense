@@ -17,10 +17,8 @@
 Jeu game;
 Entity_type_vector tourelle_types;
 Entity_type_vector etudiant_types;
+Log_storage logs;
 
-// fonction wrapper basée sur une boucle permettant la navigation dans le menu
-// cette fonction évoluera avec la complexité/les graphismes du menu
-// elle est responsable d'ouvir le fichier de partie séléctionné et d'appeler la fonction game_init
 void menu(){
 
     bool quit = false;
@@ -70,13 +68,28 @@ void menu(){
 }
 
 int main(void){
+
+    // open level file & initialize all the data
     menu();
+    
     affiche_vague();
-    while(!game.finished){
-        update_round();
-        affiche_jeu();
-        interInstru();
-    }
+    char str[2];
+    str[0] = '\0';
+
+    printf("\n\nEntree pour commencer à jouer ...");
+    getc(stdin);
+    scanf("%c", str);
+
+    affiche_jeu();
+    prompt();
+
+    do {
+        next_round();
+        prompt();
+    } while (! game.finished );
+    
+
     end_game();
+    
     return 0;
 }

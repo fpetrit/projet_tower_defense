@@ -43,6 +43,11 @@ static inline void fill_etudiant_block(FILE * file, Etudiant_type * e_type){
 
             fscanf(file, " %d", &e_type->pointsDeVie);
 
+            fscanf(file, " %d", &e_type->vitesse);
+
+            // strength
+            fscanf(file, " %d", &e_type->strength);
+
             fscanf(file, " %d", &e_type->damage_type);
     
             fscanf(file, " %d", &e_type->move_type);
@@ -74,19 +79,46 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
 
         if (length > 0) {
 
+            // unique type id to refer the type
             t_type->id = t_id;
             t_id++;
         
+            // name
             strcpy(t_type->name, str);
 
+            // abbreviation
             fscanf(file, "%c", &t_type->abbr);
 
+            // '\n'
+            fgetc(file);
+
+            // a description
+            if (getc(file) == '[') {
+                fscanf(file, " %[^]]", t_type->description);
+
+                // ']'
+                fgetc(file);
+            }
+
+            else
+                *t_type->description = '\0';
+
+            
+
+            // price
             fscanf(file, " %d", &t_type->prix);
 
+
+            // HPs
             fscanf(file, " %d", &t_type->pointsDeVie);
 
+            // strength
+            fscanf(file, " %d", &t_type->strength);
+
+            // an integer damage type 
             fscanf(file, " %d", &t_type->damage_type);
     
+            // an integer move type
             fscanf(file, " %d", &t_type->move_type);
         }
 

@@ -12,8 +12,10 @@
 /
 / <NOM_DE_LA_TOURELLE>
 / <ABREVIATION>
+/ <DESCRIPTION>
 / <PRIX>
 / <POINTS_DE_VIE>
+/ <FORCE>
 / <TYPE_DEGATS>
 / <TYPE_DEPLACEMENT>
 /
@@ -23,6 +25,8 @@
 /
 / ABREVIATION : un seul caractère unique.
 / Permet de réprésenter facilement la tourelle surtout en ascii.
+/
+/ DESCRIPTION : Un texte entre crochets (délimiteurs).
 /
 / PRIX : un int.
 /
@@ -46,12 +50,54 @@
 / partant de 0, unique).
 
 
-
-
 TOURELLE DE BASE
 T
+[La tourelle active la plus abordable.
+Elle inflige 1 de degat à sa cible.]
 25
+10
 3
 0
 0
 
+
+CANON
+C
+[Les tirs de cette tourelle sont infligent des degats en profondeur.
+Ils touchent les trois premiers ennemis de sa ligne dans une direction.]
+50
+10
+3
+1
+0
+
+
+BOMBE
+B
+[Une mine passive mais qui explose une fois detruite !
+Elle inflige alors des degats a tous les ennemis de sa ligne et de sa colonne.]
+25
+1
+3
+2
+0
+
+TOURELLE LANCEUSE DE GLACE
+G
+[Elle inflige des degats de base et sa cible est ralentie d'une vitesse d'une case par tour pendant 3 tours.]
+40
+10
+0
+3
+0
+
+LANCE MISSILES
+M
+[Elle dispose d'un système de visée qui lui permet de toucher directement l'ennemi le plus proche de l'universite.
+Elle inflige des degats de base a sa cible et a toutes les entites de la meme colonne.
+Attention aux dommages collateraux !]
+40
+10
+3
+4
+0

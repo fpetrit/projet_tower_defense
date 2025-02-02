@@ -1,12 +1,49 @@
 / <NOM_DU_ZOMBIE>
 / <ABREVIATION>
 / <POINTS_DE_VIE>
+/ <VITESSE>
+/ <FORCE>
 / <TYPE_DEGATS>
 / <TYPE_DEPLACEMENT>
 
-Antoine
-Z
-50
+ANTOINE
+A
+10
+1
+3
 0
 0
+
+TANK
+B
+20
+1
+3
+0
+0
+
+ASSASSIN
+I
+5
+2
+6
+0
+0
+
+MAGE
+Q
+10
+1
+3
+0
+1
+
+SOIGNEUR
+S
+10
+1
+3
+1
+0
+
 

@@ -3,7 +3,10 @@
 projet
 docs/html
 *.txt
+*.odt#
+*.odt
 
+!note.txt
 !game/tourelles.txt
 !game/vilains.txt
 
