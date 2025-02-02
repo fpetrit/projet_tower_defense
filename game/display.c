@@ -228,24 +228,41 @@ int prompt(void){
         int i=0;
         printf("Types possibles:\n");
         while (i<tourelle_types.count){
-            printf("%d\n",tourelle_types.arr[i].type.t_type.id);
+            printf("%d ",tourelle_types.arr[i].type.t_type.id);
             i++;
         }
-        printf("\nDonnez le type de la tourelle : ");
+        printf("\n\nDonnez le type de la tourelle : ");
         scanf("%c",&c);
-        printf("Type : %d : %s : Degats : %d, PV : %d, prix : %d\n",tourelle_types.arr[i].type.t_type.id, tourelle_types.arr[i].type.t_type.name, tourelle_types.arr[i].type.t_type.damage_type, tourelle_types.arr[i].type.t_type.pointsDeVie, tourelle_types.arr[i].type.t_type.prix);
+
+        // remove the '\n' from the buffer otherwise will not prompt again
+        fgetc(stdin);
+
+        Tourelle_type t_type = entity_type_get_type_by_id(&tourelle_types, c)->type.t_type;
+        printf("\nType : %d --- %s\nForce : %d\nPV : %d\nPrix : %d\n\n",
+        t_type.t_type.id, t_type.t_type.name, t_type.t_type.damage_type, t_type.t_type.pointsDeVie, t_type.t_type.prix);
     }
+
     else if (!strcmp(instru,"StatEtu")){
         int i=0;
-        printf("Types possibles:\n");
+        char c;
+
+        printf("\nAbbreviations existantes :\n");
         while (i<etudiant_types.count){
-            printf("%d\n",etudiant_types.arr[i].type.e_type.id);
+            printf("%c ", etudiant_types.arr[i].type.e_type.abbr);
             i++;
         }
-        printf("\nDonnez le type de l'étudiant : ");
-        scanf("%d",&i);
-        printf("Type : %d : %s : Degats : %d, PV : %d, vitesse : %d\n",etudiant_types.arr[i].type.e_type.id, etudiant_types.arr[i].type.e_type.name, etudiant_types.arr[i].type.e_type.damage_type, etudiant_types.arr[i].type.e_type.pointsDeVie, etudiant_types.arr[i].type.e_type.vitesse);
+
+        printf("\n\nDonnez l'abbreviation du type de l'etudiant : ");
+        scanf("%c",&c);
+
+        // remove the '\n' from the buffer otherwise will not prompt again
+        fgetc(stdin);
+
+        Etudiant_type e_type = entity_type_get_type_by_abbr(&etudiant_types, c, ETUDIANT)->type.e_type;
+        printf("\nType : %d --- %s\nForce : %d\nPV : %d\nVitesse : %d\n\n",
+        e_type.id, e_type.name, e_type.strength, e_type.pointsDeVie, e_type.vitesse);
     }
+
     else if (!strcmp(instru,"end")){
         game.finished=1;
         return 0;
