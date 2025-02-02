@@ -21,6 +21,23 @@ typedef enum {
     G_POS =  1 << 2
 } POS_FLAGS;
 
+#define EFFECT_NO 4
+
+typedef enum {
+    // speed is set to 0 when affected
+    FREEZE      = 1 << 0,
+
+    // + effect_value hp each round (may be negative)
+    HEALTH      = 1 << 1,
+
+    // + effect_value strength when affected (may be negative)
+    STRENGTH    = 1 << 2,
+
+    // + effect_value speed when affected (may be negative)
+    SPEED       = 1 << 3,
+
+} TEMP_EFFECT;
+
 
 
 /**
@@ -36,6 +53,13 @@ typedef struct tourelle {
     int pointsDeVie;
     int ligne;
     int position;
+    int strength;
+
+    // temporary effects
+    char effect_remaining_time[EFFECT_NO];
+    char effect_values[EFFECT_NO];
+    TEMP_EFFECT effect;
+    
 
     int round_no;
     
@@ -75,6 +99,12 @@ typedef struct etudiant {
     int ligne;
     int position;
     int vitesse;
+    int strength;
+
+    // temporary effects
+    char effect_remaining_time[EFFECT_NO];
+    char effect_values[EFFECT_NO];
+    TEMP_EFFECT effect;
 
     /// Used to determine when to display the enemy.
     int tour;
@@ -142,7 +172,7 @@ extern Jeu game;
  */
 void game_init(FILE * level);
 
-void start_game();
+void next_round(void);
 
 void end_game(void);
 

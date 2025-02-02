@@ -102,7 +102,7 @@ void help(void){
 
 void creer_save(char nom[28]){
     FILE* f=fopen(nom,"w");
-    fprintf(f,"%d\n%d\n%d\n",game.cagnotte,game.score,game.tour); // game.score à ajouter
+    fprintf(f,"%d\n%d\n%d\n",game.cagnotte,game.score,game.tour);
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
     while (t!=NULL){
@@ -261,16 +261,16 @@ int interInstru(void){ //pas terminé on ajoutera des instructions possibles au 
             printf("\nType %d --- %s :\n%s\nDegats : %d, PV : %d, prix : %d\n",tourelle_types.arr[i].type.t_type.id, tourelle_types.arr[i].type.t_type.name, tourelle_types.arr[i].type.t_type.description, tourelle_types.arr[i].type.t_type.damage_type, tourelle_types.arr[i].type.t_type.pointsDeVie, tourelle_types.arr[i].type.t_type.prix);
             i++;
         }
-        printf("\nSaisir le type de la tourelle :\n");
+        printf("\nSaisir le type de la tourelle : ");
         scanf("%d",&type);
         if (game.cagnotte<entity_type_get_type_by_id(&tourelle_types, type)->type.t_type.prix){
-            printf("Pas assez d'argent");
+            printf("\nPas assez d'argent.");
         }
         else{
             game.cagnotte-=entity_type_get_type_by_id(&tourelle_types, type)->type.t_type.prix;
-            printf("Saisir la ligne de la tourelle :\n");
+            printf("Saisir la ligne de la tourelle : ");
             scanf("%d",&line);
-            printf("Saisir la colonne de la tourelle :\n");
+            printf("Saisir la colonne de la tourelle : ");
             scanf("%d",&position);
             Tourelle * new = tourelle_add(type, line, position, &error);
             if ( error )

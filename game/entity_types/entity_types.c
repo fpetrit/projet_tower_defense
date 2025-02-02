@@ -45,6 +45,9 @@ static inline void fill_etudiant_block(FILE * file, Etudiant_type * e_type){
 
             fscanf(file, " %d", &e_type->vitesse);
 
+            // strength
+            fscanf(file, " %d", &e_type->strength);
+
             fscanf(file, " %d", &e_type->damage_type);
     
             fscanf(file, " %d", &e_type->move_type);
@@ -108,6 +111,9 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
 
             // HPs
             fscanf(file, " %d", &t_type->pointsDeVie);
+
+            // strength
+            fscanf(file, " %d", &t_type->strength);
 
             // an integer damage type 
             fscanf(file, " %d", &t_type->damage_type);

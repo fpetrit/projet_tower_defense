@@ -18,9 +18,6 @@ Jeu game;
 Entity_type_vector tourelle_types;
 Entity_type_vector etudiant_types;
 
-// fonction wrapper basée sur une boucle permettant la navigation dans le menu
-// cette fonction évoluera avec la complexité/les graphismes du menu
-// elle est responsable d'ouvir le fichier de partie séléctionné et d'appeler la fonction game_init
 void menu(){
 
     bool quit = false;
@@ -85,10 +82,11 @@ int main(void){
     affiche_jeu();
     interInstru();
 
-    while(!game.finished){
+    do {
         next_round();
         interInstru();
-    }
+    } while (! game.finished );
+    
 
     end_game();
     

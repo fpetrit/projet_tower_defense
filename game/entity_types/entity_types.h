@@ -12,6 +12,7 @@ typedef struct {
     char description[TYPE_DESCRIPTONS_MAX_CHAR_NO + 1];
     int prix;
     int pointsDeVie;
+    int strength;
     int damage_type;
     int move_type;
 
@@ -24,6 +25,7 @@ typedef struct {
     char abbr;
     int pointsDeVie;
     int vitesse;
+    int strength;
     int damage_type;
     int move_type;
 

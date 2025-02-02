@@ -9,6 +9,8 @@
 #include "entity_types/entity_type_vector.h"
 #include "display.h"
 
+#define max(a, b)   (a <= b) b : a
+
 
 
 Tourelle * tourelle_create(int type, int ligne, int position){
@@ -32,6 +34,10 @@ Tourelle * tourelle_create(int type, int ligne, int position){
         new->position = position;
         new->round_no = game.tour;
 
+        new->effect = 0;
+        memset(&new->effect_remaining_time, 0, EFFECT_NO);
+        memset(&new->effect_values, 0, EFFECT_NO);
+
         new->next = NULL;
         new->next_line = NULL;
         new->prev_line = NULL;
@@ -41,6 +47,7 @@ Tourelle * tourelle_create(int type, int ligne, int position){
 
         new->pointsDeVie = t_type.pointsDeVie;
         new->prix = t_type.prix;
+        new->strength = t_type.strength;
     }
 
     return new;
@@ -216,12 +223,16 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
         fprintf(stderr, "Error: etudiant_create failed to retrieve the Etudiant type described by '%c'.\n\
         Maybe the Etudiant type description is missing in vilains.txt.\n", abbr);
 
-    if (new){
+    if (new && ttype_res){
 
         // fill non type dependent members
         new->ligne = ligne;
         new->position = position;
         new->tour = tour;
+
+        new->effect = 0;
+        memset(&new->effect_remaining_time, 0, EFFECT_NO);
+        memset(&new->effect_values, 0, EFFECT_NO);
 
         new->prev_line = NULL;
         new->next_line = NULL;
@@ -233,6 +244,7 @@ Etudiant * etudiant_create(char abbr, int ligne, int position, int tour){
         new->type = e_type.id;
         new->pointsDeVie = e_type.pointsDeVie;
         new->vitesse = e_type.vitesse;
+        new->strength = e_type.strength;
     }
 
     return new;
@@ -537,9 +549,6 @@ static inline int count_etudiants(void){
 
 void next_round(void){
 
-    // the etudiants of the current round no. ust appear if their position is free (line i, position 0)
-    // else their round no. is incrementedm
-
     POS_FLAGS flags_e = 0;
     POS_FLAGS flags_t = 0;
 
@@ -558,6 +567,11 @@ void next_round(void){
 
     int score;
     bool stop;
+
+    // the etudiants of the current round no. ust appear if their position is free (line i, position 0)
+    // else their round no. is incremented
+
+    // take the opportunity to apply per round effect
 
     e = game.etudiants;
     while (e) {
@@ -581,6 +595,8 @@ void next_round(void){
     // increment game.tour AFTER THE NEAREST ENTITIES SEARCH
     // to ignore during the search the etudiants that must appear at this current round
     game.tour++;
+
+    manage_per_round_effects();
     
     // tourelles are updated (move & inflict damages)
     update_tourelles();
@@ -670,6 +686,10 @@ void next_round(void){
             save_log(PLAYER_WIN, tmp_t_entity, 0, &logs);
         }
     }
+
+
+    // update the temporary effects (decrement remaining times and reset characteristics)
+    manage_effects(&logs);
 
 
     // print the game then the messages
