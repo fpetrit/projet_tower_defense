@@ -19,20 +19,22 @@ Entity_type_vector tourelle_types;
 Entity_type_vector etudiant_types;
 Log_storage logs;
 
+/**
+ * @brief Prompt the user for a level filename, open it and initialize a game with it by calling @ref game_init
+ */
 void menu(){
 
     bool quit = false;
     char response;
     FILE * level;
 
-    // 8 caractères, il en reste 20 pour les noms de niveau, null byte géré
+    // 8 chararcers ("levels" + null byte), 20 available for level filename
     char filename[28];
     strcpy(filename, "levels/");
     char level_name[21];
 
     while ( ! quit ){
 
-        // macro évaluée par le preprocesseur à réutiliser
         CLEAR
 
         response = 0;
@@ -67,6 +69,11 @@ void menu(){
 
 }
 
+
+
+/**
+ * @brief Contains the main loop of the game in which are called @ref next_round and @ref prompt .
+ */
 int main(void){
 
     // open level file & initialize all the data
