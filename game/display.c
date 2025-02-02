@@ -226,20 +226,22 @@ int prompt(void){
     else if (!strcmp(instru,"StatTour")){
         char c;
         int i=0;
-        printf("Types possibles:\n");
+
+        printf("\nAbbreviations existantes :\n");
         while (i<tourelle_types.count){
-            printf("%d ",tourelle_types.arr[i].type.t_type.id);
+            printf("%c ",tourelle_types.arr[i].type.t_type.abbr);
             i++;
         }
-        printf("\n\nDonnez le type de la tourelle : ");
+
+        printf("\n\nDonnez l'abbreviation du type de la tourelle : ");
         scanf("%c",&c);
 
         // remove the '\n' from the buffer otherwise will not prompt again
         fgetc(stdin);
 
-        Tourelle_type t_type = entity_type_get_type_by_id(&tourelle_types, c)->type.t_type;
-        printf("\nType : %d --- %s\nForce : %d\nPV : %d\nPrix : %d\n\n",
-        t_type.t_type.id, t_type.t_type.name, t_type.t_type.damage_type, t_type.t_type.pointsDeVie, t_type.t_type.prix);
+        Tourelle_type t_type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE)->type.t_type;
+        printf("\nType : %d --- %s\n%s\nForce : %d\nPV : %d\nPrix : %d\n\n",
+        t_type.id, t_type.name, t_type.description, t_type.strength, t_type.pointsDeVie, t_type.prix);
     }
 
     else if (!strcmp(instru,"StatEtu")){

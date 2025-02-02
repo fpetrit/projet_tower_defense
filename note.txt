@@ -1,12 +1,6 @@
-
-verifier la strength 0 ?
-
-problème stdin input buffer n'est pas vide lors des appels récursifs à interInstru : il prend la newline seule restante du buffer et return immédiatement
-on ne peut donc rentrer qu'une seule commande par tour ?
-
 le prompt s'affiche après avoir perdu la partie -> bug si l'on rentre des trucs surement
 
-
+warning fonction prompt
 
 
 
