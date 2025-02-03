@@ -9,13 +9,13 @@
 extern Entity_type_vector tourelle_types;
 extern Entity_type_vector etudiant_types;
 
-void affiche_jeu(void){
+void display_game(void){
     char L[ROWS][COLUMNS+5][5];
     Tourelle* t=game.tourelles;
     Etudiant* e=game.etudiants;
     CLEAR
     printf("Tour %d\n",game.tour);
-    for (int i=0; i<ROWS;i++){
+    for (int i=0; i<ROWS;i++){ //creates an empty board in a 2D list of strings
         for (int j=0; j<COLUMNS+1;j++){
             if (j==0){
                 sprintf(L[i][0],"%d|  ",i+1);
@@ -34,17 +34,17 @@ void affiche_jeu(void){
             }
         }
     }
-    while (e!=NULL){
+    while (e!=NULL){ // Puts Etudiants in the right spots of the list
         if (e->tour<=game.tour){
         sprintf(L[e->ligne-1][COLUMNS+1 - e->position]," %2d%c",e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         }
         e=e->next;
     }
-    while (t!=NULL){
+    while (t!=NULL){ // Puts Tourelles in the right spots of the list
         sprintf(L[t->ligne-1][COLUMNS+1 - t->position]," %2d%c",t->pointsDeVie,entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.abbr);
         t=t->next;
     }
-    for (int k=0;k<=ROWS-1;k++){
+    for (int k=0;k<=ROWS-1;k++){ //prints the list
         for (int l=0;l<=COLUMNS;l++){
             printf(L[k][l]);
         }
@@ -54,7 +54,7 @@ void affiche_jeu(void){
 }
 
 
-void affiche_vague(void){ //affiche la vague avant le début des tours 
+void display_wave(void){
     char L[ROWS][game.etudiant_last_tour+5][5];;
     Etudiant* e=game.etudiants;
     CLEAR
@@ -93,7 +93,7 @@ void affiche_vague(void){ //affiche la vague avant le début des tours
 
 
 
-void creer_save(char nom[28]){
+void create_save(char nom[28]){
     FILE* f=fopen(nom,"w");
     fprintf(f,"%d\n%d\n%d\n",game.cagnotte,game.score,game.tour);
     Tourelle* t=game.tourelles;
@@ -102,7 +102,7 @@ void creer_save(char nom[28]){
         fprintf(f,"%d %d %d %d\n",t->type,t->ligne,t->position,t->pointsDeVie);
         t=t->next;
     }
-    fprintf(f,"\n"); //2e saut de ligne pour différencier tourelles et ennemis
+    fprintf(f,"\n"); //2nd line skip to differentiate between Tourelles and Etudiants
     while (e!=NULL){
         fprintf(f,"%d %d %d %d %c\n",e->ligne,e->position,e->tour,e->pointsDeVie,entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.abbr);
         e=e->next;
@@ -111,7 +111,7 @@ void creer_save(char nom[28]){
 }
 
 
-int charge_save(char nom[28]){
+int load_save(char nom[28]){
     game.etudiants = NULL;
     game.tourelles = NULL;
     game.finished = false;
@@ -132,7 +132,7 @@ int charge_save(char nom[28]){
     fscanf(f,"%d\n%d\n%d",&game.cagnotte,&game.score,&game.tour);
     fscanf(f,"%c",&t);
     fscanf(f,"%c",&t);
-    while(t!='\n'){
+    while(t!='\n'){ //tests if we've arrived to the line skip 
         fscanf(f," %d %d %d",&l,&p,&pv);
         T=tourelle_add(t-48,l,p,&error_1);
         printf("%c %d %d %d\n\n",t,l,p,pv); 
@@ -171,9 +171,6 @@ int charge_save(char nom[28]){
         printf(" %d %d %d %d %c\n", line_no, p, round_no, pv ,abbr);
         if ( ! error )
             e = etudiant_create(abbr , line_no, p, round_no);
-        // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
-        // nécessaire pour l'algo de chaînage double par ligne
-        // erreur également si malloc n'a pas fonctionné
         error = error || e == NULL || prev_e->tour > round_no;
         
         if ( ! error ) {
@@ -219,19 +216,19 @@ int save_s(char *nom){
     char lines[10][64];
     int s[10];
     fscanf(f,"%d\n",&i);
-    for (int j=0;j<i;j++){
+    for (int j=0;j<i;j++){ //puts already save scores in a list 
         if (!feof(f)){
             fscanf(f,"%d %s\n",&s[j],lines[j]);
         }
     }
     fclose(f);
-    for (int k=0;k<i;k++){
+    for (int k=0;k<i;k++){ // finds the position of the new score in the list
         if (s[k]<=game.score){
             p=k;
             break;
         }
     }
-    if (i<10){
+    if (i<10){ //if we dont have 10 scores saved, we just add the new one at the right position 
         i++;
         
         if (p==-1){
@@ -249,8 +246,8 @@ int save_s(char *nom){
         }
     }
 
-    else{
-        if (p==-1){
+    else{ // else we get rid of the lowest one
+        if (p==-1){ // case where the 10 scores already registred are better than the new one
             printf("le score n'est pas dans les 10 meilleurs\n");
             fclose(f);
             return 0;
@@ -270,7 +267,7 @@ int save_s(char *nom){
     return 1;
 }
 
-void affiche_s(void){
+void display_s(void){
     FILE* f=fopen("scores.txt","r");
     int i,j;
     char s[28];
@@ -401,7 +398,7 @@ void save(void){
     char save_name[21];
     printf("nom de fichier de sauvegarde : ");
     scanf("%s",save_name); 
-    creer_save(strcat(filename,save_name));
+    create_save(strcat(filename,save_name));
 }
 
 #define COMMANDS_NO 6

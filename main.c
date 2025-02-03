@@ -45,7 +45,7 @@ int menu(bool *end){
             scanf("%s", save_name);
             if ( strcat(filename, save_name) ){
                 printf("%s\n", filename);
-                if (charge_save(filename)){
+                if (load_save(filename)){
                     save = true;
                     quit=true;
                 }
@@ -114,14 +114,14 @@ int menu(bool *end){
 int main(void){
     bool end=false;
     // display best scores for 5 secs
-    affiche_s();
+    display_s();
     sleep(2);
     CLEAR
     // open level file & initialize all the data
     int i=menu(&end);
     if (end==true) return 0;
     if (i==1){
-        affiche_vague();
+        display_wave();
         char str[2];
         str[0] = '\0';
 
@@ -137,7 +137,7 @@ int main(void){
         getc(stdin);
         scanf("%c", str);
     }
-    affiche_jeu();
+    display_game();
     prompt();
     do {
         

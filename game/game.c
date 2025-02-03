@@ -698,7 +698,7 @@ void next_round(void){
 
     // print the game then the messages
 
-    affiche_jeu();
+    display_game();
 
     printf("Cagnotte : %d\n",game.cagnotte);
     printf("Score : %d\n\n", game.score);

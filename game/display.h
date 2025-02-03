@@ -1,24 +1,28 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-// affiche un tour de jeu 
-void affiche_jeu(void);
+// display a round
+void display_game(void);
 
-//affiche un aperçu de la vague avant le début de la partie 
-void affiche_vague(void);
+//display a wave before the game starts
+void display_wave(void);
 
-//affiche l'aide aux commandes
+//display list of commands
 void help(void);
 
-//interprète les commandes utilisateur
+//interprets user commands
 void prompt(void);
 
-void creer_save(char nom[28]);
+//creates a save file
+void create_save(char nom[28]);
 
-int charge_save(char nom[28]);
+//loads a save file
+int load_save(char nom[28]);
 
+//save a new highscore
 int save_s(char *nom);
 
-void affiche_s(void);
+//display highscores
+void display_s(void);
 
 #endif
