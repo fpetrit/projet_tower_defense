@@ -195,7 +195,10 @@ void  e_m_1(Etudiant * e){
         a = a->next_line;
     }
 
-    e->vitesse = a->vitesse + 1;
+    if (e != a)
+        e->vitesse = a->vitesse + 1;
+    else
+        e->vitesse = entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.vitesse;
 
     e_m_0(e);
 }
