@@ -129,7 +129,8 @@ int charge_save(char nom[28]){
     if (!f){
         return 0;
     }
-    fscanf(f,"%d\n%d\n%d\n",&game.cagnotte,&game.score,&game.tour);
+    fscanf(f,"%d\n%d\n%d",&game.cagnotte,&game.score,&game.tour);
+    fscanf(f,"%c",&t);
     fscanf(f,"%c",&t);
     while(t!='\n'){
         fscanf(f,"%d %d %d",&l,&p,&pv);
@@ -146,12 +147,10 @@ int charge_save(char nom[28]){
     Etudiant * prev_e = NULL;
     Etudiant * e;
     if (! feof(f) ){
-        fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
-        printf("%d %d %d %d %c\n", line_no, p, round_no, pv,abbr );
+        error = EOF == fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
         // to chain Etudiants
-        if(round_no>game.etudiant_last_tour) game.etudiant_last_tour=round_no;
         prev_e = etudiant_create(abbr , line_no, p, round_no);
-        error = prev_e == NULL;
+        error = error || prev_e == NULL;
 
         if (!error) {
             etudiant_insert(prev_e);
@@ -166,14 +165,15 @@ int charge_save(char nom[28]){
     while ( ! feof(f) && ! error){
 
         // first simple chaining
-        fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
-        if(round_no>game.etudiant_last_tour) game.etudiant_last_tour=round_no;
-        printf("%d %d %d %d %c\n", line_no, p, round_no, pv,abbr );
-        e = etudiant_create(abbr , line_no, p, round_no);
+        error = EOF == fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
+
+        if ( ! error )
+            e = etudiant_create(abbr , line_no, p, round_no);
+        
         // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
         // nécessaire pour l'algo de chaînage double par ligne
         // erreur également si malloc n'a pas fonctionné
-        error = e == NULL || prev_e->tour > round_no;
+        error = error || e == NULL || prev_e->tour > round_no;
         
         if ( ! error ) {
 
@@ -190,6 +190,9 @@ int charge_save(char nom[28]){
                 current_last_etudiant_on_line[prev_e->ligne - 1] = prev_e;
             }
 
+            if (prev_e->tour > game.etudiant_last_tour)
+                game.etudiant_last_tour = prev_e->tour;
+
         } else if (prev_e != NULL) {
             fprintf(stderr, "Error: incorrect level text file format.\nFirst fields of each row must be ordered in ascending order.");
         } else {
@@ -201,7 +204,9 @@ int charge_save(char nom[28]){
 
     // the last etudiant on each line has no previous etudiant on the same line
     for (int i = 0; i < ROWS; i++){
-        current_last_etudiant_on_line[i]->prev_line = NULL;
+        // some lines may be empty
+        if (current_last_etudiant_on_line[i])
+            current_last_etudiant_on_line[i]->prev_line = NULL;
     }
     fclose(f);
     return 1;
@@ -244,6 +249,7 @@ int save_s(char *nom){
     else{
         if (p==-1){
             printf("le score n'est pas dans les 10 meilleurs\n");
+            fclose(f);
             return 0;
         }
         FILE* f=fopen("scores.txt","w");
