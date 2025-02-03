@@ -224,23 +224,27 @@ int save_s(char *nom){
             break;
         }
     }
-    if (p==-1){
-        return 0;
-    }
     if (i<10){
         i++;
+        if (p==-1){
+            p=i;
+        }
         FILE* f=fopen("scores.txt","w");
         fprintf(f,"%d\n",i);
         for (int j=0;j<p;j++){
             fprintf(f,"%d %s\n",s[j],lines[j]);
         }
         fprintf(f,"%d %s\n",game.score,nom);
-        for (int k=p+1;k<i;k++){
+        for (int k=p+1;k<=i;k++){
             fprintf(f,"%d %s\n",s[k-1],lines[k-1]);
         }
     }
 
     else{
+        if (p==-1){
+            printf("le score n'est pas dans les 10 meilleurs\n");
+            return 0;
+        }
         FILE* f=fopen("scores.txt","w");
         fprintf(f,"%d\n",i);
         for (int j=0;j<p;j++){
@@ -252,6 +256,7 @@ int save_s(char *nom){
         }
     }
     fclose(f);
+    printf("Le score a bien ete enregistre\n");
     return 1;
 }
 

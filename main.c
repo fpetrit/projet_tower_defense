@@ -110,7 +110,10 @@ int menu(){
  * @brief Contains the main loop of the game in which are called @ref next_round and @ref prompt .
  */
 int main(void){
-
+    // display best scores for 5 secs
+    affiche_s();
+    sleep(5);
+    CLEAR
     // open level file & initialize all the data
     int i=menu();
     if (i==1){
@@ -133,7 +136,20 @@ int main(void){
 
     } while (! game.finished );
     
-
+    if (game.won){
+        char response=0;
+        while (response != 'o' && response != 'n'){
+            printf("\n\nEnregistrer le score ? [o/n]\n");
+            scanf("%c", &response);
+        }
+        if (response=='o'){
+            char nom[64];
+            printf("Nom du joueur : ");
+            scanf("%s",nom);
+            CLEAR
+            save_s(nom);
+        }
+    }
     end_game();
     
     return 0;
