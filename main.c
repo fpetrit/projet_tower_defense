@@ -60,7 +60,7 @@ int menu(){
                 scanf("%c", &response_1);
             }
             save = response_1 == 'n' || save;
-            strcpy(filename, "levels/");
+            strcpy(filename, "saves/");
         }
         return 0;
     }  
@@ -127,13 +127,12 @@ int main(void){
     }
     affiche_jeu();
     prompt();
-
     do {
         
         next_round();
-        if (! game.finished)
+        if (! game.finished){
             prompt();
-
+        }
     } while (! game.finished );
     
     if (game.won){
