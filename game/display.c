@@ -234,35 +234,36 @@ int save_s(char *nom){
         if (p==-1){
             p=i-1;
         }
-        FILE* f=fopen("scores.txt","w");
-        fprintf(f,"%d\n",i);
+        FILE* f1=fopen("scores.txt","w");
+        fprintf(f1,"%d\n",i);
         for (int j=0;j<p;j++){
             
-            fprintf(f,"%d %s\n",s[j],lines[j]);
+            fprintf(f1,"%d %s\n",s[j],lines[j]);
         }
-        fprintf(f,"%d %s\n",game.score,nom);
+        fprintf(f1,"%d %s\n",game.score,nom);
         for (int k=p+1;k<i;k++){
-            fprintf(f,"%d %s\n",s[k-1],lines[k-1]);
+            fprintf(f1,"%d %s\n",s[k-1],lines[k-1]);
         }
+        fclose(f1);
     }
 
     else{ // else we get rid of the lowest one
         if (p==-1){ // case where the 10 scores already registred are better than the new one
             printf("le score n'est pas dans les 10 meilleurs\n");
-            fclose(f);
             return 0;
         }
-        FILE* f=fopen("scores.txt","w");
-        fprintf(f,"%d\n",i);
+        FILE* f2=fopen("scores.txt","w");
+        fprintf(f2,"%d\n",i);
         for (int j=0;j<p;j++){
-            fprintf(f,"%d %s\n",s[j],lines[j]);
+            fprintf(f2,"%d %s\n",s[j],lines[j]);
         }
-        fprintf(f,"%d %s\n",game.score,nom);
+        fprintf(f2,"%d %s\n",game.score,nom);
         for (int k=p+1;k<10;k++){
-            fprintf(f,"%d %s\n",s[k-1],lines[k-1]);
-        }
+            fprintf(f2,"%d %s\n",s[k-1],lines[k-1]);
+        }    
+        fclose(f2);
     }
-    fclose(f);
+
     printf("Le score a bien ete enregistre\n");
     return 1;
 }
