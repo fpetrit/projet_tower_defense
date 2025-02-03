@@ -112,7 +112,7 @@ int menu(){
 int main(void){
     // display best scores for 5 secs
     affiche_s();
-    sleep(1);
+    sleep(2);
     CLEAR
     // open level file & initialize all the data
     int i=menu();

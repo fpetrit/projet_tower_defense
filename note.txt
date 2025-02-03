@@ -1,6 +1,3 @@
-warning fclose qqpart dans le systeme de sauvegarde
-
-caractères chelous generes dans scores lorsqu'on enregistre un score + les scores ne s'affichent pas correctement
 
 quand on fait continuer non lorqu'on rentre un fichier inexistant ça lance une partie vide puis seg fault
 
