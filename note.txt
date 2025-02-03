@@ -1,5 +1,4 @@
 
-quand on fait continuer non lorqu'on rentre un fichier inexistant ça lance une partie vide puis seg fault
 
 commenter le plus possibles de header format doxygen les trucs importants a expliquer (fred)
 

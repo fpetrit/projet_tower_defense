@@ -22,7 +22,7 @@ Log_storage logs;
 /**
  * @brief Prompt the user for a level filename, open it and initialize a game with it by calling @ref game_init
  */
-int menu(){
+int menu(bool *end){
 
     bool quit = false, save=false;
     char response,response_1=0;
@@ -62,6 +62,7 @@ int menu(){
             save = response_1 == 'n' || save;
             strcpy(filename, "saves/");
         }
+        if (response_1=='n') *end=true;
         return 0;
     }  
     // 8 chararcers ("levels" + null byte), 20 available for level filename
@@ -100,6 +101,7 @@ int menu(){
 
         strcpy(filename, "levels/");
     }
+    if (response=='n') *end=true;
     return 1;
 }
 
@@ -110,12 +112,14 @@ int menu(){
  * @brief Contains the main loop of the game in which are called @ref next_round and @ref prompt .
  */
 int main(void){
+    bool *end=false;
     // display best scores for 5 secs
     affiche_s();
     sleep(2);
     CLEAR
     // open level file & initialize all the data
-    int i=menu();
+    int i=menu(end);
+    if (*end==true) return 0;
     if (i==1){
         affiche_vague();
         char str[2];
