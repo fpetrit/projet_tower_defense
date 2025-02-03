@@ -1,4 +1,6 @@
+chargement des saves ne marche plus : seg fault
 
+mauvais nom de fichier + ne pas continuer --> seg fault
 
 commenter le plus possibles de header format doxygen les trucs importants a expliquer (fred)
 
