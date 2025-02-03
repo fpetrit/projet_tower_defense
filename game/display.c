@@ -134,8 +134,9 @@ int charge_save(char nom[28]){
     while(t!='\n'){
         fscanf(f,"%d %d %d",&l,&p,&pv);
         T=tourelle_add(t-48,l,p,&error_1);
-        printf("%c %d %d %d\n",t,l,p,pv); 
+        printf("%c %d %d %d\n\n",t,l,p,pv); 
         T->pointsDeVie=pv;
+        fscanf(f,"%c",&t);
         fscanf(f,"%c",&t);
         
     }

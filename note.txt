@@ -1,6 +1,3 @@
-le prompt s'affiche après avoir perdu la partie -> bug si l'on rentre des trucs surement
-
-warning fonction prompt
 
 
 
