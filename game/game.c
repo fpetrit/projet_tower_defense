@@ -407,10 +407,10 @@ void game_init(FILE * level){
 
     // create the first etudiant, initialize prev_e
     if (! feof(level) ){
-        fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
+        error = EOF == fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
         // to chain Etudiants
         prev_e = etudiant_create(abbr , line_no, 0, round_no);
-        error = prev_e == NULL;
+        error = error || prev_e == NULL;
 
         if (!error) {
             etudiant_insert(prev_e);
@@ -424,14 +424,15 @@ void game_init(FILE * level){
     while ( ! feof(level) && ! error){
 
         // first simple chaining
-        fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
+        error = EOF == fscanf(level, " %d %d %c", &round_no, &line_no, &abbr );
 
-        e = etudiant_create(abbr , line_no, 0, round_no);
+        if ( ! error )
+            e = etudiant_create(abbr , line_no, 0, round_no);
         
         // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
         // nécessaire pour l'algo de chaînage double par ligne
         // erreur également si malloc n'a pas fonctionné
-        error = e == NULL || prev_e->tour > round_no;
+        error = error || e == NULL || prev_e->tour > round_no;
         
         if ( ! error ) {
 
@@ -462,7 +463,9 @@ void game_init(FILE * level){
 
     // the last etudiant on each line has no previous etudiant on the same line
     for (int i = 0; i < ROWS; i++){
-        current_last_etudiant_on_line[i]->prev_line = NULL;
+        // some lines may be empty
+        if (current_last_etudiant_on_line[i])
+            current_last_etudiant_on_line[i]->prev_line = NULL;
     }
 }
 
