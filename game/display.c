@@ -133,21 +133,23 @@ int charge_save(char nom[28]){
     fscanf(f,"%c",&t);
     fscanf(f,"%c",&t);
     while(t!='\n'){
-        fscanf(f,"%d %d %d",&l,&p,&pv);
+        fscanf(f," %d %d %d",&l,&p,&pv);
         T=tourelle_add(t-48,l,p,&error_1);
         printf("%c %d %d %d\n\n",t,l,p,pv); 
         T->pointsDeVie=pv;
         fscanf(f,"%c",&t);
         fscanf(f,"%c",&t);
-        
     }
-    
     Etudiant * current_last_etudiant_on_line[ROWS];
     memset(current_last_etudiant_on_line, 0, ROWS * sizeof(Etudiant *));
+
     Etudiant * prev_e = NULL;
     Etudiant * e;
+
+    // create the first etudiant, initialize prev_e
     if (! feof(f) ){
         error = EOF == fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
+        printf(" %d %d %d %d %c\n", line_no, p, round_no, pv ,abbr);
         // to chain Etudiants
         prev_e = etudiant_create(abbr , line_no, p, round_no);
         error = error || prev_e == NULL;
@@ -166,10 +168,9 @@ int charge_save(char nom[28]){
 
         // first simple chaining
         error = EOF == fscanf(f, " %d %d %d %d %c", &line_no, &p, &round_no, &pv ,&abbr);
-
+        printf(" %d %d %d %d %c\n", line_no, p, round_no, pv ,abbr);
         if ( ! error )
             e = etudiant_create(abbr , line_no, p, round_no);
-        
         // erreur si les champs "tour" des lignes ne sont dans l'ordre croissant
         // nécessaire pour l'algo de chaînage double par ligne
         // erreur également si malloc n'a pas fonctionné

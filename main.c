@@ -112,14 +112,14 @@ int menu(bool *end){
  * @brief Contains the main loop of the game in which are called @ref next_round and @ref prompt .
  */
 int main(void){
-    bool *end=false;
+    bool end=false;
     // display best scores for 5 secs
     affiche_s();
     sleep(2);
     CLEAR
     // open level file & initialize all the data
-    int i=menu(end);
-    if (*end==true) return 0;
+    int i=menu(&end);
+    if (end==true) return 0;
     if (i==1){
         affiche_vague();
         char str[2];
