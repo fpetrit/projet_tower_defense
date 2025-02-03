@@ -282,6 +282,7 @@ void help(void){
            "\t- se | stats etudiant    affiche les stats d'un type d'etudiant\n"
            "\t- p  | place             initie le placement d'une tourelle\n"
            "\t- end                    termine la partie sur une defaite\n"
+           "\t- save                   enregistre l'etat de la partie\n"
            "\t- <Entree>               passe au tour suivant\n\n");
 }
 
