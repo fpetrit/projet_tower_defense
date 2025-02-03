@@ -12,6 +12,7 @@
 #define max(a, b)   (a <= b) b : a
 
 extern Log_storage logs;
+extern const void (*tourelle_death[]) (Tourelle *);
 
 Tourelle * tourelle_create(int type, int ligne, int position){
     Tourelle * new = NULL;
@@ -515,7 +516,9 @@ void update_tourelles(void){
 
         // tourelles cannot move for now
         // move(&entity);
-        inflict_damage(&entity);
+        
+        if (entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type.damage_type != -1 )
+            inflict_damage(&entity);
 
         t = t->next;
     }
@@ -533,9 +536,12 @@ void update_etudiants(void){
     while (e){
         entity.entity.etudiant = e;
 
-        move(&entity);
-        inflict_damage(&entity);
-
+        if (entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.move_type != -1 )
+            move(&entity);
+        
+        if (entity_type_get_type_by_id(&etudiant_types, e->type)->type.e_type.damage_type != -1 )
+            inflict_damage(&entity);
+        
         e = e->next;
     }
 }
@@ -618,6 +624,13 @@ void next_round(void){
     while (t) {
 
         if (t->pointsDeVie <= 0) {
+
+            t_type = entity_type_get_type_by_id(&tourelle_types, t->type)->type.t_type;
+
+            // call the entitty death event handler
+            if (t_type.death_type != -1)
+                tourelle_death[t_type.death_type](t);            
+
             
             // tmp_t_entity has type Tagged_entity (NOT Tagged_entity_p) that store the entity data itself and not pointers to it
             // because the tourelle memory is not longer available
@@ -626,7 +639,7 @@ void next_round(void){
             tmp_t = t;
             t = t->next;
 
-            t_type = entity_type_get_type_by_id(&tourelle_types, tmp_t->type)->type.t_type;
+            // compute the score increment
             score = tourelle_get_score(t_type, game.tour);
 
             tourelle_delete(tmp_t);

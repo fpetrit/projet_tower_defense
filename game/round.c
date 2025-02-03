@@ -82,31 +82,8 @@ void t_d_1(Tourelle * t){
     }
 }
 
-// bomb type, damages inflicted to all etudiants on the same column and line
-void t_d_2(Tourelle * t){
-
-    Etudiant * e = game.etudiants;
-    while (e && e->ligne != t->ligne) { e = e->next; }
-
-    if (e) {
-        while (e->prev_line) { e = e->prev_line; }
-
-        while (e){
-            e->pointsDeVie = max(0, e->pointsDeVie - t->strength);
-            e = e->next_line;
-        }
-    }
-
-    // to find the etduiants on the same column no other choices: must browse all the linked list
-    e = game.etudiants;
-    while (e){
-        if (e->position == t->position) e->pointsDeVie = max(0, e->pointsDeVie - t->strength);
-        e = e->next;
-    }
-}
-
 // classic + a speed malus temp effect (3 rounds remaining time)
-void t_d_3(Tourelle * t){
+void t_d_2(Tourelle * t){
 
     POS_FLAGS flags = 0;
 
@@ -119,7 +96,7 @@ void t_d_3(Tourelle * t){
 
 }
 
-void t_d_4(Tourelle * t){
+void t_d_3(Tourelle * t){
 
     Etudiant * e = game.etudiants;
     Etudiant * max_e = game.etudiants;
@@ -225,6 +202,32 @@ void  e_m_1(Etudiant * e){
 
 
 
+// FUNCTIONS TO HANDLE ENTITTY DEATH EVENTS //////////////////////////////////////////////
+
+// bomb_type
+void t_death_0(Tourelle * t){
+
+    Etudiant * e = game.etudiants;
+    while (e && e->ligne != t->ligne) { e = e->next; }
+
+    if (e) {
+        while (e->prev_line) { e = e->prev_line; }
+
+        while (e){
+            e->pointsDeVie = max(0, e->pointsDeVie - t->strength);
+            e = e->next_line;
+        }
+    }
+
+    // to find the etduiants on the same column no other choices: must browse all the linked list
+    e = game.etudiants;
+    while (e){
+        if (e->position == t->position) e->pointsDeVie = max(0, e->pointsDeVie - t->strength);
+        e = e->next;
+    }
+}
+
+
 // GLOBAL ARRAYS TO STORE THE ATTACK AND MOVE FUNCTIONS
 // the damage type of an entity i is implemented by the function at index i of the corresponding function array 
 
@@ -238,7 +241,6 @@ const static void (* tourelle_inflict_damage[]) (Tourelle *) = {
     t_d_1,
     t_d_2,
     t_d_3,
-    t_d_4,
 };
 
 const static void (* tourelle_move[]) (Tourelle *) = {
@@ -250,8 +252,11 @@ const static void (* etudiant_move[]) (Etudiant *) = {
     e_m_1,
 };
 
-
-
+// NOT STATIC, MUST BE AVAILABLE TO THE "next_round" FUNCTION
+const void ( *tourelle_death[]) (Tourelle *) = {
+    t_death_0,
+};
+ 
 // WRAPPER FUNCTIONS: AN ENTITY CAN MOVE AND INFLICT DAMAGES
 
 void inflict_damage(Tagged_entity_p * t_e){

@@ -39,18 +39,26 @@ static inline void fill_etudiant_block(FILE * file, Etudiant_type * e_type){
         
             strcpy(e_type->name, str);
 
-            fscanf(file, "%c", &e_type->abbr);
+            // test: reading abbreviation, HPs, speed, strength, damage_type, move_type, death type
+            fscanf(file, "%c %d %d %d %d %d %d",
+            &e_type->abbr, &e_type->pointsDeVie, &e_type->vitesse, &e_type->strength,
+            &e_type->damage_type, &e_type->move_type, &e_type->death_type);
 
-            fscanf(file, " %d", &e_type->pointsDeVie);
+            // fscanf(file, "%c", &e_type->abbr);
 
-            fscanf(file, " %d", &e_type->vitesse);
+            // fscanf(file, " %d", &e_type->pointsDeVie);
 
-            // strength
-            fscanf(file, " %d", &e_type->strength);
+            // fscanf(file, " %d", &e_type->vitesse);
 
-            fscanf(file, " %d", &e_type->damage_type);
+            // // strength
+            // fscanf(file, " %d", &e_type->strength);
+
+            // fscanf(file, " %d", &e_type->damage_type);
     
-            fscanf(file, " %d", &e_type->move_type);
+            // fscanf(file, " %d", &e_type->move_type);
+
+            // // death type
+            // fscanf(file, " %d", &e_type->death_type);
         }
 
     }
@@ -105,21 +113,25 @@ static inline void fill_tourelle_block(FILE * file, Tourelle_type * t_type){
 
             
 
-            // price
-            fscanf(file, " %d", &t_type->prix);
+            fscanf(file, " %d %d %d %d %d %d",
+            &t_type->prix, &t_type->pointsDeVie, &t_type->strength,
+            &t_type->damage_type, &t_type->move_type, &t_type->death_type);
+
+            // // price
+            // fscanf(file, " %d", &t_type->prix);
 
 
-            // HPs
-            fscanf(file, " %d", &t_type->pointsDeVie);
+            // // HPs
+            // fscanf(file, " %d", &t_type->pointsDeVie);
 
-            // strength
-            fscanf(file, " %d", &t_type->strength);
+            // // strength
+            // fscanf(file, " %d", &t_type->strength);
 
-            // an integer damage type 
-            fscanf(file, " %d", &t_type->damage_type);
+            // // an integer damage type 
+            // fscanf(file, " %d", &t_type->damage_type);
     
-            // an integer move type
-            fscanf(file, " %d", &t_type->move_type);
+            // // an integer move type
+            // fscanf(file, " %d", &t_type->move_type);
         }
 
     }

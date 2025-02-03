@@ -1,6 +1,3 @@
-bombe fait des degats quand elle n'est pas tuée et n'en fait pas quand elle l'est + fait des dégats à distance 
-placer une tour et sauvegarder avance au tour suivant 
-
 commenter le plus possibles de header format doxygen les trucs importants a expliquer (fred)
 
 

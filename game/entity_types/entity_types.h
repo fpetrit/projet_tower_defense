@@ -15,6 +15,7 @@ typedef struct {
     int strength;
     int damage_type;
     int move_type;
+    int death_type;
 
 } Tourelle_type;
 
@@ -28,6 +29,7 @@ typedef struct {
     int strength;
     int damage_type;
     int move_type;
+    int death_type;
 
 } Etudiant_type;
 
