@@ -129,6 +129,14 @@ int main(void){
         getc(stdin);
         scanf("%c", str);
     }
+    if (i==0){
+        char str[2];
+        str[0] = '\0';
+        CLEAR
+        printf("\n\nEntree pour commencer a jouer ...");
+        getc(stdin);
+        scanf("%c", str);
+    }
     affiche_jeu();
     prompt();
     do {
