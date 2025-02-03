@@ -4,6 +4,8 @@ projet
 docs/html
 *.txt
 *.odt#
+levels/*
+saves/*
 
 
 !note.txt

@@ -1,4 +1,12 @@
+seg fault chargement d'une save
 
+warning fclose qqpart dans le systeme de sauvegarde
+
+commenter le plus possibles de header format doxygen les trucs importants a expliquer (fred)
+
+changer les commentaires en anglais
+
+écrire le dev.pdf
 
 
 
