@@ -284,6 +284,7 @@ void display_s(void){
             printf("Joueur : %s     Score : %d\n",s,j);
         }
     }
+    fclose(f);
 }
 
 
