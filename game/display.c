@@ -440,6 +440,10 @@ void place_tourelle(void){
             printf("Saisir la colonne de la tourelle : ");
             scanf("%d",&position);
 
+            printf("\n");
+
+            getc(stdin);
+
             if (0 < position && position <= COLUMNS - 1 && 0 <= line && line <= ROWS - 1) {
 
                 Tourelle * new = tourelle_add(t_type.id, line, position, &error);
@@ -448,6 +452,10 @@ void place_tourelle(void){
                     printf("Une entitee occupe deja cette position !\n\n");
                 else if (! new)
                     fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add\n\n");
+
+                else {
+                    display_game();
+                }
             }
 
             else {
@@ -475,6 +483,7 @@ void save(void){
     char save_name[21];
     printf("nom de fichier de sauvegarde : ");
     scanf("%s",save_name); 
+    fgetc(stdin);
     create_save(strcat(filename,save_name));
 }
 
