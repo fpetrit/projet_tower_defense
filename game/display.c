@@ -312,9 +312,17 @@ void tourelle_stats(void){
     // remove the '\n' from the buffer otherwise will not prompt again
     fgetc(stdin);
 
-    Tourelle_type t_type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE)->type.t_type;
-    printf("\nType : %d --- %s\n%s\nForce : %d\nPV : %d\nPrix : %d\n\n",
-    t_type.id, t_type.name, t_type.description, t_type.strength, t_type.pointsDeVie, t_type.prix);
+    Tagged_entity_type * type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE);
+    Tourelle_type t_type;
+
+    if (type){
+        t_type = type->type.t_type;
+        printf("\nType : %d --- %s\n%s\nForce : %d\nPV : %d\nPrix : %d\n\n",
+        t_type.id, t_type.name, t_type.description, t_type.strength, t_type.pointsDeVie, t_type.prix);
+    }
+
+    else
+        printf("Abbreviation non reconnue.\n\n");
 }
 
 void etudiant_stats(void){
@@ -333,9 +341,17 @@ void etudiant_stats(void){
     // remove the '\n' from the buffer otherwise will not prompt again
     fgetc(stdin);
 
-    Etudiant_type e_type = entity_type_get_type_by_abbr(&etudiant_types, c, ETUDIANT)->type.e_type;
-    printf("\nType : %d --- %s\nForce : %d\nPV : %d\nVitesse : %d\n\n",
-    e_type.id, e_type.name, e_type.strength, e_type.pointsDeVie, e_type.vitesse);
+    Tagged_entity_type * type = entity_type_get_type_by_abbr(&etudiant_types, c, ETUDIANT);
+    Etudiant_type e_type;
+
+    if (type){
+        e_type = type->type.e_type;
+        printf("\nType : %d --- %s\nForce : %d\nPV : %d\nVitesse : %d\n\n",
+        e_type.id, e_type.name, e_type.strength, e_type.pointsDeVie, e_type.vitesse);
+    }
+
+    else
+        printf("Abbreviation non reconnue.\n\n");
 }
 
 void place_tourelle(void){
@@ -363,29 +379,46 @@ void place_tourelle(void){
     // remove the '\n' from the buffer otherwise will not prompt again
     getc(stdin);
 
-    t_type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE)->type.t_type;
+    Tagged_entity_type * type = entity_type_get_type_by_abbr(&tourelle_types, c, TOURELLE);
+    
+    if (type){
+        t_type = type->type.t_type;
 
-    if (game.cagnotte < t_type.prix){
-        printf("\nPas assez d'argent.\n\n");
+        if (game.cagnotte < t_type.prix){
+            printf("\nPas assez d'argent.\n\n");
+        }
+
+        else {
+            game.cagnotte -= t_type.prix;
+
+            printf("Saisir la ligne de la tourelle : ");
+            scanf("%d",&line);
+
+            printf("Saisir la colonne de la tourelle : ");
+            scanf("%d",&position);
+
+            if (0 < position && position <= COLUMNS - 1 && 0 <= line && line <= ROWS - 1) {
+
+                Tourelle * new = tourelle_add(t_type.id, line, position, &error);
+
+                if ( error )
+                    printf("Une entitee occupe deja cette position !\n\n");
+                else if (! new)
+                    fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add\n\n");
+            }
+
+            else {
+                printf("Position invalide.\n\n");
+                fgetc(stdin);
+            }   
+        }
     }
 
-    else{
-
-        game.cagnotte -= t_type.prix;
-
-        printf("Saisir la ligne de la tourelle : ");
-        scanf("%d",&line);
-
-        printf("Saisir la colonne de la tourelle : ");
-        scanf("%d",&position);
-
-        Tourelle * new = tourelle_add(t_type.id, line, position, &error);
-
-        if ( error )
-            printf("Une entitee occupe deja cette position !\n\n");
-        else if (! new)
-            fprintf(stderr, "Error: PlaceTour malloc failed in tourelle_add\n\n");
+    else {
+        printf("Abbreviation non reconnue.\n\n");
     }
+
+
 }
 
 void end(void){
