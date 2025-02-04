@@ -29,17 +29,17 @@ void set_speed_effect(Etudiant * e, int value){
 
     Tagged_entity tagged_e;
     tagged_e.tag = ETUDIANT;
-
-    e->effect |= SPEED;
+    
     e->effect_values[get_effect_index(SPEED)] = value;
     e->effect_remaining_time[get_effect_index(SPEED)] = 3;
 
-    e->vitesse = max(0, e->vitesse + value);
+    if (! (e->effect & SPEED)){
+        e->effect |= SPEED;
+        e->vitesse = max(0, e->vitesse + value);
+    }   
 
     tagged_e.entity.etudiant = *e;
-
     save_log(ENTITY_EFFECT_APPLY, tagged_e, SPEED);
-
 }
 
 // FUNCTIONS TO INFLICT DAMAGE ////////////////////////////////////
@@ -231,7 +231,7 @@ void t_death_0(Tourelle * t){
 }
 
 
-// GLOBAL ARRAYS TO STORE THE ATTACK AND MOVE FUNCTIONS
+// GLOBAL CONST STATIC ARRAYS TO STORE THE ATTACK AND MOVE FUNCTIONS
 // the damage type of an entity i is implemented by the function at index i of the corresponding function array 
 
 const static void (* etudiant_inflict_damage[]) (Etudiant *) = {
