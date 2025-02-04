@@ -315,7 +315,7 @@ Etudiant * etudiant_get_nearest_line(int line, int position, POS_FLAGS * flags){
             // on the right
             // or directly to the left
             // or at the same pos
-            while (node->prev_line && node->position > position) {
+            while (node->prev_line && (node->position > position)) {
                 if (node->tour <= game.tour) last_correct = node;
                 node = node->prev_line;
             }

@@ -73,12 +73,14 @@ void t_d_1(Tourelle * t){
 
         // etudiants are targeted on the right
         if (flags & G_POS)
-            e = e->prev_line;
+            do { e = e->prev_line; } while (e && e->tour > game.tour);
 
         // L_POS must be set
         // etudiants are targeted on the left
         else
-            e = e->next_line;
+            do { e = e->next_line; } while (e && e->tour > game.tour);
+        
+        i++;
     }
 }
 
@@ -87,6 +89,7 @@ void t_d_2(Tourelle * t){
 
     POS_FLAGS flags = 0;
 
+    // ignores entities not on the game board
     Etudiant * e = etudiant_get_nearest_line(t->ligne, t->position, &flags);
 
     if (e) {
@@ -104,7 +107,8 @@ void t_d_3(Tourelle * t){
 
     // no seg fault is no etudiants bc e = max_e
     while (e){
-        if (e->position > max_e->position)
+
+        if (e->tour <= game.tour && e->position > max_e->position)
             max_e = e;
 
         e = e->next;
@@ -112,7 +116,7 @@ void t_d_3(Tourelle * t){
 
     e = game.etudiants;
     while (e){
-        if (e->position == max_e->position)
+        if (e->tour <= game.tour && e->position == max_e->position)
             e->pointsDeVie = max(0, e->pointsDeVie - t->strength);
         e = e->next;
     }
