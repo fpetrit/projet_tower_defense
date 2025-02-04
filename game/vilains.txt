@@ -8,18 +8,18 @@
 / <TYPE_MORT>
 
 ANTOINE
-A 10 1 3 0 0 -1
+A 7 2 4 0 0 -1
 
 TANK
-B 20 1 3 0 0 -1
+B 15 2 4 0 0 -1
 
 ASSASSIN
-I 5 2 6 0 0 -1
+I 5 4 6 0 0 -1
 
 MAGE
-Q 10 1 3 0 1 -1
+Q 7 2 3 0 1 -1
 
 SOIGNEUR
-S 10 1 3 1 0 -1
+S 7 2 3 1 0 -1
 
 
