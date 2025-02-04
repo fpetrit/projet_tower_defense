@@ -544,7 +544,7 @@ void display_logs(void){
             break;
 
         case PLAYER_WIN:
-            printf(format_string);
+            printf("%s", format_string);
             break;
 
         case ETUDIANT_WIN:

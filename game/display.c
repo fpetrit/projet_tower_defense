@@ -49,7 +49,7 @@ void display_game(void){
     }
     for (int k=0;k<=ROWS-1;k++){ //prints the list
         for (int l=0;l<=COLUMNS;l++){
-            printf(L[k][l]);
+            printf("%s", L[k][l]);
         }
         printf("\n");
     }
@@ -87,7 +87,7 @@ void display_wave(void){
     }
     for (int k=0;k<=ROWS-1;k++){
         for (int l=0;l<=game.etudiant_last_tour;l++){
-            printf(L[k][l]);
+            printf("%s", L[k][l]);
         }
         printf("\n");
     }
