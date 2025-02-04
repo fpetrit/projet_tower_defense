@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <stdbool.h>
+#include <unistd.h>
+
 #include "game.h"
 #include "../preprocessor_macros_constants.h"
 #include "entity_types/entity_type_vector.h"

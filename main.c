@@ -112,6 +112,7 @@ int menu(bool *end){
  * @brief Contains the main loop of the game in which are called @ref next_round and @ref prompt .
  */
 int main(void){
+    CLEAR
     bool end=false;
     // display best scores for 5 secs
     display_s();
