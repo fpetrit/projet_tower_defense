@@ -54,7 +54,7 @@
 TOURELLE DE BASE
 T
 [La tourelle active la plus abordable.
-Elle inflige 1 de degat à sa cible.]
+Elle inflige 3 de degat à sa cible.]
 25 10 3 0 0 -1
 
 
@@ -69,7 +69,7 @@ BOMBE
 B
 [Une mine passive mais qui explose une fois detruite !
 Elle inflige alors des degats a tous les ennemis de sa ligne et de sa colonne.]
-25 1 3 -1 0 0
+25 1 5 -1 0 0
 
 TOURELLE LANCEUSE DE GLACE
 G
@@ -81,4 +81,4 @@ M
 [Elle dispose d'un système de visée qui lui permet de toucher directement l'ennemi le plus proche de l'universite.
 Elle inflige des degats de base a sa cible et a toutes les entites de la meme colonne.
 Attention aux dommages collateraux !]
-40 10 3 3 0 -1
+75 10 3 3 0 -1
