@@ -148,6 +148,10 @@ int main(void){
     } while (! game.finished );
     
     if (game.won){
+        sleep(5);
+        CLEAR
+        victory();
+        CLEAR
         char response=0;
         while (response != 'o' && response != 'n'){
             printf("\n\nEnregistrer le score ? [o/n]\n");
@@ -160,6 +164,12 @@ int main(void){
             CLEAR
             save_s(nom);
         }
+    }
+    if (!game.won){
+        sleep(5);
+        CLEAR
+        defeat();
+        CLEAR
     }
     end_game();
     

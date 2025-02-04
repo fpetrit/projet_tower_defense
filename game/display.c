@@ -284,6 +284,46 @@ void display_s(void){
 }
 
 
+void defeat(void){
+    printf( "DDDDDDDDDDDDD      EEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFEEEEEEEEEEEEEEEEEEEEEE               AAA         TTTTTTTTTTTTTTTTTTTTTTT\n"
+            "D::::::::::::DDD   E::::::::::::::::::::EF::::::::::::::::::::FE::::::::::::::::::::E              A:::A        T:::::::::::::::::::::T\n"
+            "D:::::::::::::::DD E::::::::::::::::::::EF::::::::::::::::::::FE::::::::::::::::::::E             A:::::A       T:::::::::::::::::::::T\n"
+            "DDD:::::DDDDD:::::DEE::::::EEEEEEEEE::::EFF::::::FFFFFFFFF::::FEE::::::EEEEEEEEE::::E            A:::::::A      T:::::TT:::::::TT:::::T\n"
+            "  D:::::D    D:::::D E:::::E       EEEEEE  F:::::F       FFFFFF  E:::::E       EEEEEE           A:::::::::A     TTTTTT  T:::::T  TTTTTT\n"
+            "  D:::::D     D:::::DE:::::E               F:::::F               E:::::E                       A:::::A:::::A            T:::::T\n"        
+            "  D:::::D     D:::::DE::::::EEEEEEEEEE     F::::::FFFFFFFFFF     E::::::EEEEEEEEEE            A:::::A A:::::A           T:::::T\n"        
+            "  D:::::D     D:::::DE:::::::::::::::E     F:::::::::::::::F     E:::::::::::::::E           A:::::A   A:::::A          T:::::T\n"        
+            "  D:::::D     D:::::DE:::::::::::::::E     F:::::::::::::::F     E:::::::::::::::E          A:::::A     A:::::A         T:::::T\n"        
+            "  D:::::D     D:::::DE::::::EEEEEEEEEE     F::::::FFFFFFFFFF     E::::::EEEEEEEEEE         A:::::AAAAAAAAA:::::A        T:::::T\n"        
+            "  D:::::D     D:::::DE:::::E               F:::::F               E:::::E                  A:::::::::::::::::::::A       T:::::T\n"        
+            "  D:::::D    D:::::D E:::::E       EEEEEE  F:::::F               E:::::E       EEEEEE    A:::::AAAAAAAAAAAAA:::::A      T:::::T\n"        
+            "DDD:::::DDDDD:::::DEE::::::EEEEEEEE:::::EFF:::::::FF           EE::::::EEEEEEEE:::::E   A:::::A             A:::::A   TT:::::::TT\n"      
+            "D:::::::::::::::DD E::::::::::::::::::::EF::::::::FF           E::::::::::::::::::::E  A:::::A               A:::::A  T:::::::::T\n"      
+            "D::::::::::::DDD   E::::::::::::::::::::EF::::::::FF           E::::::::::::::::::::E A:::::A                 A:::::A T:::::::::T\n"      
+            "DDDDDDDDDDDDD      EEEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFF           EEEEEEEEEEEEEEEEEEEEEEAAAAAAA                   AAAAAAATTTTTTTTTTT\n");
+    sleep(5);
+}
+
+void victory(void){
+    printf( "VVVVVVVV           VVVVVVVVIIIIIIIIII      CCCCCCCCCCCCCTTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   YYYYYYY       YYYYYYY\n"
+            "V::::::V           V::::::VI::::::::I   CCC::::::::::::CT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  Y:::::Y       Y:::::Y\n"
+            "V::::::V           V::::::VI::::::::I CC:::::::::::::::CT:::::::::::::::::::::T OO:::::::::::::OO R::::::RRRRRR:::::R Y:::::Y       Y:::::Y\n"
+            "V::::::V           V::::::VII::::::IIC:::::CCCCCCCC::::CT:::::TT:::::::TT:::::TO:::::::OOO:::::::ORR:::::R     R:::::RY::::::Y     Y::::::Y\n"
+            " V:::::V           V:::::V   I::::I C:::::C       CCCCCCTTTTTT  T:::::T  TTTTTTO::::::O   O::::::O  R::::R     R:::::RYYY:::::Y   Y:::::YYY\n"
+            "  V:::::V         V:::::V    I::::IC:::::C                      T:::::T        O:::::O     O:::::O  R::::R     R:::::R   Y:::::Y Y:::::Y\n"        
+            "   V:::::V       V:::::V     I::::IC:::::C                      T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R     Y:::::Y:::::Y\n"        
+            "    V:::::V     V:::::V      I::::IC:::::C                      T:::::T        O:::::O     O:::::O  R:::::::::::::RR       Y:::::::::Y\n"        
+            "     V:::::V   V:::::V       I::::IC:::::C                      T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R       Y:::::::Y\n"        
+            "      V:::::V V:::::V        I::::IC:::::C                      T:::::T        O:::::O     O:::::O  R::::R     R:::::R       Y:::::Y\n"        
+            "       V:::::V:::::V         I::::IC:::::C                      T:::::T        O:::::O     O:::::O  R::::R     R:::::R       Y:::::Y\n"        
+            "        V:::::::::V          I::::I C:::::C       CCCCCC        T:::::T        O::::::O   O::::::O  R::::R     R:::::R       Y:::::Y\n"        
+            "         V:::::::V         II::::::IIC:::::CCCCCCCC::::C      TT:::::::TT      O:::::::OOO:::::::ORR:::::R     R:::::R       Y:::::Y\n"      
+            "          V:::::V          I::::::::I CC:::::::::::::::C      T:::::::::T       OO:::::::::::::OO R::::::R     R:::::R    YYYY:::::YYYY\n"      
+            "           V:::V           I::::::::I   CCC::::::::::::C      T:::::::::T         OO:::::::::OO   R::::::R     R:::::R    Y:::::::::::Y\n"      
+            "            VVV            IIIIIIIIII      CCCCCCCCCCCCC      TTTTTTTTTTT           OOOOOOOOO     RRRRRRRR     RRRRRRR    YYYYYYYYYYYYY\n");
+    sleep(5);
+}
+
 // PROMPT SYSTEM ////////////////////////////////////////////////////
 
 void help(void){
