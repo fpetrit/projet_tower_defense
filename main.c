@@ -112,6 +112,7 @@ int menu(bool *end){
  * @brief Contains the main loop of the game in which are called @ref next_round and @ref prompt .
  */
 int main(void){
+    CLEAR
     bool end=false;
     // display best scores for 5 secs
     display_s();
@@ -148,6 +149,10 @@ int main(void){
     } while (! game.finished );
     
     if (game.won){
+        sleep(5);
+        CLEAR
+        victory();
+        CLEAR
         char response=0;
         while (response != 'o' && response != 'n'){
             printf("\n\nEnregistrer le score ? [o/n]\n");
@@ -160,6 +165,12 @@ int main(void){
             CLEAR
             save_s(nom);
         }
+    }
+    if (!game.won){
+        sleep(5);
+        CLEAR
+        defeat();
+        CLEAR
     }
     end_game();
     

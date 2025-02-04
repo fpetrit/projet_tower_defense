@@ -25,4 +25,10 @@ int save_s(char *nom);
 //display highscores
 void display_s(void);
 
+//victory screen
+void defeat(void);
+
+//defeat screen
+void victory(void);
+
 #endif
