@@ -15,7 +15,7 @@ void move(Tagged_entity_p * entity);
 
 void manage_per_round_effects(void);
 
-
+int etudiant_get_value(Etudiant_type e_type,int round_no);
 int etudiant_get_score(Etudiant_type e_type, int round_no);
 int tourelle_get_score(Tourelle_type t_type, int round_no);
 
