@@ -444,7 +444,7 @@ void place_tourelle(void){
 
             getc(stdin);
 
-            if (0 < position && position <= COLUMNS - 1 && 0 <= line && line <= ROWS - 1) {
+            if (0 < position && position <= COLUMNS && 0 < line && line <= ROWS) {
 
                 Tourelle * new = tourelle_add(t_type.id, line, position, &error);
 
