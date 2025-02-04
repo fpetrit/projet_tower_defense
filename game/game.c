@@ -669,8 +669,8 @@ void next_round(void){
             e = e->next;
 
             e_type = entity_type_get_type_by_id(&etudiant_types, tmp_e->type)->type.e_type;
-            score = etudiant_get_score(e_type, game.tour);
-
+            score = etudiant_get_score(e_type, tmp_e->tour);
+            game.cagnotte += etudiant_get_value(e_type,tmp_e->tour);
             game.score += score;
             etudiant_delete(tmp_e);
 

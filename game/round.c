@@ -580,3 +580,9 @@ int tourelle_get_score(Tourelle_type t_type, int round_no){
     double res = -0.5 * ( t_type.pointsDeVie * 25 + (1 / pow(2, (game.tour - round_no) / 3.0  )) * 25 ) ;
     return round(res);
 }
+
+
+int etudiant_get_value(Etudiant_type e_type,int round_no){ //calculates value added to cagnotte when an etudiant dies
+    int res = e_type.pointsDeVie*2 + 10/(game.tour - round_no);
+    return res;
+}
